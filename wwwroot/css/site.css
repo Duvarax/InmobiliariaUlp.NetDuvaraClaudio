@@ -1,6 +1,12 @@
 html {
   font-size: 14px;
 }
+.anim{
+  transition: transform .5s ease;
+}
+.anim:hover{
+  transform: scale(1.05);
+}
 
 @media (min-width: 768px) {
   html {

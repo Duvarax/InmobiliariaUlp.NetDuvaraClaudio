@@ -17,16 +17,13 @@ public class HomeController : Controller
 
     public IActionResult Index()
     {
-        Persona p = new Persona();
+
         
         return View();
     }
 
     public IActionResult Privacy()
     {
-        Persona p = new Persona();
-        p.toString();
-        Console.WriteLine(p.toString());
         return View();
     }
 

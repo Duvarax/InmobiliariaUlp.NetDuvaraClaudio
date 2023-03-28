@@ -107,7 +107,7 @@ public class RepositorioInquilino
         int res = -1;
         using(MySqlConnection conn = new MySqlConnection(ConnectionString))
         {
-            var query = @$"DELETE FROM inquilinos WHERE {nameof(Persona.Id)} = @id";
+            var query = @$"DELETE FROM inquilinos WHERE {nameof(Propietario.Id)} = @id";
 
             using(MySqlCommand command = new MySqlCommand(query, conn))
             {
