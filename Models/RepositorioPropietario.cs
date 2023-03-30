@@ -74,7 +74,7 @@ public class RepositorioPropietario
 
     public Propietario obtenerPropietarioById(int id)
     {
-        Propietario propietario = null;
+        Propietario? propietario = null;
         using(MySqlConnection conn = new MySqlConnection(ConnectionString))
         {
             var query = @$"SELECT * FROM propietarios WHERE {nameof(Propietario.Id)} = @id";

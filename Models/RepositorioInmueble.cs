@@ -2,21 +2,23 @@ using MySql.Data.MySqlClient;
 
 namespace PracticaMVC.Models;
 
-public class RepositorioInquilino
+public class RepositorioInmueble
 {   
    string ConnectionString = "Server=localhost;User=root;Password=;Database=testmvc;SslMode=none";
 
-   public RepositorioInquilino()
+   public RepositorioInmueble()
    {
     
    }
 
-   public List<Inquilino> GetInquilinos()
+   public List<Inmueble> GetInmuebles()
    {
-    List<Inquilino> inquilinos = new List<Inquilino>();
+    List<Inmueble> inmuebles = new List<Inmueble>();
     using (MySqlConnection conn = new MySqlConnection(ConnectionString))
     {
-        var query = @"SELECT Id, Nombre, Apellido,Telefono,Dni, Email FROM inquilinos";
+        var query = @"SELECT i.Id, i.Direccion, i.Ambientes, i.Superficie, i.Latitud, i.Longitud, 
+        i.PropietarioId, p.Nombre, p.Apellido 
+        FROM inmuebles i, propietarios p WHERE i.PropietarioId = p.Id";
         
         using (var command = new MySqlCommand(query, conn))
         {
@@ -26,22 +28,30 @@ public class RepositorioInquilino
             {
                while (reader.Read())
                {
-                Inquilino inquilino = new Inquilino{
-                    Id = reader.GetInt32(nameof(inquilino.Id)),
-                    Nombre = reader.GetString(nameof(inquilino.Nombre)),
-                    Apellido = reader.GetString(nameof(inquilino.Apellido)),
-                    Telefono = reader.GetString(nameof(inquilino.Telefono)),
-                    Dni = reader.GetString(nameof(inquilino.Dni)),
-                    Email = reader.GetString(nameof(inquilino.Email))
+                Inmueble inmueble = new Inmueble{
+                    Id = reader.GetInt32(0),
+                    Direccion = reader.GetString(1),
+                    Ambientes = reader.GetInt32(2),
+                    Superficie = reader.GetInt32(3),
+                    Latitud = reader.GetDecimal(4),
+                    Longitud = reader.GetDecimal(5),
+                    PropietarioId = reader.GetInt32(6),
+                    Duenio = new Propietario
+                    {
+                        Id = reader.GetInt32(6),
+                        Nombre = reader.GetString(7),
+                        Apellido = reader.GetString(8),
+                    }
+                    
                 };
-                inquilinos.Add(inquilino);
+                inmuebles.Add(inmueble);
                }
             }
         }
         conn.Close();
 
     }
-    return inquilinos;
+    return inmuebles;
    }
 
    public int agregarInquilino(Inquilino inquilino)
@@ -70,12 +80,12 @@ public class RepositorioInquilino
     return res;
    }
 
-    public Inquilino obtenerInquilinoById(int id)
+    public Inmueble obtenerInmuebleById(int id)
     {
-        Inquilino? inquilino = null;
+        Inmueble inmueble = null;
         using(MySqlConnection conn = new MySqlConnection(ConnectionString))
         {
-            var query = @$"SELECT * FROM inquilinos WHERE {nameof(Inquilino.Id)} = @id";
+            var query = @$"SELECT i.*, p.Nombre, p.Apellido FROM inmuebles i, propietarios p WHERE i.PropietarioId = p.Id AND i.PropietarioId = @id";
 
             using(MySqlCommand command = new MySqlCommand(query, conn))
             {
@@ -85,14 +95,20 @@ public class RepositorioInquilino
                 var reader = command.ExecuteReader();
                 if(reader.Read())
                 {
-                    inquilino = new Inquilino
+                    inmueble = new Inmueble
                     {
-                        Id = reader.GetInt32(nameof(Inquilino.Id)),
-                        Apellido = reader.GetString("Apellido"),
-                        Telefono = reader.GetString("Telefono"),
-                        Nombre = reader.GetString("Nombre"),
-                        Dni = reader.GetString("Dni"),
-                        Email = reader.GetString("Email")
+                        Id = reader.GetInt32(nameof(Inmueble.Id)),
+                        Direccion = reader.GetString("Direccion"),
+                        Ambientes = reader.GetInt32("Ambientes"),
+                        Superficie = reader.GetInt32("Superficie"),
+                        Latitud = reader.GetDecimal("Latitud"),
+                        Longitud = reader.GetDecimal("Longitud"),
+                        PropietarioId = reader.GetInt32("PropietarioId"),
+                        Duenio = new Propietario
+                        {
+                            Nombre = reader.GetString("Nombre"),
+                            Apellido = reader.GetString("Apellido")
+                        }
 
                     };
 
@@ -100,7 +116,7 @@ public class RepositorioInquilino
                 conn.Close();
             }
         }
-        return inquilino;
+        return inmueble;
     }
     public int eliminarInquilinoById(int id)
     {
