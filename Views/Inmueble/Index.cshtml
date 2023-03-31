@@ -1,13 +1,13 @@
 @model IEnumerable<PracticaMVC.Models.Inmueble>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Listado de inmuebles";
 }
 
-<h1>Index</h1>
+<h1>Listado de inmuebles</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Cargar Inmueble</a>
 </p>
 <table class="table">
     <thead>
@@ -67,9 +67,9 @@
                 @(item.Duenio.Nombre + " " + item.Duenio.Apellido)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-                @Html.ActionLink("Details", "Details", new { id=item.Id }) |
-                @Html.ActionLink("Delete", "Delete", new { id=item.Id })
+                @Html.ActionLink("Editar", "Edit", new { id=item.Id }) |
+                @Html.ActionLink("Detalles", "Details", new { id=item.Id }) |
+                @Html.ActionLink("Eliminar", "Delete", new { id=item.Id })
             </td>
             
         </tr>

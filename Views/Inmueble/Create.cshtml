@@ -1,10 +1,11 @@
 @model PracticaMVC.Models.Inmueble
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Crear nuevo inmueble";
+    var Propietarios = (IList<Propietario>)ViewBag.Propietarios;
 }
 
-<h1>Create</h1>
+<h1>Crear nuevo inmueble</h1>
 
 <h4>Inmueble</h4>
 <hr />
@@ -12,11 +13,6 @@
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Id" class="control-label"></label>
-                <input asp-for="Id" class="form-control" />
-                <span asp-validation-for="Id" class="text-danger"></span>
-            </div>
             <div class="form-group">
                 <label asp-for="Direccion" class="control-label"></label>
                 <input asp-for="Direccion" class="form-control" />
@@ -42,9 +38,10 @@
                 <input asp-for="Longitud" class="form-control" />
                 <span asp-validation-for="Longitud" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="PropietarioId" class="control-label"></label>
-                <input asp-for="PropietarioId" class="form-control" />
+            <div class="form-group" id="propietario-container">
+                <button id="btn-asignar" type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                    Asignar Propietario
+                </button>
                 <span asp-validation-for="PropietarioId" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -55,6 +52,42 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Volver al listado</a>
+</div>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Asignar Propietario</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body d-flex justify-content-center align-items-center">
+        <table>
+            <tr>
+                <th class="text-center"> ID </th>
+                <th class="text-center">Propietario</th>
+                <th class="text-center">Dni</th>
+                <th class="text-center">Telefono</th>
+            </tr>
+            @foreach (var item in Propietarios)
+            {
+                <tr>
+                <td> @item.Id </td>
+                   <td> @item.Nombre @item.Apellido </td>
+                   <td> @item.Dni </td>
+                   <td> @item.Telefono </td>
+                   <td class="bg-info"><i id='@item.Id' class="fa-solid fa-plus"></i></td>
+                </tr>
+            }
+        </table>    
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
 </div>
 

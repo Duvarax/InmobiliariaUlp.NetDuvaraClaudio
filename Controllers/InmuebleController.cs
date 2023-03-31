@@ -10,9 +10,11 @@ namespace PracticaMVC.Controllers
     public class InmuebleController : Controller
     {
         private RepositorioInmueble repo;
+        private RepositorioPropietario repositorioPropietario;
         public InmuebleController()
         {
             repo = new RepositorioInmueble();
+            repositorioPropietario = new RepositorioPropietario();
         }
         // GET: Inmueble
         public ActionResult Index()
@@ -31,22 +33,29 @@ namespace PracticaMVC.Controllers
         // GET: Inmueble/Create
         public ActionResult Create()
         {
+            ViewBag.Propietarios = repositorioPropietario.GetPropietarios();
             return View();
         }
 
         // POST: Inmueble/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(Inmueble inmueble)
         {
             try
             {
                 // TODO: Add insert logic here
-
-                return RedirectToAction(nameof(Index));
+                int res = repo.agregarInmueble(inmueble);
+                if(res > 0){
+                    return RedirectToAction(nameof(Index));
+                }else{
+                    return View();
+                }
+                
             }
-            catch
+            catch(Exception e)
             {
+                Console.WriteLine(e);
                 return View();
             }
         }
@@ -54,22 +63,30 @@ namespace PracticaMVC.Controllers
         // GET: Inmueble/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            Inmueble inmueble = repo.obtenerInmuebleById(id);
+            return View(inmueble);
         }
 
         // POST: Inmueble/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, Inmueble inmueble)
         {
             try
             {
                 // TODO: Add update logic here
-
-                return RedirectToAction(nameof(Index));
+                inmueble.Id = id;
+                int res = repo.modificarInmueble(inmueble);
+                if(res > 0){
+                    return RedirectToAction(nameof(Index));
+                }else{
+                    return View();
+                }
+                
             }
-            catch
+            catch(Exception e)
             {
+                Console.WriteLine(e);
                 return View();
             }
         }
@@ -77,7 +94,8 @@ namespace PracticaMVC.Controllers
         // GET: Inmueble/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            Inmueble inmueble = repo.obtenerInmuebleById(id);
+            return View(inmueble);
         }
 
         // POST: Inmueble/Delete/5
@@ -88,11 +106,17 @@ namespace PracticaMVC.Controllers
             try
             {
                 // TODO: Add delete logic here
-
-                return RedirectToAction(nameof(Index));
+                int res = repo.eliminarInmuebleById(id);
+                if(res > 0){
+                    return RedirectToAction(nameof(Index));
+                }else{
+                    return View();
+                }
+                
             }
-            catch
+            catch(Exception e)
             {
+                Console.WriteLine(e);
                 return View();
             }
         }

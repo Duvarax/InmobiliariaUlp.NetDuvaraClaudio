@@ -117,5 +117,8 @@ namespace PracticaMVC.Controllers
                 return View();
             }
         }
+        public List<Propietario> listar(){
+            return rp.GetPropietarios();
+        }
     }
 }

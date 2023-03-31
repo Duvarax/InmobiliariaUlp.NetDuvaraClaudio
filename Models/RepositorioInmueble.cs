@@ -54,24 +54,25 @@ public class RepositorioInmueble
     return inmuebles;
    }
 
-   public int agregarInquilino(Inquilino inquilino)
+   public int agregarInmueble(Inmueble inmueble)
    {
     int res = -1;
     using(MySqlConnection conn = new MySqlConnection(ConnectionString))
     {   
-        var query = @"INSERT INTO inquilinos(`Nombre`, `Apellido`, `Telefono`, `Dni`, `Email`) VALUES (@nombre, @apellido, @telefono, @dni, @email); SELECT LAST_INSERT_ID();
+        var query = @"INSERT INTO inmuebles(`Direccion`, `Ambientes`, `Superficie`, `Latitud`, `Longitud`, `PropietarioId`) VALUES (@direccion, @ambientes, @superficie, @latitud, @longitud, @propietarioid); SELECT LAST_INSERT_ID();
         ;";
         using(var command = new MySqlCommand(query, conn))
         {
             command.CommandType = System.Data.CommandType.Text;
-            command.Parameters.AddWithValue("@nombre", inquilino.Nombre);
-            command.Parameters.AddWithValue("@apellido", inquilino.Apellido);
-            command.Parameters.AddWithValue("@telefono", inquilino.Telefono);
-            command.Parameters.AddWithValue("@dni", inquilino.Dni);
-            command.Parameters.AddWithValue("@email", inquilino.Email);
+            command.Parameters.AddWithValue("@direccion", inmueble.Direccion);
+            command.Parameters.AddWithValue("@ambientes", inmueble.Ambientes);
+            command.Parameters.AddWithValue("@superficie", inmueble.Superficie);
+            command.Parameters.AddWithValue("@latitud", inmueble.Latitud);
+            command.Parameters.AddWithValue("@longitud", inmueble.Longitud);
+            command.Parameters.AddWithValue("@propietarioid", inmueble.PropietarioId);
             conn.Open();
             res = Convert.ToInt32(command.ExecuteScalar());
-            inquilino.Id = res;
+            inmueble.Id = res;
             Console.Write(res);
             conn.Close();
         }
@@ -118,12 +119,12 @@ public class RepositorioInmueble
         }
         return inmueble;
     }
-    public int eliminarInquilinoById(int id)
+    public int eliminarInmuebleById(int id)
     {
         int res = -1;
         using(MySqlConnection conn = new MySqlConnection(ConnectionString))
         {
-            var query = @$"DELETE FROM inquilinos WHERE {nameof(Propietario.Id)} = @id";
+            var query = @$"DELETE FROM inmuebles WHERE {nameof(Inmueble.Id)} = @id";
 
             using(MySqlCommand command = new MySqlCommand(query, conn))
             {
@@ -137,21 +138,22 @@ public class RepositorioInmueble
         return res;
     }
 
-    public int modificarInquilino(Inquilino inquilino)
+    public int modificarInmueble(Inmueble inmueble)
 		{
 			int res = -1;
 			using (var connection = new MySqlConnection(ConnectionString))
 			{
-				string sql = "UPDATE inquilinos SET " +
-	"Nombre=@nombre, Apellido=@apellido, Telefono=@telefono, Dni=@dni, Email=@email " + "WHERE Id = @id";
+				string sql = "UPDATE inmuebles SET " +
+	"Direccion=@direccion, Ambientes=@ambientes, Superficie=@superficie, Latitud=@latitud, Longitud=@longitud, PropietarioId=@propietarioid " + "WHERE Id = @id";
 				using (MySqlCommand command = new MySqlCommand(sql, connection))
 				{
-					command.Parameters.AddWithValue("@nombre", inquilino.Nombre);
-					command.Parameters.AddWithValue("@apellido", inquilino.Apellido);
-					command.Parameters.AddWithValue("@telefono", inquilino.Telefono);
-                    command.Parameters.AddWithValue("@email", inquilino.Email);
-					command.Parameters.AddWithValue("@dni", inquilino.Dni);
-					command.Parameters.AddWithValue("@id", inquilino.Id);
+                    command.Parameters.AddWithValue("@id", inmueble.Id);
+					command.Parameters.AddWithValue("@direccion", inmueble.Direccion);
+                    command.Parameters.AddWithValue("@ambientes", inmueble.Ambientes);
+                    command.Parameters.AddWithValue("@superficie", inmueble.Superficie);
+                    command.Parameters.AddWithValue("@latitud", inmueble.Latitud);
+                    command.Parameters.AddWithValue("@longitud", inmueble.Longitud);
+                    command.Parameters.AddWithValue("@propietarioid", inmueble.PropietarioId);
 					command.CommandType = System.Data.CommandType.Text;
 					connection.Open();
 					res = command.ExecuteNonQuery();

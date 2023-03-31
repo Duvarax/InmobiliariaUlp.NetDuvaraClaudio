@@ -1,12 +1,12 @@
 @model PracticaMVC.Models.Inmueble
 
 @{
-    ViewData["Title"] = "Delñete";
+    ViewData["Title"] = "Eliminar Inmueble";
 }
 
-<h1>Delñete</h1>
+<h1>Eliminar Inmueble</h1>
 
-<h3>Are you sure you want to delete this?</h3>
+<h3>Seguro de que quieres eliminar este inmueble?</h3>
 <div>
     <h4>Inmueble</h4>
     <hr />
@@ -55,8 +55,8 @@
         </dd>
     </dl>
     
-    <form asp-action="Delñete">
+    <form asp-action="Delete">
         <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
+        <a asp-action="Index">Volver al listado</a>
     </form>
 </div>
