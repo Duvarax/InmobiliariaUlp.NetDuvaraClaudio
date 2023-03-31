@@ -72,7 +72,7 @@ public class RepositorioInquilino
 
     public Inquilino obtenerInquilinoById(int id)
     {
-        Inquilino inquilino = null;
+        Inquilino? inquilino = null;
         using(MySqlConnection conn = new MySqlConnection(ConnectionString))
         {
             var query = @$"SELECT * FROM inquilinos WHERE {nameof(Inquilino.Id)} = @id";

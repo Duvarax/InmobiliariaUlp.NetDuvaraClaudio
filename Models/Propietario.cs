@@ -15,7 +15,7 @@ public class Propietario
        
     }
 
-    public string toString()
+    public override string ToString()
     {
         return Nombre + " " + Apellido;
     }

@@ -17,8 +17,7 @@ public class HomeController : Controller
 
     public IActionResult Index()
     {
-
-        
+        ViewBag.Error = 0;
         return View();
     }
 

@@ -7,6 +7,36 @@ html {
 .anim:hover{
   transform: scale(1.05);
 }
+table, th, td {
+  border: 1px solid black;
+}
+td{
+  padding: 5px;
+}
+.fa-plus{
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+  
+}
+.fa-plus:hover{
+  animation: gira-en-sentido-horario 2s linear infinite;
+}
+
+.fa-user-minus{
+  font-size: 20px;
+  color: crimson;
+  transition: transform .5s ease;
+  cursor: pointer;
+  padding: 20px;
+}
+.fa-user-minus:hover{
+  transform: scale(1.15);
+}
+@keyframes gira-en-sentido-horario {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
 
 @media (min-width: 768px) {
   html {

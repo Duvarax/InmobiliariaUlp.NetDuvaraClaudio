@@ -1,0 +1,44 @@
+@model PracticaMVC.Models.Contrato
+
+@{
+    ViewData["Title"] = "Eliminar contrato";
+}
+
+<h1>Eliminar contrato</h1>
+
+<h3>Seguro que quieres eliminar este contrato?</h3>
+<div>
+    <h4>Contrato</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Inquilino)
+        </dt>
+        <dd class = "col-sm-10">
+            @Model.Inquilino.Nombre @Model.Inquilino.Apellido
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Inmueble)
+        </dt>
+        <dd class = "col-sm-10">
+            @Model.Inmueble.Direccion
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.fechaInicio)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.fechaInicio)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.fechaFinalizacion)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.fechaFinalizacion)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="submit" value="Eliminar" class="btn btn-danger" /> |
+        <a asp-action="Index">Volver al listado</a>
+    </form>
+</div>

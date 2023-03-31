@@ -1,13 +1,13 @@
-@model PracticaMVC.Models.Propietario
+@model PracticaMVC.Models.Inmueble
 
 @{
-    ViewData["Title"] = "Detalles de propietario";
+    ViewData["Title"] = "Detalles del inmueble";
 }
 
-<h1>Detalles de propietario</h1>
+<h1>Detalles del inmueble</h1>
 
 <div>
-    <h4>Propietario</h4>
+    <h4>Inmueble</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -17,40 +17,40 @@
             @Html.DisplayFor(model => model.Id)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Nombre)
+            @Html.DisplayNameFor(model => model.Direccion)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Nombre)
+            @Html.DisplayFor(model => model.Direccion)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Apellido)
+            @Html.DisplayNameFor(model => model.Ambientes)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Apellido)
+            @Html.DisplayFor(model => model.Ambientes)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Telefono)
+            @Html.DisplayNameFor(model => model.Superficie)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Telefono)
+            @Html.DisplayFor(model => model.Superficie)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Dni)
+            @Html.DisplayNameFor(model => model.Latitud)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Dni)
+            @Html.DisplayFor(model => model.Latitud)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Email)
+            @Html.DisplayNameFor(model => model.Longitud)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Email)
+            @Html.DisplayFor(model => model.Longitud)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Clave)
+            Dueño
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Clave)
+            @Html.DisplayFor(model => model.Duenio.Nombre) @Html.DisplayFor(model => model.Duenio.Apellido)
         </dd>
     </dl>
 </div>
