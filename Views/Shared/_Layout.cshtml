@@ -32,11 +32,22 @@
                         <li class="nav-item">
                             <a class="nav-link text-info anim bg-secondary rounded mx-2 " asp-area="" asp-controller="Inmueble" asp-action="Index">Inmuebles</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-info anim bg-secondary rounded mx-2 " asp-area="" asp-controller="Contrato" asp-action="Index">Contratos</a>
+                        </li>
                     </ul>
                 </div>
             </div>
         </nav>
     </header>
+    <div>
+    @if (ViewBag.CreacionExitosa != null)
+    {
+        <div class="alert alert-success text-center" role="alert">
+            <strong> CREADO EXITOSAMENTE </strong>
+        </div>
+    } 
+    </div>
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()

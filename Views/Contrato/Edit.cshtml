@@ -1,0 +1,121 @@
+@model PracticaMVC.Models.Contrato
+
+@{
+    ViewData["Title"] = "Modificar Contrato";
+    var Inquilinos = (IList<Inquilino>)ViewBag.Inquilinos;
+    var Inmuebles = (IList<Inmueble>)ViewBag.Inmuebles;
+}
+
+<h1>Modificar Contrato</h1>
+
+<h4></h4>Contrato</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group" id="inquilino-container">
+                <label for="InquilinoId" class="control-label btn-light">
+                    <span> @Model.Inquilino.Nombre  @Model.Inquilino.Apellido</span>
+                </label>
+                <input type="hidden" name="InquilinoId" class="form-control" id="InquilinoId" value="@Model.InquilinoId" style="display: inline;"/>
+                <i class="fa-solid fa-user-minus"></i>
+                <span asp-validation-for="InquilinoId" class="text-danger"></span>
+            </div>
+            <div class="form-group" id="inmueble-container">
+                <label asp-for="InmuebleId" class="control-label btn-light">
+                    <span> @Model.Inmueble.Direccion </span>
+                </label>
+                <input type="hidden" asp-for="InmuebleId" class="form-control" value="@Model.InmuebleId" />
+                 <i class="fa-solid fa-user-minus"></i>
+                <span asp-validation-for="InmuebleId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="fechaInicio" class="control-label"></label>
+                <input asp-for="fechaInicio" class="form-control" />
+                <span asp-validation-for="fechaInicio" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="fechaFinalizacion" class="control-label"></label>
+                <input asp-for="fechaFinalizacion" class="form-control" />
+                <span asp-validation-for="fechaFinalizacion" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Volver al listado</a>
+</div>
+
+<div class="modal fade" id="modalinquilino" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Asignar Propietario</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body d-flex justify-content-center align-items-center">
+        <table>
+            <tr>
+                <th class="text-center"> ID </th>
+                <th class="text-center">Nombre</th>
+                <th class="text-center">Apelido</th>
+                <th class="text-center">Telefono</th>
+            </tr>
+            @foreach (var item in Inquilinos)
+            {
+                <tr>
+                <td> @item.Id </td>
+                   <td> @item.Nombre </td>
+                   <td> @item.Apellido </td>
+                   <td> @item.Telefono </td>
+                   <td class="bg-info"><i data-dismiss="modal" id='@item.Id' class="fa-solid fa-plus"></i></td>
+                </tr>
+            }
+        </table>    
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="modalinmueble" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Asignar Propietario</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body d-flex justify-content-center align-items-center">
+        <table>
+            <tr>
+                <th class="text-center"> ID </th>
+                <th class="text-center"> Direccion </th>
+            </tr>
+            @foreach (var item in Inmuebles)
+            {
+                <tr>
+                <td> @item.Id </td>
+                   <td> @item.Direccion </td>
+                   <td class="bg-info"><i data-dismiss="modal" id='@item.Id' class="fa-solid fa-plus"></i></td>
+                </tr>
+            }
+        </table>    
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

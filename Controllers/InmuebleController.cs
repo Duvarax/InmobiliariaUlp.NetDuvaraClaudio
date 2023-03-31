@@ -20,6 +20,11 @@ namespace PracticaMVC.Controllers
         public ActionResult Index()
         {   
             List<Inmueble> listaInmuebles = repo.GetInmuebles();
+            ViewBag.CreacionExitosa = TempData["CreacionExitosa"];
+
+            if(TempData.ContainsKey("Mensaje")){
+                ViewBag.Mensaje = TempData["Mensaje"];
+            }
             return View(listaInmuebles);
         }
 
@@ -33,6 +38,7 @@ namespace PracticaMVC.Controllers
         // GET: Inmueble/Create
         public ActionResult Create()
         {
+            
             ViewBag.Propietarios = repositorioPropietario.GetPropietarios();
             return View();
         }
@@ -47,6 +53,7 @@ namespace PracticaMVC.Controllers
             {
                 // TODO: Add insert logic here
                 int res = repo.agregarInmueble(inmueble);
+                TempData["CreacionExitosa"] = inmueble.Id; 
                 if(res > 0){
                     return RedirectToAction(nameof(Index));
                 }else{
@@ -97,6 +104,7 @@ namespace PracticaMVC.Controllers
         public ActionResult Delete(int id)
         {
             Inmueble inmueble = repo.obtenerInmuebleById(id);
+            Console.WriteLine(inmueble);
             return View(inmueble);
         }
 
