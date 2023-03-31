@@ -1,20 +1,17 @@
 @model IEnumerable<PracticaMVC.Models.Inquilino>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Inquilinos";
 }
 
-<h1>Index</h1>
+<h1>Listado de inquilinos</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Cargar nuevo inquilino</a>
 </p>
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Id)
-            </th>
             <th>
                 @Html.DisplayNameFor(model => model.Nombre)
             </th>
@@ -37,9 +34,6 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Id)
-            </td>
-            <td>
                 @Html.DisplayFor(modelItem => item.Nombre)
             </td>
             <td>
@@ -55,9 +49,9 @@
                 @Html.DisplayFor(modelItem => item.Email)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { id=item.Id  }) |
-                @Html.ActionLink("Details", "Details", new { id=item.Id  }) |
-                @Html.ActionLink("Delete", "Delete", new { id=item.Id  })
+                @Html.ActionLink("Editar", "Edit", new { id=item.Id  }) |
+                @Html.ActionLink("Detalles", "Details", new { id=item.Id  }) |
+                @Html.ActionLink("Eliminar", "Delete", new { id=item.Id  })
             </td>
         </tr>
 }
