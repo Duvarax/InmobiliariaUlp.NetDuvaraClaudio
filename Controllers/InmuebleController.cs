@@ -42,6 +42,7 @@ namespace PracticaMVC.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(Inmueble inmueble)
         {
+            ViewBag.Propietarios = repositorioPropietario.GetPropietarios();
             try
             {
                 // TODO: Add insert logic here
@@ -49,6 +50,7 @@ namespace PracticaMVC.Controllers
                 if(res > 0){
                     return RedirectToAction(nameof(Index));
                 }else{
+                    
                     return View();
                 }
                 
