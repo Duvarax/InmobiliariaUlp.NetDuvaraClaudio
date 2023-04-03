@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 01-04-2023 a las 01:11:49
+-- Tiempo de generación: 03-04-2023 a las 06:51:26
 -- Versión del servidor: 10.4.27-MariaDB
 -- Versión de PHP: 8.0.25
 
@@ -32,15 +32,18 @@ CREATE TABLE `contratos` (
   `InquilinoId` int(11) NOT NULL,
   `InmuebleId` int(11) NOT NULL,
   `fechaInicio` datetime NOT NULL,
-  `fechaFinalizacion` datetime NOT NULL
+  `fechaFinalizacion` datetime NOT NULL,
+  `Precio` double NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `contratos`
 --
 
-INSERT INTO `contratos` (`Id`, `InquilinoId`, `InmuebleId`, `fechaInicio`, `fechaFinalizacion`) VALUES
-(15, 1, 3, '2023-03-31 19:32:00', '2023-03-25 19:32:00');
+INSERT INTO `contratos` (`Id`, `InquilinoId`, `InmuebleId`, `fechaInicio`, `fechaFinalizacion`, `Precio`) VALUES
+(16, 0, 11, '2023-04-05 00:31:00', '2023-05-05 00:31:00', 500025),
+(17, 3, 11, '2023-04-04 00:33:00', '2023-05-05 00:33:00', 52),
+(19, 4, 12, '2023-04-04 01:44:00', '2023-05-03 01:44:00', 4321);
 
 -- --------------------------------------------------------
 
@@ -55,6 +58,7 @@ CREATE TABLE `inmuebles` (
   `Superficie` int(11) NOT NULL,
   `Latitud` decimal(10,0) NOT NULL,
   `Longitud` decimal(10,0) NOT NULL,
+  `Precio` double NOT NULL,
   `PropietarioId` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -62,16 +66,9 @@ CREATE TABLE `inmuebles` (
 -- Volcado de datos para la tabla `inmuebles`
 --
 
-INSERT INTO `inmuebles` (`Id`, `Direccion`, `Ambientes`, `Superficie`, `Latitud`, `Longitud`, `PropietarioId`) VALUES
-(1, 'San Luisz', 2, 10, '5', '5', 1),
-(2, 'Cordoba', 2, 2, '4', '2', 2),
-(3, 'Cordoba', 2, 4, '1', '2', 1),
-(4, 'Buenos Aires', 5, 10, '52', '4', 1),
-(6, 'Mendoza', 455, 421, '13', '23', 1),
-(7, 'San Luisx', 2, 3, '4', '5', 1),
-(8, 'Buenos Aires', 2, 2, '3', '4', 2),
-(9, 'Cordoba', 2, 3, '5', '5', 1),
-(10, 'Narnia', 10, 10, '10', '10', 2);
+INSERT INTO `inmuebles` (`Id`, `Direccion`, `Ambientes`, `Superficie`, `Latitud`, `Longitud`, `Precio`, `PropietarioId`) VALUES
+(11, 'Cordoba', 3, 3, '4', '5', 0, 3),
+(12, 'Mendoza', 2, 3, '13', '32', 0, 4);
 
 -- --------------------------------------------------------
 
@@ -93,8 +90,8 @@ CREATE TABLE `inquilinos` (
 --
 
 INSERT INTO `inquilinos` (`Id`, `Nombre`, `Apellido`, `Telefono`, `Dni`, `Email`) VALUES
-(1, 'Claudio', 'Duvara', '2665024712', '44358778', 'duvaraclaudiojavier@gmail.com'),
-(2, 'Javier', 'Duvara', '2665024712', '44358778', 'duvaraclaudiojavier@gmail.com');
+(3, 'Claudio', 'Duvara', '2665024712', '44358778', 'duvaraclaudiojavier@gmail.com'),
+(4, 'Luciano', 'Castro', '32131', '312124', 'dsada@gmail.com');
 
 -- --------------------------------------------------------
 
@@ -117,8 +114,8 @@ CREATE TABLE `propietarios` (
 --
 
 INSERT INTO `propietarios` (`Id`, `Nombre`, `Apellido`, `Telefono`, `Dni`, `Email`, `Clave`) VALUES
-(1, 'Claudio', 'Duvara', '2665024712', '44358778', 'duvaraclaudiojavier@gmail.com', 'asado'),
-(2, 'Javier', 'Duvara', '231313131', '4123412412', 'duvaraclaudiojavier1@gmail.com', 'sadasd');
+(3, 'Javier', 'Duvara', '2665024712', '44358778', 'duvaraclaudiojavier@gmail.com', 'asado'),
+(4, 'Laura', 'Albornoz', '32131231', '41231231', '3131@gmail.com', '32131');
 
 --
 -- Índices para tablas volcadas
@@ -159,25 +156,25 @@ ALTER TABLE `propietarios`
 -- AUTO_INCREMENT de la tabla `contratos`
 --
 ALTER TABLE `contratos`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT de la tabla `inmuebles`
 --
 ALTER TABLE `inmuebles`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT de la tabla `inquilinos`
 --
 ALTER TABLE `inquilinos`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `propietarios`
 --
 ALTER TABLE `propietarios`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- Restricciones para tablas volcadas
