@@ -16,9 +16,9 @@ public class RepositorioInmueble
     List<Inmueble> inmuebles = new List<Inmueble>();
     using (MySqlConnection conn = new MySqlConnection(ConnectionString))
     {
-        var query = @"SELECT i.Id, i.Direccion, i.Ambientes, i.Superficie, i.Latitud, i.Longitud, 
+        var query = @"SELECT i.Id, i.Direccion, i.Ambientes, i.Superficie, i.Latitud, i.Longitud, i.Precio,
         i.PropietarioId, p.Nombre, p.Apellido 
-        FROM inmuebles i, propietarios p WHERE i.PropietarioId = p.Id";
+        FROM inmuebles i INNER JOIN propietarios p ON i.PropietarioId = p.Id;";
         
         using (var command = new MySqlCommand(query, conn))
         {
@@ -35,12 +35,12 @@ public class RepositorioInmueble
                     Superficie = reader.GetInt32(3),
                     Latitud = reader.GetDecimal(4),
                     Longitud = reader.GetDecimal(5),
-                    PropietarioId = reader.GetInt32(6),
+                    Precio = reader.GetDouble(6),
+                    PropietarioId = reader.GetInt32(7),
                     Duenio = new Propietario
                     {
-                        Id = reader.GetInt32(6),
-                        Nombre = reader.GetString(7),
-                        Apellido = reader.GetString(8),
+                        Nombre = reader.GetString(8),
+                        Apellido = reader.GetString(9),
                     }
                     
                 };
@@ -59,7 +59,7 @@ public class RepositorioInmueble
     int res = -1;
     using(MySqlConnection conn = new MySqlConnection(ConnectionString))
     {   
-        var query = @"INSERT INTO inmuebles(`Direccion`, `Ambientes`, `Superficie`, `Latitud`, `Longitud`, `PropietarioId`) VALUES (@direccion, @ambientes, @superficie, @latitud, @longitud, @propietarioid); SELECT LAST_INSERT_ID();
+        var query = @"INSERT INTO inmuebles(`Direccion`, `Ambientes`, `Superficie`, `Latitud`, `Longitud`, Precio, `PropietarioId`) VALUES (@direccion, @ambientes, @superficie, @latitud, @longitud, @precio, @propietarioid); SELECT LAST_INSERT_ID();
         ;";
         using(var command = new MySqlCommand(query, conn))
         {
@@ -69,6 +69,7 @@ public class RepositorioInmueble
             command.Parameters.AddWithValue("@superficie", inmueble.Superficie);
             command.Parameters.AddWithValue("@latitud", inmueble.Latitud);
             command.Parameters.AddWithValue("@longitud", inmueble.Longitud);
+            command.Parameters.AddWithValue("@precio", inmueble.Precio);
             command.Parameters.AddWithValue("@propietarioid", inmueble.PropietarioId);
             conn.Open();
             res = Convert.ToInt32(command.ExecuteScalar());
@@ -86,7 +87,7 @@ public class RepositorioInmueble
         Inmueble inmueble = null;
         using(MySqlConnection conn = new MySqlConnection(ConnectionString))
         {
-            var query = @$"SELECT i.*, p.Nombre, p.Apellido FROM inmuebles i, propietarios p WHERE i.PropietarioId = p.Id AND i.PropietarioId = @id";
+            var query = @$"SELECT i.*, p.Nombre, p.Apellido FROM inmuebles i INNER JOIN propietarios p WHERE i.PropietarioId = p.Id AND i.Id = @id";
 
             using(MySqlCommand command = new MySqlCommand(query, conn))
             {
@@ -104,6 +105,7 @@ public class RepositorioInmueble
                         Superficie = reader.GetInt32("Superficie"),
                         Latitud = reader.GetDecimal("Latitud"),
                         Longitud = reader.GetDecimal("Longitud"),
+                        Precio = reader.GetDouble("Precio"),
                         PropietarioId = reader.GetInt32("PropietarioId"),
                         Duenio = new Propietario
                         {
@@ -144,7 +146,7 @@ public class RepositorioInmueble
 			using (var connection = new MySqlConnection(ConnectionString))
 			{
 				string sql = "UPDATE inmuebles SET " +
-	"Direccion=@direccion, Ambientes=@ambientes, Superficie=@superficie, Latitud=@latitud, Longitud=@longitud, PropietarioId=@propietarioid " + "WHERE Id = @id";
+	"Direccion=@direccion, Ambientes=@ambientes, Superficie=@superficie, Latitud=@latitud, Longitud=@longitud , Precio=@precio, PropietarioId=@propietarioid " + "WHERE Id = @id";
 				using (MySqlCommand command = new MySqlCommand(sql, connection))
 				{
                     command.Parameters.AddWithValue("@id", inmueble.Id);
@@ -154,6 +156,7 @@ public class RepositorioInmueble
                     command.Parameters.AddWithValue("@latitud", inmueble.Latitud);
                     command.Parameters.AddWithValue("@longitud", inmueble.Longitud);
                     command.Parameters.AddWithValue("@propietarioid", inmueble.PropietarioId);
+                    command.Parameters.AddWithValue("@precio", inmueble.Precio);
 					command.CommandType = System.Data.CommandType.Text;
 					connection.Open();
 					res = command.ExecuteNonQuery();

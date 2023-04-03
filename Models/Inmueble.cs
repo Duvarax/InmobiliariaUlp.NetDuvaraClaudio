@@ -16,6 +16,8 @@ public class Inmueble
     [ForeignKey(nameof(PropietarioId))]
     public Propietario? Duenio {get; set;}
 
+    public Double Precio {get; set;}
+
     public Inmueble()
     {
        

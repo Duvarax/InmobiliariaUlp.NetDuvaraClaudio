@@ -19,6 +19,7 @@ public class Contrato
     public DateTime? fechaInicio { get; set; }
     [Display(Name ="Finalizacion del contrato")]
     public DateTime? fechaFinalizacion { get; set; }
+    public Double? Precio {get; set;}
 
     public Contrato()
     {

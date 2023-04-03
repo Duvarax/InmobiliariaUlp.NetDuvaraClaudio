@@ -16,7 +16,11 @@ public class RepositorioContrato
     List<Contrato> contratos = new List<Contrato>();
     using (MySqlConnection conn = new MySqlConnection(ConnectionString))
     {
-        var query = @"SELECT c.Id, InquilinoId, InmuebleId, fechaInicio, fechaFinalizacion, i.Nombre, i.Apellido, m.Direccion FROM contratos c, inquilinos i, inmuebles m WHERE InmuebleId = m.Id AND InquilinoId = i.Id";
+        var query = @"SELECT c.Id, InquilinoId, InmuebleId, fechaInicio, fechaFinalizacion, c.Precio, i.Nombre, i.Apellido, m.Direccion 
+                    FROM contratos c INNER JOIN
+                    inquilinos i INNER JOIN
+                    inmuebles m 
+                    WHERE InmuebleId = m.Id AND InquilinoId = i.Id;";
         
         using (var command = new MySqlCommand(query, conn))
         {
@@ -32,14 +36,15 @@ public class RepositorioContrato
                     InmuebleId = reader.GetInt32(2),
                     fechaInicio = reader.GetDateTime(3),
                     fechaFinalizacion = reader.GetDateTime(4),
+                    Precio = reader.GetDouble(5),
                     Inquilino = new Inquilino
                     {
-                        Nombre = reader.GetString(5),
-                        Apellido = reader.GetString(6)
+                        Nombre = reader.GetString(6),
+                        Apellido = reader.GetString(7)
                     },
                     Inmueble = new Inmueble
                     {
-                        Direccion = reader.GetString(7)
+                        Direccion = reader.GetString(8)
                     }
                 };
                 contratos.Add(contrato);
@@ -57,7 +62,7 @@ public class RepositorioContrato
     int res = -1;
     using(MySqlConnection conn = new MySqlConnection(ConnectionString))
     {   
-        var query = @"INSERT INTO contratos(`InquilinoId`, `InmuebleId`, `fechaInicio`, `fechaFinalizacion`) VALUES (@inquilinoid, @inmuebleid, @fechainicio, @fechaFinalizacion); SELECT LAST_INSERT_ID();
+        var query = @"INSERT INTO contratos(`InquilinoId`, `InmuebleId`, `fechaInicio`, `fechaFinalizacion`, `Precio`) VALUES (@inquilinoid, @inmuebleid, @fechainicio, @fechaFinalizacion, @precio); SELECT LAST_INSERT_ID();
         ;";
         using(var command = new MySqlCommand(query, conn))
         {
@@ -66,6 +71,7 @@ public class RepositorioContrato
             command.Parameters.AddWithValue("@inmuebleid", contrato.InmuebleId);
             command.Parameters.AddWithValue("@fechainicio", contrato.fechaInicio);
             command.Parameters.AddWithValue("@fechafinalizacion", contrato.fechaFinalizacion);
+            command.Parameters.AddWithValue("@precio", contrato.Precio);
             conn.Open();
             res = Convert.ToInt32(command.ExecuteScalar());
             contrato.Id = res;
@@ -81,9 +87,12 @@ public class RepositorioContrato
         Contrato? contrato = null;
         using(MySqlConnection conn = new MySqlConnection(ConnectionString))
         {
-            var query = @$"SELECT c.Id, c.fechaInicio, c.fechaFinalizacion, c.InquilinoId, i.Nombre, i.Apellido, c.InmuebleId, 
-            m.Direccion FROM contratos c, inquilinos i, inmuebles m WHERE c.InquilinoId = i.Id AND c.InmuebleId = m.Id 
-            AND c.Id = @id;";
+            var query = @$"SELECT c.Id, c.fechaInicio, c.fechaFinalizacion,c.Precio, c.InquilinoId, i.Nombre, i.Apellido, c.InmuebleId, 
+            m.Direccion FROM contratos c 
+            INNER JOIN inquilinos i 
+            INNER JOIN inmuebles m 
+            ON c.InquilinoId = i.Id AND c.InmuebleId = m.Id 
+            AND c.Id = @id";
 
             using(MySqlCommand command = new MySqlCommand(query, conn))
             {
@@ -96,18 +105,19 @@ public class RepositorioContrato
                     contrato = new Contrato
                     {
                         Id = reader.GetInt32(0),
-                        InquilinoId = reader.GetInt32(3),
-                        InmuebleId = reader.GetInt32(6),
                         fechaInicio = reader.GetDateTime(1),
                         fechaFinalizacion = reader.GetDateTime(2),
+                        Precio = reader.GetDouble(3),
+                        InquilinoId = reader.GetInt32(4),
                         Inquilino = new Inquilino
                         {
-                            Nombre = reader.GetString(4),
-                            Apellido = reader.GetString(5),
+                            Nombre = reader.GetString(5),
+                            Apellido = reader.GetString(6),
                         },
+                        InmuebleId = reader.GetInt32(7),
                         Inmueble = new Inmueble
                         {
-                            Direccion = reader.GetString(7)
+                            Direccion = reader.GetString(8)
                         }
                         
 
