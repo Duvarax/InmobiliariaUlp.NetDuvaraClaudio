@@ -22,9 +22,15 @@ document.addEventListener('DOMContentLoaded', () => {
             btn_asignar_inmueble.addEventListener('click', seleccion("inmueble", btn_asignar_inmueble, btn_asignar_inmueble.parentNode))
         }
     
+        
+        let propietario_input = document.querySelector('#propietario-container #PropietarioId');
+        if(propietario_input){
+            propietario_input.addEventListener('click' , reemplazarSeleccion('propietario', propietario_input))
+        }
+
         let inquilino_input = document.querySelector('#inquilino-container #InquilinoId');
         if(inquilino_input){
-            inquilino_input.addEventListener('click' , reemplazarSeleccion('inquilino', inquilino_input))
+            inquilino_input.addEventListener('click', reemplazarSeleccion('inquilino', inquilino_input))
         }
     
         let inmueble_input = document.querySelector('#inmueble-container #InmuebleId');
@@ -54,6 +60,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     let btn_asignar_inmueble = document.getElementById('btn-asignar-inmueble');
                     if(btn_asignar_inmueble){
                         btn_asignar_inmueble.addEventListener('click', seleccion("inmueble", btn_asignar_inmueble, btn_asignar_inmueble.parentNode))
+                    }
+                    let btn_asignar_propietario = document.getElementById('btn-asignar-propietario');
+                    if(btn_asignar_propietario){
+                        btn_asignar_propietario.addEventListener('click', seleccion("propietario", btn_asignar_propietario, btn_asignar_propietario.parentNode))
                     }
                 })
                 container.appendChild(button)

@@ -72,6 +72,7 @@ namespace PracticaMVC.Controllers
         // GET: Inmueble/Edit/5
         public ActionResult Edit(int id)
         {
+            ViewBag.Propietarios = repositorioPropietario.GetPropietarios();
             Inmueble inmueble = repo.obtenerInmuebleById(id);
             return View(inmueble);
         }

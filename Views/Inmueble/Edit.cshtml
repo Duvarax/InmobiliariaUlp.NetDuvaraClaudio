@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Editar Inmueble";
+    var Propietarios = (IList<Propietario>)ViewBag.Propietarios;
 }
 
 <h1>Editar Inmueble</h1>
@@ -42,9 +43,12 @@
                 <input asp-for="Precio" class="form-control" />
                 <span asp-validation-for="Precio" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="PropietarioId" class="control-label"></label>
-                <input asp-for="PropietarioId" class="form-control" />
+            <div class="form-group" id="propietario-container">
+                <label for="PropietarioId" class="form-group">
+                    <span> @Model.Duenio.Nombre @Model.Duenio.Apellido</span>
+                </label>
+                <input type="hidden" name="Propietarioid" id="PropietarioId" class="form-control propietario-input" value="@Model.PropietarioId" style="display: inline;">
+                <i id="remover-propietario" class="fa-solid fa-user-minus minus-propietario"></i>
                 <span asp-validation-for="PropietarioId" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -58,3 +62,39 @@
     <a asp-action="Index">Volver al listado</a>
 </div>
 
+
+<div class="modal fade" id="ModalPropietario" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Asignar Propietario</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body d-flex justify-content-center align-items-center">
+        <table>
+            <tr>
+                <th class="text-center"> ID </th>
+                <th class="text-center">Propietario</th>
+                <th class="text-center">Dni</th>
+                <th class="text-center">Telefono</th>
+            </tr>
+            @foreach (var item in Propietarios)
+            {
+                <tr>
+                <td> @item.Id </td>
+                   <td> @item.Nombre @item.Apellido </td>
+                   <td> @item.Dni </td>
+                   <td> @item.Telefono </td>
+                   <td class="bg-info"><i data-dismiss="modal" id='@item.Id' class="fa-solid fa-plus fa-propietario"></i></td>
+                </tr>
+            }
+        </table>    
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
