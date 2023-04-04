@@ -1,6 +1,20 @@
 html {
   font-size: 14px;
 }
+nav{
+  position: relative;
+}
+nav .navbar-collapse ul{
+  display: flex;
+  gap: 20px;
+}
+nav .navbar-collapse ul .drop-options{
+  position: absolute;
+  right: 70px;
+}
+nav .navbar-collapse ul .drop-options .dropdown-menu{
+  background-color: red;
+}
 .anim{
   transition: transform .5s ease;
 }
@@ -36,6 +50,18 @@ td{
 @keyframes gira-en-sentido-horario {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
+}
+
+#form-container{
+  margin-top: 25%;
+}
+#form-container div{
+  display: flex;
+  flex-direction: column;
+  margin: 10px;
+}
+#form-login{
+  background-color: red;
 }
 
 @media (min-width: 768px) {
