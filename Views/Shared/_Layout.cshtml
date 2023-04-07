@@ -35,6 +35,9 @@
                         <li class="nav-item">
                             <a class="nav-link text-light anim bg-secondary rounded mx-2 " asp-area="" asp-controller="Contrato" asp-action="Index">Contratos</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-light anim bg-secondary rounded mx-2 " asp-area="" asp-controller="Pago" asp-action="Index">Usuarios</a>
+                        </li>
                         <li class="nav-item drop-options">
                             <div class="dropdown">
                                 <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -57,7 +60,25 @@
         <div class="alert alert-success text-center" role="alert">
             <strong> CREADO EXITOSAMENTE </strong>
         </div>
-    } 
+    }
+    @if (ViewBag.ModificacionExitosa != null)
+    {
+        <div class="alert alert-success text-center" role="alert">
+            <strong> MODIFICADO EXITOSAMENTE </strong>
+        </div>
+    }
+    @if (ViewBag.EliminacionExitosa != null)
+    {
+        <div class="alert alert-success text-center" role="alert">
+            <strong> ELIMINADO EXITOSAMENTE </strong>
+        </div>
+    }   
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert alert-danger text-center" role="alert">
+            <strong> UN ERROR HA OCURRIDO </strong>
+        </div>
+    }
     </div>
     <div class="container">
         <main role="main" class="pb-3">

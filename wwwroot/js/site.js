@@ -21,6 +21,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if(btn_asignar_inmueble){
             btn_asignar_inmueble.addEventListener('click', seleccion("inmueble", btn_asignar_inmueble, btn_asignar_inmueble.parentNode))
         }
+
+        let btn_asignar_contrato = document.getElementById('btn-asignar-contrato');
+        if(btn_asignar_contrato){
+            btn_asignar_contrato.addEventListener('click', seleccion("contrato", btn_asignar_contrato, btn_asignar_contrato.parentNode))
+        }
     
         
         let propietario_input = document.querySelector('#propietario-container #PropietarioId');

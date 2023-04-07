@@ -17,6 +17,8 @@ public class Inmueble
     public Propietario? Duenio {get; set;}
 
     public Double Precio {get; set;}
+    public Boolean Estado {get; set;}
+    
 
     public Inmueble()
     {

@@ -7,106 +7,109 @@ using Microsoft.AspNetCore.Mvc;
 using PracticaMVC.Models;
 namespace PracticaMVC.Controllers
 {
-    public class InmuebleController : Controller
+    public class PagoController : Controller
     {
-        private RepositorioInmueble repo;
-        private RepositorioPropietario repositorioPropietario;
-        public InmuebleController()
+        private RepositorioPagos rpo;
+        private RepositorioContrato rpoContrato;
+        public PagoController()
         {
-            repo = new RepositorioInmueble();
-            repositorioPropietario = new RepositorioPropietario();
+            rpo = new RepositorioPagos();
+            rpoContrato = new RepositorioContrato();
         }
-        // GET: Inmueble
+        // GET: Pago
         public ActionResult Index()
-        {   
-            List<Inmueble> listaInmuebles = repo.GetInmuebles();
+        {
+            List<Pago> listaPagos = rpo.GetPagos();
             ViewBag.CreacionExitosa = TempData["CreacionExitosa"];
-            return View(listaInmuebles);
+            ViewBag.ModificacionExitosa = TempData["ModificacionExitosa"];
+            ViewBag.EliminacionExitosa = TempData["EliminacionExitosa"];
+            
+            return View(listaPagos);
         }
 
-        // GET: Inmueble/Details/5
+        // GET: Pago/Details/5
         public ActionResult Details(int id)
         {
-            Inmueble inmueble = repo.obtenerInmuebleById(id);
-            return View(inmueble);
+            Pago pago = rpo.obtenerPagoById(id);
+            return View(pago);
         }
 
-        // GET: Inmueble/Create
+        // GET: Pago/Create
         public ActionResult Create()
         {
-            
-            ViewBag.Propietarios = repositorioPropietario.GetPropietarios();
             ViewBag.Error = TempData["Error"];
+            ViewBag.Contratos = rpoContrato.GetContratos();
             return View();
         }
 
-        // POST: Inmueble/Create
+        // POST: Pago/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Inmueble inmueble)
+        public ActionResult Create(Pago pago)
         {
-            ViewBag.Propietarios = repositorioPropietario.GetPropietarios();
+            ViewBag.Contratos = rpoContrato.GetContratos();
             try
             {
                 // TODO: Add insert logic here
-                int res = repo.agregarInmueble(inmueble);
+                int res = rpo.agregarPago(pago);
                 if(res > 0){
                     TempData["CreacionExitosa"] = 1;
                     return RedirectToAction(nameof(Index));
                 }else{
                     throw new ArgumentException("Un parametro es nulo");
                 }
-
-            }
-            catch(Exception e)
-            {
-                Console.WriteLine(e);
-                TempData["Error"] = 1;
-                return RedirectToAction(nameof(Create));
-            }
-        }
-
-        // GET: Inmueble/Edit/5
-        public ActionResult Edit(int id)
-        {
-            ViewBag.Propietarios = repositorioPropietario.GetPropietarios();
-            Inmueble inmueble = repo.obtenerInmuebleById(id);
-            return View(inmueble);
-        }
-
-        // POST: Inmueble/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, Inmueble inmueble)
-        {
-            try
-            {
-                // TODO: Add update logic here
-                inmueble.Id = id;
-                int res = repo.modificarInmueble(inmueble);
-                if(res > 0){
-                    return RedirectToAction(nameof(Index));
-                }else{
-                    return View();
-                }
                 
             }
             catch(Exception e)
             {
                 Console.WriteLine(e);
-                return View();
+                TempData["Error"] = 1;
+                 return RedirectToAction(nameof(Create));
             }
         }
 
-        // GET: Inmueble/Delete/5
-        public ActionResult Delete(int id)
+        // GET: Pago/Edit/5
+        public ActionResult Edit(int id)
         {
-            Inmueble inmueble = repo.obtenerInmuebleById(id);
-            Console.WriteLine(inmueble);
-            return View(inmueble);
+            Pago pago = rpo.obtenerPagoById(id);
+            ViewBag.Error = TempData["Error"];
+            return View(pago);
         }
 
-        // POST: Inmueble/Delete/5
+        // POST: Pago/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit(int id, Pago pago)
+        {
+            try
+            {
+                // TODO: Add update logic here
+                pago.Id = id;
+                int res = rpo.modificarPago(pago);
+                if(res > 0){
+                    TempData["ModificacionExitosa"] = 1;
+                    return RedirectToAction(nameof(Index));
+                }else{
+                    throw new ArgumentException("Un parametro es nulo");
+                }
+                
+            }
+            catch(Exception e)
+            {
+                TempData["Error"] = 1;
+                return RedirectToAction(nameof(Edit));
+            }
+        }
+
+        // GET: Pago/Delete/5
+        public ActionResult Delete(int id)
+        {
+            Pago pago = rpo.obtenerPagoById(id);
+            ViewBag.Error = TempData["Error"];
+            return View(pago);
+        }
+
+        // POST: Pago/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, IFormCollection collection)
@@ -114,17 +117,18 @@ namespace PracticaMVC.Controllers
             try
             {
                 // TODO: Add delete logic here
-                int res = repo.eliminarInmuebleById(id);
+                int res = rpo.eliminarPagoById(id);
                 if(res > 0){
+                    TempData["EliminacionExitosa"] = 1;
                     return RedirectToAction(nameof(Index));
                 }else{
-                    return View();
+                    throw new ArgumentException("Un parametro es nulo");
                 }
                 
             }
-            catch(Exception e)
+            catch(Exception e) 
             {
-                Console.WriteLine(e);
+                TempData["Error"] = 1;
                 return View();
             }
         }
