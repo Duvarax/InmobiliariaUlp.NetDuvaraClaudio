@@ -1,11 +1,11 @@
 @model PracticaMVC.Models.Pago
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Pagar un contrato";
     var Contratos = (IList<Contrato>) ViewBag.Contratos;
 }
 
-<h1>Create</h1>
+<h1>Pagar un contrato</h1>
 
 <h4>Pago</h4>
 <hr />
@@ -37,7 +37,7 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Volver al listado</a>
 </div>
 
 <div class="modal fade" id="ModalContrato" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
