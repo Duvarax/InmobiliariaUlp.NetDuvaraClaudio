@@ -133,6 +133,7 @@ public class RepositorioPagos
 					command.Parameters.AddWithValue("@fechapago", Pago.fechaPago);
 					command.Parameters.AddWithValue("@importe", Pago.Importe);
 					command.Parameters.AddWithValue("@idcontrato", Pago.ContratoId);
+                    command.Parameters.AddWithValue("@id", Pago.Id);
 					command.CommandType = System.Data.CommandType.Text;
 					connection.Open();
 					res = command.ExecuteNonQuery();

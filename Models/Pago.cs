@@ -12,6 +12,7 @@ public class Pago
 
     public Double? Importe {get; set;}
 
+    [Display(Name ="Nro de Contrato")]
     public int? ContratoId {get; set;}
     [ForeignKey(nameof(ContratoId))]
     public Contrato? contrato {get; set;}

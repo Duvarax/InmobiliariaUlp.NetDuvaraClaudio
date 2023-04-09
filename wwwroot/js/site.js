@@ -121,4 +121,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 
             })
         }
+
+
+        let avatar_input = document.getElementById('avatar_input');
+        if(avatar_input){
+            const avatar_preview = document.getElementById('avatar_img');
+            avatar_input.addEventListener('change', e => {
+                    const file = avatar_input.files[0];
+                    const reader = new FileReader();
+                    reader.addEventListener('load', () => {
+                        const imgData = reader.result;
+                        avatar_preview.src = imgData;
+                    })
+                    reader.readAsDataURL(file);
+            })
+        }
 })

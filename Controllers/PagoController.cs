@@ -86,6 +86,7 @@ namespace PracticaMVC.Controllers
                 // TODO: Add update logic here
                 pago.Id = id;
                 int res = rpo.modificarPago(pago);
+                Console.WriteLine(res);
                 if(res > 0){
                     TempData["ModificacionExitosa"] = 1;
                     return RedirectToAction(nameof(Index));
@@ -96,6 +97,7 @@ namespace PracticaMVC.Controllers
             }
             catch(Exception e)
             {
+                Console.WriteLine(e);
                 TempData["Error"] = 1;
                 return RedirectToAction(nameof(Edit));
             }
