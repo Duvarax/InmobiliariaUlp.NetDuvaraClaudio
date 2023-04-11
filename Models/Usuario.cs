@@ -22,7 +22,8 @@ public class Usuario
     public IFormFile? AvatarFile{get; set;}
     
     public int Rol;
-    
+    [NotMapped]//Para EF
+    public string RolNombre => Rol > 0 ? ((enRoles)Rol).ToString() : "";
 
 
     public Usuario()
