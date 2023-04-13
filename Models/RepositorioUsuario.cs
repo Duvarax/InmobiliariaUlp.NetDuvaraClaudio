@@ -16,7 +16,7 @@ public class RepositorioUsuario
     List<Usuario> usuarios = new List<Usuario>();
     using (MySqlConnection conn = new MySqlConnection(ConnectionString))
     {
-        var query = @"SELECT Id, Nombre, Apellido, Email, NombreUsuario, Contraseña, Avatar FROM usuarios";
+        var query = @"SELECT Id, Nombre, Apellido, Email, NombreUsuario, Avatar, Rol FROM usuarios";
         
         using (var command = new MySqlCommand(query, conn))
         {
@@ -32,8 +32,8 @@ public class RepositorioUsuario
                     Apellido = reader.GetString("Apellido"),
                     Email = reader.GetString("Email"),
                     NombreUsuario = reader.GetString("NombreUsuario"),
-                    Contraseña = reader.GetString("Contraseña"),
                     Avatar = reader.GetString("Avatar"),
+                    Rol = reader.GetInt32("Rol")
                 };
                 usuarios.Add(usuario);
                }
@@ -50,7 +50,7 @@ public class RepositorioUsuario
     int res = -1;
     using(MySqlConnection conn = new MySqlConnection(ConnectionString))
     {   
-        var query = @"INSERT INTO usuarios(`Nombre`, `Apellido`, `Email`, `NombreUsuario`, `Contraseña`, `Avatar`) VALUES (@Nombre, @Apellido, @Email, @NombreUsuario, @Contraseña, @Avatar); SELECT LAST_INSERT_ID();
+        var query = @"INSERT INTO usuarios(`Nombre`, `Apellido`, `Email`, `NombreUsuario`, `Contraseña`, `Avatar`,`Rol`) VALUES (@Nombre, @Apellido, @Email, @NombreUsuario, @Contraseña, @Avatar, @Rol); SELECT LAST_INSERT_ID();
         ;";
         using(var command = new MySqlCommand(query, conn))
         {
@@ -60,7 +60,12 @@ public class RepositorioUsuario
             command.Parameters.AddWithValue("@Email", usuario.Email);
             command.Parameters.AddWithValue("@NombreUsuario", usuario.NombreUsuario);
             command.Parameters.AddWithValue("@Contraseña", usuario.Contraseña);
+            if(String.IsNullOrEmpty(usuario.Avatar))
+            
+                command.Parameters.AddWithValue("@Avatar", DBNull.Value);
+            else
             command.Parameters.AddWithValue("@Avatar", usuario.Avatar);
+            command.Parameters.AddWithValue("@Rol", usuario.Rol);
             conn.Open();
             res = Convert.ToInt32(command.ExecuteScalar());
             usuario.Id = res;
@@ -76,7 +81,7 @@ public class RepositorioUsuario
         Usuario? usuario = null;
         using(MySqlConnection conn = new MySqlConnection(ConnectionString))
         {
-            var query = @$"SELECT Id, Nombre, Apellido, Email, NombreUsuario, Contraseña, Avatar FROM usuario WHERE {nameof(Usuario.Id)} = @id";
+            var query = @$"SELECT Id, Nombre, Apellido, Email, NombreUsuario, Contraseña, Avatar FROM usuarios WHERE {nameof(Usuario.Id)} = @id";
 
             using(MySqlCommand command = new MySqlCommand(query, conn))
             {
@@ -135,6 +140,8 @@ public class RepositorioUsuario
 					command.Parameters.AddWithValue("@Apellido", Usuario.Apellido);
 					command.Parameters.AddWithValue("@Email", Usuario.Email);
                     command.Parameters.AddWithValue("@NombreUsuario", Usuario.NombreUsuario);
+                    command.Parameters.AddWithValue("@Contraseña", Usuario.Contraseña);
+                    command.Parameters.AddWithValue("@Avatar", Usuario.Avatar);
 					command.Parameters.AddWithValue("@id", Usuario.Id);
 					command.CommandType = System.Data.CommandType.Text;
 					connection.Open();

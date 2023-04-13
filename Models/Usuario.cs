@@ -18,11 +18,10 @@ public class Usuario
     public string NombreUsuario {get; set;}
     public string Contraseña { get; set; }
     public string? Avatar {get; set;}
+    public int Rol {get; set;}
 
     public IFormFile? AvatarFile{get; set;}
     
-    public int Rol;
-    [NotMapped]//Para EF
     public string RolNombre => Rol > 0 ? ((enRoles)Rol).ToString() : "";
 
 

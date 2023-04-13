@@ -48,7 +48,10 @@
                                 </button>
                                 <div class="dropdown-menu bg-dark" aria-labelledby="dropdownMenuButton">
                                     <a class="dropdown-item  text-light" asp-controller="Usuario" asp-action="Login">Login Usuario</a>
-                                    <a class="dropdown-item  text-light" asp-controller="Usuario" asp-action="Index">Registro Usuario</a>
+                                    @if(User.Identity.IsAuthenticated)
+                                    {
+                                        <a class="dropdown-item  text-light" asp-controller="Usuario" asp-action="Index">Registro Usuario</a>
+                                    }
                                 </div>
                             </div>
                         </li>

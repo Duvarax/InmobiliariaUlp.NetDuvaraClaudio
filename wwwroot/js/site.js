@@ -136,4 +136,17 @@ document.addEventListener('DOMContentLoaded', () => {
                     reader.readAsDataURL(file);
             })
         }
+
+        let rolInput = document.getElementById("RolSelect")
+        if(rolInput){
+            const HIDDEN_ROL_INPUT = document.getElementById('Rol');
+            
+            rolInput.addEventListener('click', (e) => {
+                HIDDEN_ROL_INPUT.value = rolInput.value;
+                HIDDEN_ROL_INPUT.innerText = rolInput.value;
+            })
+        }
+        
+        
+        
 })
