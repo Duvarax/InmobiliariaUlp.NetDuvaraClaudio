@@ -5,6 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PracticaMVC.Models;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 namespace PracticaMVC.Controllers
 {
     public class UsuarioController : Controller
@@ -33,7 +36,13 @@ namespace PracticaMVC.Controllers
             ViewBag.roles = Usuario.getRoles();
             return View();
         }
+        [Authorize]
         public ActionResult Login()
+        {
+            return View();
+        }
+
+        public ActionResult Logout()
         {
             return View();
         }

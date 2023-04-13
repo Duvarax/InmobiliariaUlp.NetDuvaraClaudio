@@ -8,18 +8,13 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
 .AddCookie(options => {
-    options.LoginPath = "/Home/Login";
-    options.LoginPath = "/Home/Logout";
+    options.LoginPath = "/Usuario/Login";
+    options.LoginPath = "/Usuario/Logout";
     options.AccessDeniedPath = "/Home/Restringido";
 });
 
 builder.Services.AddAuthorization(options => {
-    options.AddPolicy("Administrador", policy => {
-        policy.RequireClaim(ClaimTypes.Role, "Adminstrador");
-    });
-    options.AddPolicy("Empleado",policy => {
-        policy.RequireClaim(ClaimTypes.Role, "Empleado");
-    });
+    options.AddPolicy("Administrador", policy => policy.RequireRole("Administrador", "Empleado"));
 });
     
 
@@ -39,10 +34,14 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
+app.UseAuthentication();
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+app.MapControllerRoute(
+    name: "logout",
+    pattern: "{controller=Usuario}/{action=Logout}");
 app.MapControllerRoute(
     name: "inmueble",
     pattern: "{controller=Propietario}/{action=listar}",
