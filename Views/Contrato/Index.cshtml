@@ -6,9 +6,12 @@
 
 <h1>Listado de Contratos</h1>
 
-<p>
-    <a asp-action="Create">Crear nuevo contrato</a>
-</p>
+@if(User.IsInRole("Administrador"))
+{
+    <p>
+        <a asp-action="Create">Crear nuevo contrato</a>
+    </p>
+}
 <table class="table">
     <thead>
         <tr>

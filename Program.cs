@@ -12,12 +12,15 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     options.LoginPath = "/Usuario/Login";
     options.LogoutPath = "/Usuario/Logout";
     options.AccessDeniedPath = "/Home/Restringido";
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(1);
 });
 
 builder.Services.AddAuthorization(options =>
 {;
 	options.AddPolicy("Administrador", policy => policy.RequireRole("Administrador", "Empleado"));
 });
+
+
     
 
 var app = builder.Build();

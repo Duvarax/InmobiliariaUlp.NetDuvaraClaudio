@@ -1,10 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PracticaMVC.Models;
+using Microsoft.AspNetCore.Authorization;
 namespace PracticaMVC.Controllers
 {
     public class ContratoController : Controller
@@ -19,15 +15,18 @@ namespace PracticaMVC.Controllers
             repositorioInquilino = new RepositorioInquilino();
         }
         // GET: Contrato
+        [Authorize]
         public ActionResult Index()
         {
             ViewBag.CreacionExitosa = TempData["CreacionExitosa"];
+            ViewBag.CreacionExitosa = TempData["ModificacionExitosa"];
             
             List<Contrato> listaContratos = repositorioContrato.GetContratos();
             return View(listaContratos);
         }
 
         // GET: Contrato/Details/5
+        [Authorize]
         public ActionResult Details(int id)
         {
             Contrato contrato = repositorioContrato.obtenerContratoById(id);
@@ -35,6 +34,7 @@ namespace PracticaMVC.Controllers
         }
 
         // GET: Contrato/Create
+        [Authorize]
         public ActionResult Create()
         {
             ViewBag.Inquilinos = repositorioInquilino.GetInquilinos();
@@ -45,6 +45,7 @@ namespace PracticaMVC.Controllers
         // POST: Contrato/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public ActionResult Create(Contrato contrato)
         {
             try
@@ -61,12 +62,14 @@ namespace PracticaMVC.Controllers
             }
             catch(Exception e)
             {
+                TempData["Error"] = 1;
                 Console.WriteLine(e);
                 return View();
             }
         }
 
         // GET: Contrato/Edit/5
+        [Authorize]
         public ActionResult Edit(int id)
         {
             Contrato contrato = repositorioContrato.obtenerContratoById(id);
@@ -78,6 +81,7 @@ namespace PracticaMVC.Controllers
         // POST: Contrato/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public ActionResult Edit(int id, Contrato contrato)
         {
             ViewBag.Inquilinos = repositorioInquilino.GetInquilinos();
@@ -88,7 +92,7 @@ namespace PracticaMVC.Controllers
                 contrato.Id = id;
                 int res = repositorioContrato.modificarContrato(contrato);
                 if(res > 0){
-                    
+                    TempData["ModificacionExitosa"] = 1;
                     return RedirectToAction(nameof(Index));
                 }else{
                     
@@ -97,13 +101,14 @@ namespace PracticaMVC.Controllers
             }
             catch(Exception e)
             {
-                
+                TempData["Error"] = 1;
                 Console.WriteLine(e);
                 return View();
             }
         }
 
         // GET: Contrato/Delete/5
+        [Authorize(Policy="Administrador")]
         public ActionResult Delete(int id)
         {
             Contrato contrato = repositorioContrato.obtenerContratoById(id);
@@ -113,6 +118,7 @@ namespace PracticaMVC.Controllers
         // POST: Contrato/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy="Administrador")]
         public ActionResult Delete(int id, IFormCollection collection)
         {
             try
@@ -120,6 +126,7 @@ namespace PracticaMVC.Controllers
                 // TODO: Add delete logic here
                 int res = repositorioContrato.eliminarContratoById(id);
                 if(res > 0){
+                    TempData["EliminacionExitosa"] = 1;
                     return RedirectToAction(nameof(Index));
                 }else{
                     return RedirectToAction(nameof(Index));
@@ -128,6 +135,7 @@ namespace PracticaMVC.Controllers
             }
             catch(Exception e)
             {
+                TempData["Error"] = 1;
                 Console.WriteLine(e);
                 return View();
             }

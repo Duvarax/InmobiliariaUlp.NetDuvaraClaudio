@@ -162,5 +162,38 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             }
             });
-        }  
+        } 
+        
+        
+        
+        
 })
+
+let form_login = document.getElementById('form_login')
+        if(form_login){
+            const EXPRESION_EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            let email_input = document.getElementById('Email')
+            let password_input = document.getElementById('Contraseña')
+            let repeat_password_input = document.getElementById('repeat_password')
+            let submit_btn = document.getElementById('form_submit_btn')
+            
+            email_input.addEventListener('keyup', () => {
+                if(!EXPRESION_EMAIL.test(email_input.value)){
+                    submit_btn.disabled = true;
+                    
+                }else{
+                    if(repeat_password_input.value != password_input.value){
+                        submit_btn.disabled = false;
+                    }
+                }
+            })
+
+            repeat_password_input.addEventListener('keyup', () => {
+                if(repeat_password_input.value != password_input.value){
+                    submit_btn.disabled = true;
+                }else{
+                    submit_btn.disabled = false;
+                }
+            })
+
+        }

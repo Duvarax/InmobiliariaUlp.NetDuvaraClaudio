@@ -38,19 +38,22 @@
                         <li class="nav-item">
                             <a class="nav-link text-light anim bg-secondary rounded mx-2 " asp-area="" asp-controller="Pago" asp-action="Index">Pagos</a>
                         </li>
+                        @if(User.Identity.IsAuthenticated)
+                        {
                         <li class="nav-item">
-                            <a class="nav-link text-light anim bg-secondary rounded mx-2 " asp-area="" asp-controller="Usuario" asp-action="Index">Usuarios</a>
+                            <a class="nav-link text-light anim bg-info rounded mx-2 " asp-area="" asp-controller="Usuario" asp-action="Index">Usuarios</a>
                         </li>
+                        }
                         <li class="nav-item drop-options">
                             <div class="dropdown">
                                 <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     Ingresar
                                 </button>
                                 <div class="dropdown-menu bg-dark" aria-labelledby="dropdownMenuButton">
-                                    <a class="dropdown-item  text-light" asp-controller="Usuario" asp-action="Login">Login Usuario</a>
+                                    <a class="dropdown-item  text-light" asp-controller="Usuario" asp-action="Login">Log In</a>
                                     @if(User.Identity.IsAuthenticated)
                                     {
-                                        <a class="dropdown-item  text-light" asp-controller="Usuario" asp-action="Index">Registro Usuario</a>
+                                        <a class="dropdown-item  text-light" asp-controller="Usuario" asp-action="Logout">Salir</a>
                                     }
                                 </div>
                             </div>
