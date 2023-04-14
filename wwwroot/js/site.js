@@ -146,7 +146,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 HIDDEN_ROL_INPUT.innerText = rolInput.value;
             })
         }
-        
-        
-        
+
+        let btn_show = document.getElementById('show_password')
+        if(btn_show){
+            const passwordInputs = document.querySelectorAll('.password');
+
+            btn_show.addEventListener('change', function() {
+            if (btn_show.checked) {
+                passwordInputs.forEach(input => {
+                input.type = 'text';
+            });
+            } else {
+                passwordInputs.forEach(input => {
+                input.type = 'password';
+            });
+            }
+            });
+        }  
 })

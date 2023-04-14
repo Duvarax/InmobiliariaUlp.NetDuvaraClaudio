@@ -10,12 +10,17 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
 .AddCookie(options => {
     options.LoginPath = "/Usuario/Login";
-    options.LoginPath = "/Usuario/Logout";
+    options.LogoutPath = "/Usuario/Logout";
     options.AccessDeniedPath = "/Home/Restringido";
 });
 
 builder.Services.AddAuthorization(options => {
-    options.AddPolicy("Administrador", policy => policy.RequireRole("Administrador", "Empleado"));
+    options.AddPolicy("Administrador", policy => {
+        policy.RequireClaim(ClaimTypes.Role, "Adminstrador");
+    });
+    options.AddPolicy("Empleado",policy => {
+        policy.RequireClaim(ClaimTypes.Role, "Empleado");
+    });
 });
     
 
@@ -39,7 +44,7 @@ app.UseAuthentication();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Home}/{action=Index}");
 app.MapControllerRoute(
     name: "logout",
     pattern: "{controller=Usuario}/{action=Logout}");

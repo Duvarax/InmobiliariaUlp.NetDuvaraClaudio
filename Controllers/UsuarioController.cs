@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using PracticaMVC.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 namespace PracticaMVC.Controllers
 {
     public class UsuarioController : Controller
@@ -150,17 +152,66 @@ namespace PracticaMVC.Controllers
                 return View();
             }
         }
-        [Authorize]
+        
+        //GET: Usuario/Login
         public ActionResult Login()
         {
             return View();
         }
-
-        public ActionResult Logout()
+        //POST: Usuario/Login
+        [HttpPost]
+        public async Task<IActionResult> Login(LoginView login)
         {
-            return View();
-        }
+            var returnUrl = String.IsNullOrEmpty(TempData["returnUrl"] as string) ? "/Home" : TempData["returnUrl"].ToString();
+            if(!ModelState.IsValid){
+                return View();
+            }
+            string contraseñaHasheada = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                password: login.Contraseña,
+                salt: System.Text.Encoding.ASCII.GetBytes(configuration["Salt"]),
+                prf: KeyDerivationPrf.HMACSHA1,
+                iterationCount: 1000,
+                numBytesRequested: 256/8
+            ));
+
+            
+
+            Usuario usuario = rpo.obtenerUsuarioByEmail(login.Email);
+            
+            if(usuario == null || usuario.Contraseña != contraseñaHasheada)
+            {
+                ModelState.AddModelError("invalid", "Contraseña o Email Incorrectos");
+                return View();
+
+            }
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, usuario.Email),
+                new Claim("FullName", usuario.Nombre + " " + usuario.Apellido),
+                new Claim(ClaimTypes.Role, usuario.RolNombre),
+            };
+
+            var claimsIdentity = new ClaimsIdentity(
+                    claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+            await HttpContext.SignInAsync(
+                    CookieAuthenticationDefaults.AuthenticationScheme,
+                    new ClaimsPrincipal(claimsIdentity));
+            TempData.Remove("returnUrl");
+            return RedirectToAction("Index", "Home");
+				}
+                
+				
+        
+
+        [Route("salir", Name = "logout")]
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync(
+					CookieAuthenticationDefaults.AuthenticationScheme);
+			return RedirectToAction("Index", "Home");
 
         
     }
+}
 }

@@ -108,6 +108,39 @@ public class RepositorioUsuario
         }
         return usuario;
     }
+    public Usuario obtenerUsuarioByEmail(String email)
+    {
+        Usuario? usuario = null;
+        using(MySqlConnection conn = new MySqlConnection(ConnectionString))
+        {
+            var query = @$"SELECT Id, Nombre, Apellido, Email, NombreUsuario, Contraseña, Avatar, Rol FROM usuarios WHERE {nameof(Usuario.Email)} = @email";
+
+            using(MySqlCommand command = new MySqlCommand(query, conn))
+            {
+                command.Parameters.Add("@email", MySqlDbType.String).Value = email;
+                command.CommandType = System.Data.CommandType.Text;
+                conn.Open();
+                var reader = command.ExecuteReader();
+                if(reader.Read())
+                {
+                    usuario = new Usuario
+                    {
+                        Id = reader.GetInt32("Id"),
+                        Nombre = reader.GetString("Nombre"),
+                        Apellido = reader.GetString("Apellido"),
+                        Email = reader.GetString("Email"),
+                        NombreUsuario = reader.GetString("NombreUsuario"),
+                        Contraseña = reader.GetString("Contraseña"),
+                        Avatar = reader.GetString("Avatar"),
+                        Rol = reader.GetInt32("Rol")
+                    };
+
+                }
+                conn.Close();
+            }
+        }
+        return usuario;
+    }
     public int eliminarUsuarioById(int id)
     {
         int res = -1;
