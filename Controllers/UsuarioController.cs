@@ -22,6 +22,7 @@ namespace PracticaMVC.Controllers
         {
             List<Usuario> listaUsuarios = rpo.GetUsuarios();
             ViewBag.CreacionExitosa = TempData["CreacionExitosa"];
+            ViewBag.ModificacionExitosa = TempData["ModificacionExitosa"];
             return View(listaUsuarios);
         }
 
@@ -149,7 +150,7 @@ namespace PracticaMVC.Controllers
             {
                 Console.WriteLine(ex);
                 TempData["Error"] = 1;
-                return View();
+                return RedirectToAction(nameof(Delete));
             }
         }
         
@@ -211,5 +212,47 @@ namespace PracticaMVC.Controllers
 
         
     }
+
+        //GET: Usuario/CambiarAvatar
+        public IActionResult CambiarAvatar(int id)
+        {   
+            Usuario usuario = rpo.obtenerUsuarioById(id);
+            return View(usuario);
+        }
+
+        //POST: Usuario/CambiarAvatar
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult CambiarAvatar(int id, Usuario user)
+        {
+
+            try{
+                Usuario usuario = rpo.obtenerUsuarioById(id);
+                usuario.Id = id;
+                string wwwPath = enviroment.WebRootPath;
+                string path = Path.Combine(wwwPath, "Uploads");
+                string fileName = "profile_avatar_"+usuario.Id + Path.GetExtension(user.AvatarFile.FileName);
+                usuario.Avatar = Path.Combine("/Uploads", fileName);
+                string pathCompleto = Path.Combine(path, fileName);
+                using(FileStream stream = new FileStream(pathCompleto, FileMode.Create))
+                {
+                    user.AvatarFile.CopyTo(stream);
+                }
+                int res = rpo.modificarUsuario(usuario);
+                if(res > 0)
+                {
+                    TempData["ModificacionExitosa"] = 1;
+                    return RedirectToAction("Index");
+                }
+                return View();
+            }catch(Exception ex){
+                Console.WriteLine(ex);
+                return View();
+            }
+        }
+
+        
+        
+
 }
 }

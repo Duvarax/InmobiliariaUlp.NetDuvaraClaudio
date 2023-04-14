@@ -81,7 +81,7 @@ public class RepositorioUsuario
         Usuario? usuario = null;
         using(MySqlConnection conn = new MySqlConnection(ConnectionString))
         {
-            var query = @$"SELECT Id, Nombre, Apellido, Email, NombreUsuario, Contraseña, Avatar FROM usuarios WHERE {nameof(Usuario.Id)} = @id";
+            var query = @$"SELECT Id, Nombre, Apellido, Email, NombreUsuario, Contraseña, Avatar, Rol FROM usuarios WHERE {nameof(Usuario.Id)} = @id";
 
             using(MySqlCommand command = new MySqlCommand(query, conn))
             {
@@ -100,6 +100,7 @@ public class RepositorioUsuario
                         NombreUsuario = reader.GetString("NombreUsuario"),
                         Contraseña = reader.GetString("Contraseña"),
                         Avatar = reader.GetString("Avatar"),
+                        Rol = reader.GetInt32("Rol")
                     };
 
                 }
