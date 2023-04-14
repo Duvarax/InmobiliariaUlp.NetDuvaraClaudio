@@ -88,6 +88,12 @@
             <strong> UN ERROR HA OCURRIDO </strong>
         </div>
     }
+    @if (ViewBag.NoPermitido != null)
+    {
+        <div class="alert alert-danger text-center" role="alert">
+            <strong> No se puede modificar un perfil que no sea el tuyo </strong>
+        </div>
+    }
     </div>
     <div class="container">
         <main role="main" class="pb-3">

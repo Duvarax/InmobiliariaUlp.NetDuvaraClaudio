@@ -1,10 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PracticaMVC.Models;
+using Microsoft.AspNetCore.Authorization;
 namespace PracticaMVC.Controllers
 {
     public class PropietarioController : Controller
@@ -17,6 +13,7 @@ namespace PracticaMVC.Controllers
             rp = new RepositorioPropietario();
         }
         // GET: Propietario
+        [Authorize]
         public ActionResult Index()
         {
             List<Propietario> lista = rp.GetPropietarios();
@@ -24,6 +21,7 @@ namespace PracticaMVC.Controllers
         }
 
         // GET: Propietario/Details/5
+        [Authorize]
         public ActionResult Details(int id)
         {
             Propietario propietario = rp.obtenerPropietarioById(id);
@@ -31,6 +29,7 @@ namespace PracticaMVC.Controllers
         }
 
         // GET: Propietario/Create
+        [Authorize]
         public ActionResult Create()
         {
             return View();
@@ -39,6 +38,7 @@ namespace PracticaMVC.Controllers
         // POST: Propietario/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public ActionResult Create(Propietario propietario)
         {
             try
@@ -59,6 +59,7 @@ namespace PracticaMVC.Controllers
         }
 
         // GET: Propietario/Edit/5
+        [Authorize]
         public ActionResult Edit(int id)
         {
             Propietario propietario = rp.obtenerPropietarioById(id);
@@ -68,6 +69,7 @@ namespace PracticaMVC.Controllers
         // POST: Propietario/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public ActionResult Edit(int id, Propietario propietario)
         {
             try
@@ -89,6 +91,7 @@ namespace PracticaMVC.Controllers
         }
 
         // GET: Propietario/Delete/5
+        [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id)
         {
 
@@ -99,6 +102,7 @@ namespace PracticaMVC.Controllers
         // POST: Propietario/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id, IFormCollection collection)
         {
             try
@@ -117,6 +121,7 @@ namespace PracticaMVC.Controllers
                 return View();
             }
         }
+        [Authorize]
         public List<Propietario> listar(){
             return rp.GetPropietarios();
         }

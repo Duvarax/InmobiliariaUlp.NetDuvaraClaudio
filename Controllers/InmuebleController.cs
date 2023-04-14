@@ -1,9 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using PracticaMVC.Models;
 namespace PracticaMVC.Controllers
 {
@@ -17,6 +13,7 @@ namespace PracticaMVC.Controllers
             repositorioPropietario = new RepositorioPropietario();
         }
         // GET: Inmueble
+        [Authorize]
         public ActionResult Index()
         {   
             List<Inmueble> listaInmuebles = repo.GetInmuebles();
@@ -25,6 +22,7 @@ namespace PracticaMVC.Controllers
         }
 
         // GET: Inmueble/Details/5
+        [Authorize]
         public ActionResult Details(int id)
         {
             Inmueble inmueble = repo.obtenerInmuebleById(id);
@@ -32,6 +30,7 @@ namespace PracticaMVC.Controllers
         }
 
         // GET: Inmueble/Create
+        [Authorize]
         public ActionResult Create()
         {
             
@@ -43,6 +42,7 @@ namespace PracticaMVC.Controllers
         // POST: Inmueble/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public ActionResult Create(Inmueble inmueble)
         {
             ViewBag.Propietarios = repositorioPropietario.GetPropietarios();
@@ -67,6 +67,7 @@ namespace PracticaMVC.Controllers
         }
 
         // GET: Inmueble/Edit/5
+        [Authorize]
         public ActionResult Edit(int id)
         {
             ViewBag.Propietarios = repositorioPropietario.GetPropietarios();
@@ -77,6 +78,7 @@ namespace PracticaMVC.Controllers
         // POST: Inmueble/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public ActionResult Edit(int id, Inmueble inmueble)
         {
             try
@@ -99,6 +101,7 @@ namespace PracticaMVC.Controllers
         }
 
         // GET: Inmueble/Delete/5
+        [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id)
         {
             Inmueble inmueble = repo.obtenerInmuebleById(id);
@@ -109,6 +112,7 @@ namespace PracticaMVC.Controllers
         // POST: Inmueble/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id, IFormCollection collection)
         {
             try

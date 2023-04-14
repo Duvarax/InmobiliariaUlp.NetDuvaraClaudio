@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using PracticaMVC.Models;
 namespace PracticaMVC.Controllers
 {
@@ -16,6 +17,7 @@ namespace PracticaMVC.Controllers
         {
             ri = new RepositorioInquilino();
         }
+        [Authorize]
         public ActionResult Index()
         {   
             List<Inquilino> inquilinos =  ri.GetInquilinos();
@@ -23,6 +25,7 @@ namespace PracticaMVC.Controllers
         }
 
         // GET: Inquilino/Details/5
+        [Authorize]
         public ActionResult Details(int id)
         {
             Inquilino inquilino = ri.obtenerInquilinoById(id);
@@ -30,6 +33,7 @@ namespace PracticaMVC.Controllers
         }
 
         // GET: Inquilino/Create
+        [Authorize]
         public ActionResult Create()
         {
 
@@ -39,6 +43,7 @@ namespace PracticaMVC.Controllers
         // POST: Inquilino/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public ActionResult Create(Inquilino inquilino)
         {
             try
@@ -60,6 +65,7 @@ namespace PracticaMVC.Controllers
         }
 
         // GET: Inquilino/Edit/5
+        [Authorize]
         public ActionResult Edit(int id)
         {
             Inquilino inquilino = ri.obtenerInquilinoById(id);
@@ -69,6 +75,7 @@ namespace PracticaMVC.Controllers
         // POST: Inquilino/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public ActionResult Edit(int id, Inquilino inquilino)
         {
             try
@@ -94,6 +101,7 @@ namespace PracticaMVC.Controllers
         }
 
         // GET: Inquilino/Delete/5
+        [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id)
         {
             Inquilino inquilino = ri.obtenerInquilinoById(id);
@@ -103,6 +111,7 @@ namespace PracticaMVC.Controllers
         // POST: Inquilino/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id, IFormCollection collection)
         {
             try

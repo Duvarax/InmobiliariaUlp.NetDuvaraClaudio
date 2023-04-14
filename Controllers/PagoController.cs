@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using PracticaMVC.Models;
 namespace PracticaMVC.Controllers
 {
@@ -17,6 +18,7 @@ namespace PracticaMVC.Controllers
             rpoContrato = new RepositorioContrato();
         }
         // GET: Pago
+        [Authorize]
         public ActionResult Index()
         {
             List<Pago> listaPagos = rpo.GetPagos();
@@ -28,6 +30,7 @@ namespace PracticaMVC.Controllers
         }
 
         // GET: Pago/Details/5
+        [Authorize]
         public ActionResult Details(int id)
         {
             Pago pago = rpo.obtenerPagoById(id);
@@ -35,6 +38,7 @@ namespace PracticaMVC.Controllers
         }
 
         // GET: Pago/Create
+        [Authorize]
         public ActionResult Create()
         {
             ViewBag.Error = TempData["Error"];
@@ -45,6 +49,7 @@ namespace PracticaMVC.Controllers
         // POST: Pago/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public ActionResult Create(Pago pago)
         {
             ViewBag.Contratos = rpoContrato.GetContratos();
@@ -69,6 +74,7 @@ namespace PracticaMVC.Controllers
         }
 
         // GET: Pago/Edit/5
+        [Authorize]
         public ActionResult Edit(int id)
         {
             Pago pago = rpo.obtenerPagoById(id);
@@ -79,6 +85,7 @@ namespace PracticaMVC.Controllers
         // POST: Pago/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public ActionResult Edit(int id, Pago pago)
         {
             try
@@ -104,6 +111,7 @@ namespace PracticaMVC.Controllers
         }
 
         // GET: Pago/Delete/5
+        [Authorize]
         public ActionResult Delete(int id)
         {
             Pago pago = rpo.obtenerPagoById(id);
@@ -114,6 +122,7 @@ namespace PracticaMVC.Controllers
         // POST: Pago/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public ActionResult Delete(int id, IFormCollection collection)
         {
             try

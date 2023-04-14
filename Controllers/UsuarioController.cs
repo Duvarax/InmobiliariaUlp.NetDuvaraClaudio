@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 namespace PracticaMVC.Controllers
 {
     public class UsuarioController : Controller
@@ -18,15 +19,18 @@ namespace PracticaMVC.Controllers
             rpo = new RepositorioUsuario();
         }
         // GET: Usuario
+        [Authorize]
         public ActionResult Index()
         {
             List<Usuario> listaUsuarios = rpo.GetUsuarios();
             ViewBag.CreacionExitosa = TempData["CreacionExitosa"];
             ViewBag.ModificacionExitosa = TempData["ModificacionExitosa"];
+            ViewBag.NoPermitido = TempData["NoPermitido"];
             return View(listaUsuarios);
         }
 
         // GET: Usuario/Details/5
+        [Authorize]
         public ActionResult Details(int id)
         {
             Usuario usuario = rpo.obtenerUsuarioById(id);
@@ -34,6 +38,7 @@ namespace PracticaMVC.Controllers
         }
 
         // GET: Usuario/Create
+        [Authorize(Policy="Administrador")]
         public ActionResult Create()
         {
             ViewBag.roles = Usuario.getRoles();
@@ -41,6 +46,7 @@ namespace PracticaMVC.Controllers
         }
         
         // POST: Usuario/Create
+        [Authorize(Policy="Administrador")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(Usuario usuario)
@@ -87,8 +93,14 @@ namespace PracticaMVC.Controllers
         }
 
         // GET: Usuario/Edit/5
+        [Authorize]
         public ActionResult Edit(int id)
         {
+            int x = Int32.Parse((User.Claims.FirstOrDefault(c => c.Type == "Id").Value));
+            if(id !=  x){
+                TempData["NoPermitido"] = 1;
+                return RedirectToAction("Index");
+            }
             Usuario usuario = rpo.obtenerUsuarioById(id);
             return View(usuario);
         }
@@ -155,12 +167,14 @@ namespace PracticaMVC.Controllers
         }
         
         //GET: Usuario/Login
+        [AllowAnonymous]
         public ActionResult Login()
         {
             return View();
         }
         //POST: Usuario/Login
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> Login(LoginView login)
         {
 
@@ -187,6 +201,7 @@ namespace PracticaMVC.Controllers
             }
             var claims = new List<Claim>
             {
+                new Claim("Id", usuario.Id+""),
                 new Claim(ClaimTypes.Name, usuario.Email),
                 new Claim("FullName", usuario.Nombre + " " + usuario.Apellido),
                 new Claim(ClaimTypes.Role, usuario.RolNombre),
@@ -204,6 +219,7 @@ namespace PracticaMVC.Controllers
 				
         
 
+        [AllowAnonymous]
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(
@@ -214,8 +230,14 @@ namespace PracticaMVC.Controllers
     }
 
         //GET: Usuario/CambiarAvatar
+        [Authorize]
         public IActionResult CambiarAvatar(int id)
         {   
+            int x = Int32.Parse((User.Claims.FirstOrDefault(c => c.Type == "Id").Value));
+            if(id !=  x){
+                TempData["NoPermitido"] = 1;
+                return RedirectToAction("Index");
+            }
             Usuario usuario = rpo.obtenerUsuarioById(id);
             return View(usuario);
         }
@@ -223,6 +245,7 @@ namespace PracticaMVC.Controllers
         //POST: Usuario/CambiarAvatar
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public IActionResult CambiarAvatar(int id, Usuario user)
         {
 
@@ -253,7 +276,13 @@ namespace PracticaMVC.Controllers
 
         
         //GET: Usuario/CambiarContraseña
+        [Authorize]
         public IActionResult CambiarContraseña(int id){
+            int x = Int32.Parse((User.Claims.FirstOrDefault(c => c.Type == "Id").Value));
+            if(id !=  x){
+                TempData["NoPermitido"] = 1;
+                return RedirectToAction("Index");
+            }
             Usuario usuario = rpo.obtenerUsuarioById(id);
             return View(usuario);
         }
@@ -261,6 +290,7 @@ namespace PracticaMVC.Controllers
         //POST: Usuario/CambiarContraseña
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public IActionResult CambiarContraseña(int id, IFormCollection collection)
         {
             if(!ModelState.IsValid){
