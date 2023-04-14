@@ -162,7 +162,7 @@ namespace PracticaMVC.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(LoginView login)
         {
-            var returnUrl = String.IsNullOrEmpty(TempData["returnUrl"] as string) ? "/Home" : TempData["returnUrl"].ToString();
+
             if(!ModelState.IsValid){
                 return View();
             }
@@ -197,14 +197,12 @@ namespace PracticaMVC.Controllers
             await HttpContext.SignInAsync(
                     CookieAuthenticationDefaults.AuthenticationScheme,
                     new ClaimsPrincipal(claimsIdentity));
-            TempData.Remove("returnUrl");
             return RedirectToAction("Index", "Home");
 				}
                 
 				
         
 
-        [Route("salir", Name = "logout")]
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(

@@ -14,13 +14,9 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     options.AccessDeniedPath = "/Home/Restringido";
 });
 
-builder.Services.AddAuthorization(options => {
-    options.AddPolicy("Administrador", policy => {
-        policy.RequireClaim(ClaimTypes.Role, "Adminstrador");
-    });
-    options.AddPolicy("Empleado",policy => {
-        policy.RequireClaim(ClaimTypes.Role, "Empleado");
-    });
+builder.Services.AddAuthorization(options =>
+{;
+	options.AddPolicy("Administrador", policy => policy.RequireRole("Administrador", "Empleado"));
 });
     
 
