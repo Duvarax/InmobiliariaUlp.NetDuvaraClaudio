@@ -252,6 +252,57 @@ namespace PracticaMVC.Controllers
         }
 
         
+        //GET: Usuario/CambiarContraseña
+        public IActionResult CambiarContraseña(int id){
+            Usuario usuario = rpo.obtenerUsuarioById(id);
+            return View(usuario);
+        }
+
+        //POST: Usuario/CambiarContraseña
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult CambiarContraseña(int id, IFormCollection collection)
+        {
+            if(!ModelState.IsValid){
+                return View();
+            }
+            try{
+                Usuario usuario = rpo.obtenerUsuarioById(id);
+                string contraseña_vieja = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                    password: collection["contraseña_vieja"],
+                    salt: System.Text.Encoding.ASCII.GetBytes(configuration["Salt"]),
+                    prf: KeyDerivationPrf.HMACSHA1,
+                    iterationCount: 1000,
+                    numBytesRequested: 256 /8));
+            if(!(usuario.Contraseña == contraseña_vieja)){
+                return View();
+            }else{
+
+                string contraseña_nueva = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                    password: collection["Contraseña"],
+                    salt: System.Text.Encoding.ASCII.GetBytes(configuration["Salt"]),
+                    prf: KeyDerivationPrf.HMACSHA1,
+                    iterationCount: 1000,
+                    numBytesRequested: 256 /8));
+
+                usuario.Contraseña = contraseña_nueva;
+                int res = rpo.modificarUsuario(usuario);
+                if(res > 0)
+                {
+                    TempData["ModificacionExitosa"] = 1;
+                    return RedirectToAction(nameof(Index));
+                }
+            }
+                return View();
+            }catch(Exception ex)
+            {
+                Console.WriteLine(ex);
+                TempData["Error"] = 1;
+                return View();
+            }
+        }
+
+        
         
 
 }

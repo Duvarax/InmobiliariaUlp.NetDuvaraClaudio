@@ -47,8 +47,9 @@
             }
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
-                @Html.ActionLink("Cambiar Avatar", "CambiarAvatar", new { id=Model.Id }) 
             </div>
+            @Html.ActionLink("Cambiar Avatar", "CambiarAvatar", new { id=Model.Id }) <br>
+                @Html.ActionLink("Cambiar Contraseña", "CambiarContraseña", new { id=Model.Id }) 
         </form>
     </div>
 </div>
