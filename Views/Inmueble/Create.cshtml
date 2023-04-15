@@ -50,6 +50,14 @@
                 <span asp-validation-for="PropietarioId" class="text-danger"></span>
             </div>
             <div class="form-group">
+               <label asp-for="Estado"></label>
+               <select class="form-control" name="Estado" asp-for="Estado" id="Estado">
+                    <option value="1" selected>Disponible</option>
+                    <option value="0">No Disponible</option>
+               </select>
+                <span asp-validation-for="Estado" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>

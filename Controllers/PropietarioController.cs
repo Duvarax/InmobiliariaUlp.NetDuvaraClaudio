@@ -19,6 +19,7 @@ namespace PracticaMVC.Controllers
             List<Propietario> lista = rp.GetPropietarios();
             return View(lista);
         }
+        
 
         // GET: Propietario/Details/5
         [Authorize]

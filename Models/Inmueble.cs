@@ -16,8 +16,10 @@ public class Inmueble
     [ForeignKey(nameof(PropietarioId))]
     public Propietario? Duenio {get; set;}
 
-    public Double Precio {get; set;}
-    public Boolean Estado {get; set;}
+    public decimal Precio {get; set;}
+    public int Estado {get; set;}
+
+    public string EstadoNombre => Estado == 1 ? "Disponible" : "No Disponible"; 
     
 
     public Inmueble()

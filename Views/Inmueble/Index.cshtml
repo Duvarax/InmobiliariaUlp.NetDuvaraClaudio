@@ -2,6 +2,8 @@
 
 @{
     ViewData["Title"] = "Listado de inmuebles";
+    var Inmuebles = (IList<Inmueble>)ViewBag.Inmuebles;
+    var Propietarios = (IList<Propietario>)ViewBag.Propietarios;
 }
 
 <h1>Listado de inmuebles</h1>
@@ -9,70 +11,56 @@
 <p>
     <a asp-action="Create">Cargar Inmueble</a>
 </p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Id)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Direccion)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Ambientes)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Superficie)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Latitud)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Longitud)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Precio)
-            </th>
-            <th>
-                Dueño
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Direccion)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Ambientes)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Superficie)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Latitud)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Longitud)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Precio)
-            </td>
-            <td>
-                @(item.Duenio.Nombre + " " + item.Duenio.Apellido)
-            </td>
-            <td>
-                @Html.ActionLink("Editar", "Edit", new { id=item.Id }) |
-                @Html.ActionLink("Detalles", "Details", new { id=item.Id }) |
-                @Html.ActionLink("Eliminar", "Delete", new { id=item.Id })
-            </td>
-            
-        </tr>
-}
-    </tbody>
-</table>
+<ul class="d-flex">
+    <li  class="bg-dark rounded">
+        <a asp-controller="Inmueble" asp-action="Index" class="btn btn-danger">Eliminar Filtros</a>
+    </li>
+    <li  class="bg-dark rounded">
+        <a asp-controller="Inmueble" asp-action="IndexByEstadoDisponible" class="btn btn-info">Listado de inmuebles disponibles</a>
+    </li>
+    <li  class="bg-dark rounded">
+        <a asp-controller="Inmueble" asp-action="IndexByEstadoNoDisponible" class="btn btn-info">Listado de inmuebles no disponibles</a>
+    </li>
+    <li  class="bg-dark rounded">
+        <a id="seleccion_propietario" style="color:white" class="btn btn-info" data-toggle="modal" data-target="#ModalPropietario">Listado de inmuebles por propietario</a>
+    </li>
+</ul>
+
+@await Html.PartialAsync("_ListadoInmuebles", Model)
+
+
+<div class="modal fade" id="ModalPropietario" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Asignar Propietario</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body d-flex justify-content-center align-items-center">
+        <table>
+            <tr>
+                <th class="text-center"> ID </th>
+                <th class="text-center">Propietario</th>
+                <th class="text-center">Dni</th>
+                <th class="text-center">Telefono</th>
+            </tr>
+            @foreach (var item in Propietarios)
+            {
+                <tr>
+                <td> @item.Id </td>
+                   <td> @item.Nombre @item.Apellido </td>
+                   <td> @item.Dni </td>
+                   <td> @item.Telefono </td>
+                   <td class="bg-info"><a href='/Inmueble/IndexByEstadoPorUsuario/@item.Id'class="btn btn-info"><i data-dismiss="modal" class="fa-solid fa-plus fa-propietario"></i></a></td>
+                </tr>
+            }
+        </table>    
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -16,9 +16,28 @@ namespace PracticaMVC.Controllers
         [Authorize]
         public ActionResult Index()
         {   
+            ViewBag.Propietarios = repositorioPropietario.GetPropietarios();
             List<Inmueble> listaInmuebles = repo.GetInmuebles();
             ViewBag.CreacionExitosa = TempData["CreacionExitosa"];
             return View(listaInmuebles);
+        }
+        [Authorize]
+        public ActionResult IndexByEstadoDisponible(){
+            ViewBag.Propietarios = repositorioPropietario.GetPropietarios();
+            List<Inmueble> listaInmueblesDisponibles = repo.GetInmueblesByDisponibilidad();
+            return View("Index", listaInmueblesDisponibles);
+        }
+        [Authorize]
+        public ActionResult IndexByEstadoNoDisponible(){
+            ViewBag.Propietarios = repositorioPropietario.GetPropietarios();
+            List<Inmueble> listaInmueblesNoDisponbiles = repo.GetInmueblesByNoDisponibilidad();
+            return View("Index", listaInmueblesNoDisponbiles);
+        }
+        [Authorize]
+        public ActionResult IndexByEstadoPorUsuario(int id){
+            ViewBag.Propietarios = repositorioPropietario.GetPropietarios();
+            List<Inmueble> listaInmueblesNoDisponbiles = repo.GetInmueblesPorPropietario(id);
+            return View("Index", listaInmueblesNoDisponbiles);
         }
 
         // GET: Inmueble/Details/5

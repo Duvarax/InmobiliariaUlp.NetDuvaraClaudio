@@ -6,57 +6,25 @@
 
 <h1>Listado de Contratos</h1>
 
+
 @if(User.IsInRole("Administrador"))
 {
     <p>
         <a asp-action="Create">Crear nuevo contrato</a>
     </p>
 }
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.fechaInicio)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.fechaFinalizacion)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Precio)
-            </th>
-            <th>
-                Inquilino
-            </th>
-            <th>
-                Direccion
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.fechaInicio)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.fechaFinalizacion)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Precio)
-            </td>
-            <td>
-                @item.Inquilino.Nombre  @item.Inquilino.Apellido
-            </td>
-            <td>
-                @item.Inmueble.Direccion
-            </td>
-            <td>
-                @Html.ActionLink("Editar", "Edit", new { id=item.Id }) |
-                @Html.ActionLink("Detalles", "Details", new { id=item.Id }) |
-                @Html.ActionLink("Eliminar", "Delete", new { id=item.Id })
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<ul class="d-flex">
+    <li  class="bg-dark rounded">
+        <a asp-controller="Contrato" asp-action="Index" class="btn btn-danger">Eliminar Filtros</a>
+    </li>
+    <li  class="bg-dark rounded">
+        <a asp-controller="Contrato" asp-action="IndexVigentes" class="btn btn-info">Listado de contratos vigentes</a>
+    </li>
+    <li  class="bg-dark rounded">
+        <a asp-controller="Inmueble" asp-action="IndexByEstadoNoDisponible" class="btn btn-info">Listado de inmuebles no disponibles</a>
+    </li>
+    <li  class="bg-dark rounded">
+        <a id="seleccion_propietario" style="color:white" class="btn btn-info" data-toggle="modal" data-target="#ModalPropietario">Listado de inmuebles por propietario</a>
+    </li>
+</ul>
+@await Html.PartialAsync("_ListadoContratos", Model)

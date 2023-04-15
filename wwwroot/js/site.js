@@ -163,6 +163,11 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             });
         } 
+
+        let seleccionar_propietario = document.getElementById('seleccion_propietario');
+        if(seleccionar_propietario){
+           
+        }
         
         
         

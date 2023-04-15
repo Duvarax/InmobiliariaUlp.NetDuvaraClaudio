@@ -24,6 +24,12 @@ namespace PracticaMVC.Controllers
             List<Contrato> listaContratos = repositorioContrato.GetContratos();
             return View(listaContratos);
         }
+        [Authorize]
+        public ActionResult IndexVigentes()
+        {
+            List<Contrato> listaContratos = repositorioContrato.GetContratosVigentes();
+            return View("Index", listaContratos);
+        }
 
         // GET: Contrato/Details/5
         [Authorize]
