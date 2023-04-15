@@ -20,16 +20,24 @@ namespace PracticaMVC.Controllers
         {
             ViewBag.CreacionExitosa = TempData["CreacionExitosa"];
             ViewBag.CreacionExitosa = TempData["ModificacionExitosa"];
-            
+            ViewBag.Inmuebles = repositorioInmueble.GetInmuebles();
             List<Contrato> listaContratos = repositorioContrato.GetContratos();
             return View(listaContratos);
         }
         [Authorize]
         public ActionResult IndexVigentes()
         {
+            ViewBag.Inmuebles = repositorioInmueble.GetInmuebles();
             List<Contrato> listaContratos = repositorioContrato.GetContratosVigentes();
             return View("Index", listaContratos);
         }
+        // GET: Contrato/IndexPorInmueble/5
+        [Authorize]
+         public ActionResult IndexPorInmueble(int id){
+             ViewBag.Inmuebles = repositorioInmueble.GetInmuebles();
+             List<Contrato> listaContratos = repositorioContrato.GetContratosPorInmueble(id);
+             return View("Index", listaContratos);
+         }
 
         // GET: Contrato/Details/5
         [Authorize]

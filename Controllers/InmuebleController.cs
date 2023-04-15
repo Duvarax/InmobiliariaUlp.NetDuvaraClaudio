@@ -151,5 +151,10 @@ namespace PracticaMVC.Controllers
                 return View();
             }
         }
+
+        public IList<Inmueble> listarInmuebles()
+        {
+            return repo.GetInmuebles();
+        }
     }
 }

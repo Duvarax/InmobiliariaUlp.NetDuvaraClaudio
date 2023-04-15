@@ -56,10 +56,11 @@ app.MapControllerRoute(
     name:"listarxpropietario",
     pattern:"{controller=Inmueble}/{action=IndexByEstadoPorUsuario}/{id}",
     defaults: new {Controller = "Inmueble", action = "IndexByEstadoPorUsuario"});
-    app.MapControllerRoute(
-    name:"listarxinmueble",
-    pattern:"{controller=Contrato}/{action=IndexPorInmuebl}/{id}",
-    defaults: new {Controller = "Contrato", action = "IndexPorInmueble"});
+app.MapControllerRoute(
+name:"listarxinmueble",
+pattern:"{controller=Contrato}/{action=IndexPorInmueble}/{id}",
+defaults: new {Controller = "Contrato", action = "IndexPorInmueble"});
+
 
 
 app.Run();
