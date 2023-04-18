@@ -70,6 +70,10 @@
             <strong> CREADO EXITOSAMENTE </strong>
         </div>
     }
+    @if (ViewBag.LogError != null)
+{
+    <div class="alert alert-danger text-center"><strong>Usuario o contraseña invalidos</strong> </div>
+}
     @if (ViewBag.ModificacionExitosa != null)
     {
         <div class="alert alert-success text-center" role="alert">

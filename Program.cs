@@ -12,7 +12,6 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     options.LoginPath = "/Usuario/Login";
     options.LogoutPath = "/Usuario/Logout";
     options.AccessDeniedPath = "/Home/Restringido";
-    options.ExpireTimeSpan = TimeSpan.FromMinutes(1);
 });
 
 builder.Services.AddAuthorization(options =>
@@ -60,6 +59,14 @@ app.MapControllerRoute(
 name:"listarxinmueble",
 pattern:"{controller=Contrato}/{action=IndexPorInmueble}/{id}",
 defaults: new {Controller = "Contrato", action = "IndexPorInmueble"});
+app.MapControllerRoute(
+name:"listarcontratoxfecha",
+pattern:"{controller=Contrato}/{action=IndexPorFecha}",
+defaults: new {Controller = "Contrato", action = "IndexPorFecha"});
+app.MapControllerRoute(
+name:"listarpagoxcontrato",
+pattern:"{controller=Pago}/{action=IndexPorContrato}/{id}",
+defaults: new {Controller = "Pago", action = "IndexPorContrato"});
 
 
 

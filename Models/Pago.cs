@@ -10,7 +10,7 @@ public class Pago
     [Display(Name ="Fecha de pago")]
     public DateTime? fechaPago {get; set;}
 
-    public Double? Importe {get; set;}
+    public Decimal? Importe {get; set;}
 
     [Display(Name ="Nro de Contrato")]
     public int? ContratoId {get; set;}

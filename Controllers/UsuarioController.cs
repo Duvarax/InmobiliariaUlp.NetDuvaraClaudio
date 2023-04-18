@@ -108,6 +108,7 @@ namespace PracticaMVC.Controllers
         // POST: Usuario/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public ActionResult Edit(int id, Usuario usuario)
         {
             try
@@ -133,6 +134,7 @@ namespace PracticaMVC.Controllers
         }
 
         // GET: Usuario/Delete/5
+        [Authorize(Policy="Administrador")]
         public ActionResult Delete(int id)
         {
             Usuario usuario = rpo.obtenerUsuarioById(id);
@@ -170,6 +172,7 @@ namespace PracticaMVC.Controllers
         [AllowAnonymous]
         public ActionResult Login()
         {
+            ViewBag.LogError = TempData["LogError"];
             return View();
         }
         //POST: Usuario/Login
@@ -179,7 +182,9 @@ namespace PracticaMVC.Controllers
         {
 
             if(!ModelState.IsValid){
-                return View();
+                TempData["LogError"] = 1;
+                return RedirectToAction("Login");
+                
             }
             string contraseñaHasheada = Convert.ToBase64String(KeyDerivation.Pbkdf2(
                 password: login.Contraseña,
@@ -195,8 +200,8 @@ namespace PracticaMVC.Controllers
             
             if(usuario == null || usuario.Contraseña != contraseñaHasheada)
             {
-                ModelState.AddModelError("invalid", "Contraseña o Email Incorrectos");
-                return View();
+                TempData["LogError"] = 1;
+                return RedirectToAction("Login");
 
             }
             var claims = new List<Claim>

@@ -145,6 +145,58 @@ public class RepositorioContrato
     return contratos;
    }
 
+   public List<Contrato> GetContratosPorFechas(DateTime desde, DateTime hasta)
+   {
+
+    string fechaDesdeStr = desde.ToString("yyyy-MM-dd");
+    string fechaHastaStr = hasta.ToString("yyyy-MM-dd");
+    List<Contrato> contratos = new List<Contrato>();
+    using (MySqlConnection conn = new MySqlConnection(ConnectionString))
+    {
+        var query = @"SELECT c.Id, InquilinoId, InmuebleId, fechaInicio, fechaFinalizacion, c.Precio, i.Nombre, i.Apellido, m.Direccion 
+                    FROM contratos c INNER JOIN
+                    inquilinos i INNER JOIN
+                    inmuebles m 
+                    WHERE fechaInicio > @desde AND fechaFinalizacion < @hasta
+                    AND c.InquilinoId = i.Id AND c.InmuebleId = m.Id";
+        
+        using (var command = new MySqlCommand(query, conn))
+        {
+            command.Parameters.AddWithValue("@desde", fechaDesdeStr);
+            command.Parameters.AddWithValue("@hasta", fechaHastaStr);
+            conn.Open();
+
+            using (var reader = command.ExecuteReader())
+            {
+               while (reader.Read())
+               {
+                Contrato contrato = new Contrato{
+                    Id = reader.GetInt32(0),
+                    InquilinoId = reader.GetInt32(1),
+                    InmuebleId = reader.GetInt32(2),
+                    fechaInicio = reader.GetDateTime(3),
+                    fechaFinalizacion = reader.GetDateTime(4),
+                    Precio = reader.GetDouble(5),
+                    Inquilino = new Inquilino
+                    {
+                        Nombre = reader.GetString(6),
+                        Apellido = reader.GetString(7)
+                    },
+                    Inmueble = new Inmueble
+                    {
+                        Direccion = reader.GetString(8)
+                    }
+                };
+                contratos.Add(contrato);
+               }
+            }
+        }
+        conn.Close();
+
+    }
+    return contratos;
+   }
+
    public int agregarContrato(Contrato contrato)
    {
     int res = -1;

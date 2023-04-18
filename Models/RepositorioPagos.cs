@@ -16,7 +16,7 @@ public class RepositorioPagos
     List<Pago> Pagos = new List<Pago>();
     using (MySqlConnection conn = new MySqlConnection(ConnectionString))
     {
-        var query = @"SELECT p.Id, p.FechaPago, p.Importe, p.ContratoId, fechaInicio FROM pagos p INNER JOIN contratos c";
+        var query = @"SELECT p.Id, p.FechaPago, p.Importe, p.ContratoId, fechaInicio FROM pagos p INNER JOIN contratos c WHERE p.ContratoId = c.Id";
         
         using (var command = new MySqlCommand(query, conn))
         {
@@ -29,7 +29,7 @@ public class RepositorioPagos
                 Pago pago = new Pago{
                     Id = reader.GetInt32(nameof(Pago.Id)),
                     fechaPago = reader.GetDateTime(nameof(Pago.fechaPago)),
-                    Importe = reader.GetDouble(nameof(Pago.Importe)),
+                    Importe = reader.GetDecimal(nameof(Pago.Importe)),
                     ContratoId = reader.GetInt32(nameof(Pago.ContratoId)),
                     contrato = new Contrato
                     {
@@ -46,6 +46,44 @@ public class RepositorioPagos
     }
     return Pagos;
    }
+
+   public List<Pago> GetPagosPorContrato(int id)
+   {
+    List<Pago> Pagos = new List<Pago>();
+    using (MySqlConnection conn = new MySqlConnection(ConnectionString))
+    {
+        var query = @"SELECT p.Id, p.FechaPago, p.Importe, p.ContratoId, fechaInicio FROM pagos p INNER JOIN contratos c WHERE p.ContratoId = @id AND p.ContratoId = c.Id";
+        
+        using (var command = new MySqlCommand(query, conn))
+        {
+            command.Parameters.AddWithValue("@id", id);
+            conn.Open();
+
+            using (var reader = command.ExecuteReader())
+            {
+               while (reader.Read())
+               {
+                Pago pago = new Pago{
+                    Id = reader.GetInt32(nameof(Pago.Id)),
+                    fechaPago = reader.GetDateTime(nameof(Pago.fechaPago)),
+                    Importe = reader.GetDecimal(nameof(Pago.Importe)),
+                    ContratoId = reader.GetInt32(nameof(Pago.ContratoId)),
+                    contrato = new Contrato
+                    {
+                        fechaInicio = reader.GetDateTime(nameof(Contrato.fechaInicio))
+                    }
+                    
+                };
+                Pagos.Add(pago);
+               }
+            }
+        }
+        conn.Close();
+
+    }
+    return Pagos;
+   }
+
 
    public int agregarPago(Pago pago)
    {
@@ -89,7 +127,7 @@ public class RepositorioPagos
                     {
                         Id = reader.GetInt32(nameof(Pago.Id)),
                         fechaPago = reader.GetDateTime(nameof(Pago.fechaPago)),
-                        Importe = reader.GetDouble(nameof(Pago.Importe)),
+                        Importe = reader.GetDecimal(nameof(Pago.Importe)),
                         ContratoId = reader.GetInt32(nameof(Pago.ContratoId)),
                         contrato = new Contrato
                         {

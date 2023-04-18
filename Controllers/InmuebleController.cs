@@ -19,6 +19,8 @@ namespace PracticaMVC.Controllers
             ViewBag.Propietarios = repositorioPropietario.GetPropietarios();
             List<Inmueble> listaInmuebles = repo.GetInmuebles();
             ViewBag.CreacionExitosa = TempData["CreacionExitosa"];
+            ViewBag.ModificacionExitosa = TempData["ModificacionExitosa"];
+            ViewBag.EliminacionExitosa = TempData["EliminacionExitosa"];
             return View(listaInmuebles);
         }
         [Authorize]
@@ -77,9 +79,7 @@ namespace PracticaMVC.Controllers
                 }
 
             }
-            catch(Exception e)
-            {
-                Console.WriteLine(e);
+            catch(Exception e){
                 TempData["Error"] = 1;
                 return RedirectToAction(nameof(Create));
             }
@@ -106,6 +106,7 @@ namespace PracticaMVC.Controllers
                 inmueble.Id = id;
                 int res = repo.modificarInmueble(inmueble);
                 if(res > 0){
+                    TempData["ModificacionExitosa"] = 1;
                     return RedirectToAction(nameof(Index));
                 }else{
                     return View();
@@ -114,24 +115,23 @@ namespace PracticaMVC.Controllers
             }
             catch(Exception e)
             {
-                Console.WriteLine(e);
-                return View();
+                TempData["Error"] = 1;
+                return RedirectToAction("Index");
             }
         }
 
         // GET: Inmueble/Delete/5
-        [Authorize(Policy = "Administrador")]
+        [Authorize]
         public ActionResult Delete(int id)
         {
             Inmueble inmueble = repo.obtenerInmuebleById(id);
-            Console.WriteLine(inmueble);
             return View(inmueble);
         }
 
         // POST: Inmueble/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Policy = "Administrador")]
+        [Authorize]
         public ActionResult Delete(int id, IFormCollection collection)
         {
             try
@@ -139,6 +139,7 @@ namespace PracticaMVC.Controllers
                 // TODO: Add delete logic here
                 int res = repo.eliminarInmuebleById(id);
                 if(res > 0){
+                    TempData["EliminacionExitosa"] = 1;
                     return RedirectToAction(nameof(Index));
                 }else{
                     return View();
@@ -147,8 +148,8 @@ namespace PracticaMVC.Controllers
             }
             catch(Exception e)
             {
-                Console.WriteLine(e);
-                return View();
+                TempData["Error"] = 1;
+                return RedirectToAction("Index");
             }
         }
 

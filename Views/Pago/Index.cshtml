@@ -2,13 +2,29 @@
 
 @{
     ViewData["Title"] = "Listado de pagos";
+    var Contratos = (IList<Contrato>) ViewBag.Contratos;
 }
 
 <h1>Listado de pagos</h1>
 
-<p>
-    <a asp-action="Create">Pagar un contrato</a>
-</p>
+@if(User.IsInRole("Administrador"))
+{
+    <p>
+        <a asp-action="Create">Pagar un contrato</a>
+    </p>
+}
+<ul class="d-flex">
+    <li  class="bg-dark rounded">
+        <a asp-controller="Pago" asp-action="Index" class="btn btn-danger">Eliminar Filtros</a>
+    </li>
+    <li  class="bg-dark rounded">
+        <button type="button" class="btn btn-info" data-toggle="modal" data-target="#ModalContrato">
+          Listado de pagos contrato
+        </button>
+    </li>  
+</ul>
+
+
 <table class="table">
     <thead>
         <tr>
@@ -43,11 +59,50 @@
                 @Html.DisplayFor(modelItem => item.ContratoId)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-                @Html.ActionLink("Details", "Details", new { id=item.Id }) |
-                @Html.ActionLink("Delete", "Delete", new { id=item.Id })
+                @Html.ActionLink("Editar", "Edit", new { id=item.Id }) |
+                @Html.ActionLink("Detalles", "Details", new { id=item.Id }) |
+                @Html.ActionLink("Eliminar", "Delete", new { id=item.Id }) |
+                @Html.ActionLink("Cargar Pago", "Pagar", new { id = item.ContratoId})
             </td>
         </tr>
 }
     </tbody>
 </table>
+
+
+<div class="modal fade" id="ModalContrato" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Asignar Contrato</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body d-flex justify-content-center align-items-center">
+        <table>
+            <tr>
+                <th class="text-center"> ID </th>
+                <th class="text-center">Fecha de inicio</th>
+                <th class="text-center">Fecha de finalizacion</th>
+                <th class="text-center">Precio</th>
+            </tr>
+            @foreach (var item in Contratos)
+            {
+                <tr>
+                    <td> @item.Id </td>
+                   <td> @item.fechaInicio </td>
+                   <td> @item.fechaFinalizacion </td>
+                   <td> @item.Precio </td>
+                   <td class="bg-info"><a href='/Pago/IndexPorContrato/@item.Id'class="btn btn-info fa fa-plus fa-contrato"> </td>
+                </tr>
+            }
+        </table>    
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+

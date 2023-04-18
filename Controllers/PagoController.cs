@@ -25,9 +25,27 @@ namespace PracticaMVC.Controllers
             ViewBag.CreacionExitosa = TempData["CreacionExitosa"];
             ViewBag.ModificacionExitosa = TempData["ModificacionExitosa"];
             ViewBag.EliminacionExitosa = TempData["EliminacionExitosa"];
-            
+            ViewBag.NoPermitido = TempData["NoPermitido"];
+            ViewBag.Contratos = rpoContrato.GetContratos();
             return View(listaPagos);
         }
+
+        // GET: Pago/IndexPorContrato/5
+        [Authorize]
+        public ActionResult IndexPorContrato(int id)
+        {
+            List<Pago> listaPagos = rpo.GetPagosPorContrato(id);
+            ViewBag.Contratos = rpoContrato.GetContratos();
+            return View("Index", listaPagos);
+        }
+
+        [Authorize]
+        public ActionResult Pagar(int id){
+            ViewBag.Contratos = rpoContrato.GetContratos();
+            Pago pago = rpo.obtenerPagoById(id);
+            return View("Create");
+        }
+
 
         // GET: Pago/Details/5
         [Authorize]
@@ -77,6 +95,7 @@ namespace PracticaMVC.Controllers
         [Authorize]
         public ActionResult Edit(int id)
         {
+           
             Pago pago = rpo.obtenerPagoById(id);
             ViewBag.Error = TempData["Error"];
             return View(pago);
@@ -111,7 +130,7 @@ namespace PracticaMVC.Controllers
         }
 
         // GET: Pago/Delete/5
-        [Authorize]
+        [Authorize(Policy="Administrador")]
         public ActionResult Delete(int id)
         {
             Pago pago = rpo.obtenerPagoById(id);
@@ -122,7 +141,7 @@ namespace PracticaMVC.Controllers
         // POST: Pago/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize]
+        [Authorize(Policy="Administrador")]
         public ActionResult Delete(int id, IFormCollection collection)
         {
             try

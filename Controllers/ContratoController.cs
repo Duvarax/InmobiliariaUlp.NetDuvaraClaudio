@@ -31,6 +31,26 @@ namespace PracticaMVC.Controllers
             List<Contrato> listaContratos = repositorioContrato.GetContratosVigentes();
             return View("Index", listaContratos);
         }
+
+
+        // POST: Contrato/IndexPorFecha
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize]
+        public ActionResult IndexPorFechas(IFormCollection collection){
+
+            string fechaDesde = collection["desde"];
+            string fechaHasta = collection["hasta"];
+
+            if(fechaDesde != null && fechaHasta != null){
+                ViewBag.Inmuebles = repositorioInmueble.GetInmuebles();
+                List<Contrato> listaContratos = repositorioContrato.GetContratosPorFechas(DateTime.Parse(fechaDesde), DateTime.Parse(fechaHasta));
+                return View("Index", listaContratos);
+            }
+            return View();
+
+            
+        }
         // GET: Contrato/IndexPorInmueble/5
         [Authorize]
          public ActionResult IndexPorInmueble(int id){
@@ -122,7 +142,7 @@ namespace PracticaMVC.Controllers
         }
 
         // GET: Contrato/Delete/5
-        [Authorize(Policy="Administrador")]
+        [Authorize]
         public ActionResult Delete(int id)
         {
             Contrato contrato = repositorioContrato.obtenerContratoById(id);
@@ -132,7 +152,7 @@ namespace PracticaMVC.Controllers
         // POST: Contrato/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Policy="Administrador")]
+        [Authorize]
         public ActionResult Delete(int id, IFormCollection collection)
         {
             try

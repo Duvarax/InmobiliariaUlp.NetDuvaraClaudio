@@ -51,6 +51,7 @@ namespace PracticaMVC.Controllers
                 // TODO: Add insert logic here
                 int res = ri.agregarInquilino(inquilino);
                 if(res > 0){
+                    TempData["CreacionExitosa"] = 1;
                     return RedirectToAction(nameof(Index));
                 }else{
                     return View();
@@ -59,7 +60,7 @@ namespace PracticaMVC.Controllers
             }
             catch(Exception ex)
             {   
-                Console.WriteLine(ex);
+                TempData["Error"] = 1;
                 return View();
             }
         }
@@ -85,23 +86,23 @@ namespace PracticaMVC.Controllers
                 int res = ri.modificarInquilino(inquilino);
                 if(res > 0)
                 {
+                    TempData["ModificacionExitosa"] = 1;
                     return RedirectToAction(nameof(Index));
                 }
-                else
-                {
+               
                     return View();
-                }
+                
                 
             }
             catch(Exception ex)
             {   
-                Console.WriteLine(ex);
+                TempData["Error"] = 1;
                 return View();
             }
         }
 
         // GET: Inquilino/Delete/5
-        [Authorize(Policy = "Administrador")]
+        [Authorize]
         public ActionResult Delete(int id)
         {
             Inquilino inquilino = ri.obtenerInquilinoById(id);
@@ -111,7 +112,7 @@ namespace PracticaMVC.Controllers
         // POST: Inquilino/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Policy = "Administrador")]
+        [Authorize]
         public ActionResult Delete(int id, IFormCollection collection)
         {
             try
@@ -119,18 +120,19 @@ namespace PracticaMVC.Controllers
                 int res = ri.eliminarInquilinoById(id);
                 if(res > 0)
                 {
+                    TempData["EliminacionExitosa"] = 1;
                     return RedirectToAction(nameof(Index));
                 }
                 else
-                {
+                
                     return View();
-                }
+                
 
                 
             }
             catch(Exception ex)
             {
-                Console.WriteLine(ex);
+                TempData["Error"] = 1;
                 return View();
             }
         }
