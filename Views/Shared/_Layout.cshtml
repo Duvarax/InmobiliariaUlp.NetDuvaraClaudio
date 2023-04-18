@@ -98,6 +98,12 @@
             <strong> No se puede modificar un perfil que no sea el tuyo </strong>
         </div>
     }
+    @if (ViewBag.NoPermiso != null)
+    {
+        <div class="alert alert-danger text-center" role="alert">
+            <strong> No tienes permiso para eso </strong>
+        </div>
+    }
     </div>
     <div class="container">
         <main role="main" class="pb-3">

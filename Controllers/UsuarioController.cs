@@ -26,6 +26,7 @@ namespace PracticaMVC.Controllers
             ViewBag.CreacionExitosa = TempData["CreacionExitosa"];
             ViewBag.ModificacionExitosa = TempData["ModificacionExitosa"];
             ViewBag.NoPermitido = TempData["NoPermitido"];
+            ViewBag.NoPermiso = TempData["NoPermiso"];
             return View(listaUsuarios);
         }
 
@@ -41,14 +42,19 @@ namespace PracticaMVC.Controllers
         [Authorize(Policy="Administrador")]
         public ActionResult Create()
         {
+            if(!User.IsInRole("Administrador")){
+                TempData["NoPermiso"] = 1;
+                return RedirectToAction("Index");
+            }
             ViewBag.roles = Usuario.getRoles();
             return View();
         }
         
         // POST: Usuario/Create
-        [Authorize(Policy="Administrador")]
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy="Administrador")]
         public ActionResult Create(Usuario usuario)
         {
             if(!ModelState.IsValid){
@@ -137,6 +143,10 @@ namespace PracticaMVC.Controllers
         [Authorize(Policy="Administrador")]
         public ActionResult Delete(int id)
         {
+            if(!User.IsInRole("Administrador")){
+                TempData["NoPermiso"] = 1;
+                return RedirectToAction("Index");
+            }
             Usuario usuario = rpo.obtenerUsuarioById(id);
             return View(usuario);
         }
@@ -144,10 +154,15 @@ namespace PracticaMVC.Controllers
         // POST: Usuario/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy="Administrador")]
         public ActionResult Delete(int id, IFormCollection collection)
         {
             try
             {   
+                if(!User.IsInRole("Administrador")){
+                TempData["NoPermiso"] = 1;
+                return RedirectToAction("Index");
+                }
                 Usuario usuario = rpo.obtenerUsuarioById(id);
                 int res = rpo.eliminarUsuarioById(id);
                 if(res > 0)
