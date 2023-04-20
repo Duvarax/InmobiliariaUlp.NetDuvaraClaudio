@@ -16,6 +16,8 @@ public class Pago
     public int? ContratoId {get; set;}
     [ForeignKey(nameof(ContratoId))]
     public Contrato? contrato {get; set;}
+
+    public Boolean? Activo {get; set;}
     
 
     public Pago()

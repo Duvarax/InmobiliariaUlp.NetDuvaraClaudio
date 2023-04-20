@@ -1,0 +1,20 @@
+@model PracticaMVC.Models.Usuario
+
+@{
+    ViewData["Title"] = "Perfil";
+}
+
+<h1>Perfil</h1>
+
+<h4>Usuario</h4>
+<hr />
+<div class="row">
+    <div class="col-md-12">
+       Usted es: @User.Claims.FirstOrDefault(c => c.Type == "FullName").Value; <br>
+       Email: @User.Claims.FirstOrDefault(c => c.Type == "Email").Value; <br>
+       Rol: @User.Claims.FirstOrDefault(c => c.Type == "Rol").Value;
+    </div>
+</div>
+
+
+

@@ -223,8 +223,10 @@ namespace PracticaMVC.Controllers
             {
                 new Claim("Id", usuario.Id+""),
                 new Claim(ClaimTypes.Name, usuario.Email),
+                new Claim("Email", usuario.Email),
                 new Claim("FullName", usuario.Nombre + " " + usuario.Apellido),
                 new Claim(ClaimTypes.Role, usuario.RolNombre),
+                new Claim("Rol", usuario.RolNombre),
             };
 
             var claimsIdentity = new ClaimsIdentity(
@@ -352,8 +354,9 @@ namespace PracticaMVC.Controllers
             }
         }
 
-        
-        
-
+    public IActionResult Perfil(){
+        return View();
+    }
 }
+
 }

@@ -141,6 +141,39 @@ public class RepositorioPagos
         }
         return pago;
     }
+    public Pago obtenerPagoByIdDeContrato(int id)
+    {
+        Pago? pago = null;
+        using(MySqlConnection conn = new MySqlConnection(ConnectionString))
+        {
+            var query = @$"SELECT p.*, c.fechaInicio FROM pagos p INNER JOIN contratos c WHERE ContratoId =  @id";
+
+            using(MySqlCommand command = new MySqlCommand(query, conn))
+            {
+                command.Parameters.Add("@id", MySqlDbType.Int32).Value = id;
+                command.CommandType = System.Data.CommandType.Text;
+                conn.Open();
+                var reader = command.ExecuteReader();
+                if(reader.Read())
+                {
+                    pago = new Pago
+                    {
+                        Id = reader.GetInt32(nameof(Pago.Id)),
+                        fechaPago = reader.GetDateTime(nameof(Pago.fechaPago)),
+                        Importe = reader.GetDecimal(nameof(Pago.Importe)),
+                        ContratoId = reader.GetInt32(nameof(Pago.ContratoId)),
+                        contrato = new Contrato
+                        {
+                            fechaInicio = reader.GetDateTime(nameof(Contrato.fechaInicio))
+                        }
+                    };
+
+                }
+                conn.Close();
+            }
+        }
+        return pago;
+    }
     public int eliminarPagoById(int id)
     {
         int res = -1;

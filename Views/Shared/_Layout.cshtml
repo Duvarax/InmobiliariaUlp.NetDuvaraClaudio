@@ -49,13 +49,15 @@
                                 <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     Ingresar
                                 </button>
-                                <div class="dropdown-menu bg-dark" aria-labelledby="dropdownMenuButton">
-                                    <a class="dropdown-item  text-light" asp-controller="Usuario" asp-action="Login">Log In</a>
-                                    @if(User.Identity.IsAuthenticated)
+                                @if(User.Identity.IsAuthenticated)
                                     {
+                                <div class="dropdown-menu bg-dark" aria-labelledby="dropdownMenuButton">
+                                    
+                                        <a class="dropdown-item  text-light" asp-controller="Usuario" asp-action="Perfil">Perfil</a>
                                         <a class="dropdown-item  text-light" asp-controller="Usuario" asp-action="Logout">Salir</a>
-                                    }
+                                    
                                 </div>
+                                    }
                             </div>
                         </li>
                     </ul>

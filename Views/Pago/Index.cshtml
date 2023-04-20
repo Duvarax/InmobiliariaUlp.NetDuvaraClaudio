@@ -7,12 +7,6 @@
 
 <h1>Listado de pagos</h1>
 
-@if(User.IsInRole("Administrador"))
-{
-    <p>
-        <a asp-action="Create">Pagar un contrato</a>
-    </p>
-}
 <ul class="d-flex">
     <li  class="bg-dark rounded">
         <a asp-controller="Pago" asp-action="Index" class="btn btn-danger">Eliminar Filtros</a>
@@ -61,8 +55,10 @@
             <td>
                 @Html.ActionLink("Editar", "Edit", new { id=item.Id }) |
                 @Html.ActionLink("Detalles", "Details", new { id=item.Id }) |
-                @Html.ActionLink("Eliminar", "Delete", new { id=item.Id }) |
-                @Html.ActionLink("Cargar Pago", "Pagar", new { id = item.ContratoId})
+                @Html.ActionLink("Cargar Pago", "Pagar", new { id = item.ContratoId}) |
+                @if(User.IsInRole("Administrador")){
+                    @Html.ActionLink("Eliminar", "Delete", new { id = item.Id})
+                }
             </td>
         </tr>
 }

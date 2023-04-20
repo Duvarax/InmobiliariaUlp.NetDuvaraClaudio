@@ -42,8 +42,8 @@ namespace PracticaMVC.Controllers
         [Authorize]
         public ActionResult Pagar(int id){
             ViewBag.Contratos = rpoContrato.GetContratos();
-            Pago pago = rpo.obtenerPagoById(id);
-            return View("Create");
+            Pago pago = rpo.obtenerPagoByIdDeContrato(id);
+            return View("Create", pago);
         }
 
 
