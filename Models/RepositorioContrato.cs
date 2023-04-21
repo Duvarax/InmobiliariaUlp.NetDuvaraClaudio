@@ -16,7 +16,7 @@ public class RepositorioContrato
     List<Contrato> contratos = new List<Contrato>();
     using (MySqlConnection conn = new MySqlConnection(ConnectionString))
     {
-        var query = @"SELECT c.Id, InquilinoId, InmuebleId, fechaInicio, fechaFinalizacion, c.Precio, i.Nombre, i.Apellido, m.Direccion 
+        var query = @"SELECT c.Id, InquilinoId, InmuebleId, fechaInicio, fechaFinalizacion, c.Precio, i.Nombre, i.Apellido, m.Direccion, c.Estado 
                     FROM contratos c INNER JOIN
                     inquilinos i INNER JOIN
                     inmuebles m WHERE c.InquilinoId = i.Id AND c.InmuebleId = m.Id
@@ -37,6 +37,7 @@ public class RepositorioContrato
                     fechaInicio = reader.GetDateTime(3),
                     fechaFinalizacion = reader.GetDateTime(4),
                     Precio = reader.GetDouble(5),
+                    Estado = reader.GetBoolean(9),
                     Inquilino = new Inquilino
                     {
                         Nombre = reader.GetString(6),
@@ -61,11 +62,11 @@ public class RepositorioContrato
     List<Contrato> contratos = new List<Contrato>();
     using (MySqlConnection conn = new MySqlConnection(ConnectionString))
     {
-        var query = @"SELECT c.Id, InquilinoId, InmuebleId, fechaInicio, fechaFinalizacion, c.Precio, i.Nombre, i.Apellido, m.Direccion 
+        var query = @"SELECT c.Id, InquilinoId, InmuebleId, fechaInicio, fechaFinalizacion, c.Precio, i.Nombre, i.Apellido, m.Direccion, c.Estado 
                     FROM contratos c INNER JOIN
                     inquilinos i INNER JOIN
                     inmuebles m 
-                    WHERE CURRENT_DATE BETWEEN date(c.fechaInicio) AND date(c.fechaFinalizacion) AND c.InquilinoId = i.Id AND c.InmuebleId = m.Id";
+                    WHERE c.Estado = 1 AND c.InquilinoId = i.Id AND c.InmuebleId = m.Id";
         
         using (var command = new MySqlCommand(query, conn))
         {
@@ -82,6 +83,7 @@ public class RepositorioContrato
                     fechaInicio = reader.GetDateTime(3),
                     fechaFinalizacion = reader.GetDateTime(4),
                     Precio = reader.GetDouble(5),
+                    Estado = reader.GetBoolean(9),
                     Inquilino = new Inquilino
                     {
                         Nombre = reader.GetString(6),
@@ -107,7 +109,7 @@ public class RepositorioContrato
     List<Contrato> contratos = new List<Contrato>();
     using (MySqlConnection conn = new MySqlConnection(ConnectionString))
     {
-        var query = @"SELECT c.Id, InquilinoId, InmuebleId, fechaInicio, fechaFinalizacion, c.Precio, i.Nombre, i.Apellido, m.Direccion FROM contratos c INNER JOIN inquilinos i INNER JOIN inmuebles m WHERE c.InmuebleId = @id AND c.InquilinoId = i.Id AND c.InmuebleId = m.Id";
+        var query = @"SELECT c.Id, InquilinoId, InmuebleId, fechaInicio, fechaFinalizacion, c.Precio, i.Nombre, i.Apellido, m.Direccion, c.Estado FROM contratos c INNER JOIN inquilinos i INNER JOIN inmuebles m WHERE c.InmuebleId = @id AND c.InquilinoId = i.Id AND c.InmuebleId = m.Id";
         
         using (var command = new MySqlCommand(query, conn))
         {
@@ -125,6 +127,7 @@ public class RepositorioContrato
                     fechaInicio = reader.GetDateTime(3),
                     fechaFinalizacion = reader.GetDateTime(4),
                     Precio = reader.GetDouble(5),
+                    Estado = reader.GetBoolean(9),
                     Inquilino = new Inquilino
                     {
                         Nombre = reader.GetString(6),
@@ -153,7 +156,7 @@ public class RepositorioContrato
     List<Contrato> contratos = new List<Contrato>();
     using (MySqlConnection conn = new MySqlConnection(ConnectionString))
     {
-        var query = @"SELECT c.Id, InquilinoId, InmuebleId, fechaInicio, fechaFinalizacion, c.Precio, i.Nombre, i.Apellido, m.Direccion 
+        var query = @"SELECT c.Id, InquilinoId, InmuebleId, fechaInicio, fechaFinalizacion, c.Precio, i.Nombre, i.Apellido, m.Direccion, c.Estado 
                     FROM contratos c INNER JOIN
                     inquilinos i INNER JOIN
                     inmuebles m 
@@ -177,6 +180,7 @@ public class RepositorioContrato
                     fechaInicio = reader.GetDateTime(3),
                     fechaFinalizacion = reader.GetDateTime(4),
                     Precio = reader.GetDouble(5),
+                    Estado = reader.GetBoolean(9),
                     Inquilino = new Inquilino
                     {
                         Nombre = reader.GetString(6),
@@ -202,7 +206,7 @@ public class RepositorioContrato
     int res = -1;
     using(MySqlConnection conn = new MySqlConnection(ConnectionString))
     {   
-        var query = @"INSERT INTO contratos(`InquilinoId`, `InmuebleId`, `fechaInicio`, `fechaFinalizacion`, `Precio`) VALUES (@inquilinoid, @inmuebleid, @fechainicio, @fechaFinalizacion, @precio); SELECT LAST_INSERT_ID();
+        var query = @"INSERT INTO contratos(`InquilinoId`, `InmuebleId`, `fechaInicio`, `fechaFinalizacion`, `Precio`, `Estado`) VALUES (@inquilinoid, @inmuebleid, @fechainicio, @fechaFinalizacion, @precio, @estado); SELECT LAST_INSERT_ID();
         ;";
         using(var command = new MySqlCommand(query, conn))
         {
@@ -212,6 +216,7 @@ public class RepositorioContrato
             command.Parameters.AddWithValue("@fechainicio", contrato.fechaInicio);
             command.Parameters.AddWithValue("@fechafinalizacion", contrato.fechaFinalizacion);
             command.Parameters.AddWithValue("@precio", contrato.Precio);
+            command.Parameters.AddWithValue("@estado", contrato.Estado);
             conn.Open();
             res = Convert.ToInt32(command.ExecuteScalar());
             contrato.Id = res;
@@ -227,8 +232,8 @@ public class RepositorioContrato
         Contrato? contrato = null;
         using(MySqlConnection conn = new MySqlConnection(ConnectionString))
         {
-            var query = @$"SELECT c.Id, c.fechaInicio, c.fechaFinalizacion,c.Precio, c.InquilinoId, i.Nombre, i.Apellido, c.InmuebleId, 
-            m.Direccion FROM contratos c 
+            var query = @$"SELECT c.Id, c.fechaInicio, c.fechaFinalizacion,c.Precio, c.InquilinoId, i.Nombre, i.Apellido, c.InmuebleId,
+            m.Direccion, c.Estado  FROM contratos c 
             INNER JOIN inquilinos i 
             INNER JOIN inmuebles m 
             ON c.InquilinoId = i.Id AND c.InmuebleId = m.Id 
@@ -249,6 +254,7 @@ public class RepositorioContrato
                         fechaFinalizacion = reader.GetDateTime(2),
                         Precio = reader.GetDouble(3),
                         InquilinoId = reader.GetInt32(4),
+                        Estado = reader.GetBoolean(9),
                         Inquilino = new Inquilino
                         {
                             Nombre = reader.GetString(5),
@@ -294,12 +300,52 @@ public class RepositorioContrato
 			using (var connection = new MySqlConnection(ConnectionString))
 			{
 				string sql = "UPDATE contratos SET " +
-	"InquilinoId=@inquilinoid, InmuebleId=@inmuebleid, fechaInicio=@fechainicio, fechaFinalizacion=@fechafinalizacion WHERE Id = @id";
+	"InquilinoId=@inquilinoid, InmuebleId=@inmuebleid, fechaInicio=@fechainicio, fechaFinalizacion=@fechafinalizacion, Estado = @estado WHERE Id = @id";
 				using (MySqlCommand command = new MySqlCommand(sql, connection))
 				{
 					command.Parameters.AddWithValue("@inquilinoid", contrato.InquilinoId);
 					command.Parameters.AddWithValue("@inmuebleid", contrato.InmuebleId);
 					command.Parameters.AddWithValue("@fechainicio", contrato.fechaInicio);
+                    command.Parameters.AddWithValue("@fechafinalizacion", contrato.fechaFinalizacion);
+                    command.Parameters.AddWithValue("@estado", contrato.Estado);
+					command.Parameters.AddWithValue("@id", contrato.Id);
+					command.CommandType = System.Data.CommandType.Text;
+					connection.Open();
+					res = command.ExecuteNonQuery();
+					connection.Close();
+				}
+			}
+			return res;
+		}
+        public int cancelarContrato(Contrato contrato)
+		{
+			int res = -1;
+			using (var connection = new MySqlConnection(ConnectionString))
+			{
+				string sql = "UPDATE contratos SET fechaFinalizacion = CURRENT_TIMESTAMP, Estado = 0 WHERE Id = @id";
+				using (MySqlCommand command = new MySqlCommand(sql, connection))
+				{
+					command.Parameters.AddWithValue("@inquilinoid", contrato.InquilinoId);
+					command.Parameters.AddWithValue("@inmuebleid", contrato.InmuebleId);
+					command.Parameters.AddWithValue("@fechainicio", contrato.fechaInicio);
+                    command.Parameters.AddWithValue("@fechafinalizacion", contrato.fechaFinalizacion);
+					command.Parameters.AddWithValue("@id", contrato.Id);
+					command.CommandType = System.Data.CommandType.Text;
+					connection.Open();
+					res = command.ExecuteNonQuery();
+					connection.Close();
+				}
+			}
+			return res;
+		}
+        public int renovarContrato(Contrato contrato)
+		{
+			int res = -1;
+			using (var connection = new MySqlConnection(ConnectionString))
+			{
+				string sql = "UPDATE contratos SET fechaInicio = CURRENT_TIMESTAMP, fechaFinalizacion = @fechaFinalizacion, Estado = 1 WHERE Id = @id";
+				using (MySqlCommand command = new MySqlCommand(sql, connection))
+				{
                     command.Parameters.AddWithValue("@fechafinalizacion", contrato.fechaFinalizacion);
 					command.Parameters.AddWithValue("@id", contrato.Id);
 					command.CommandType = System.Data.CommandType.Text;

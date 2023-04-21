@@ -52,12 +52,13 @@
                 <img class="avatar_img rounded" src="@item.Avatar" alt="">
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Rol)
+                @Html.DisplayFor(modelItem => item.RolNombre)
             </td>
             <td>
                 @Html.ActionLink("Editar", "Edit", new { id=item.Id }) |
                 @Html.ActionLink("Detalles", "Details", new { id=item.Id }) |
-                @Html.ActionLink("Eliminar", "Delete", new { id=item.Id })
+                @Html.ActionLink("Eliminar", "Delete", new { id=item.Id }) |
+                
             </td>
         </tr>
 }

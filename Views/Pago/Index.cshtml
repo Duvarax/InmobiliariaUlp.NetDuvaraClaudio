@@ -4,7 +4,12 @@
     ViewData["Title"] = "Listado de pagos";
     var Contratos = (IList<Contrato>) ViewBag.Contratos;
 }
-
+@if(User.IsInRole("Administrador"))
+{
+    <p>
+        <a asp-action="Create">Crear nuevo pago</a>
+    </p>
+}
 <h1>Listado de pagos</h1>
 
 <ul class="d-flex">

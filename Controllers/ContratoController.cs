@@ -19,8 +19,11 @@ namespace PracticaMVC.Controllers
         public ActionResult Index()
         {
             ViewBag.CreacionExitosa = TempData["CreacionExitosa"];
-            ViewBag.CreacionExitosa = TempData["ModificacionExitosa"];
+            ViewBag.ModificacionExitosa = TempData["ModificacionExitosa"];
             ViewBag.Inmuebles = repositorioInmueble.GetInmuebles();
+            ViewBag.EliminacionExitosa = TempData["EliminacionExitosa"];
+            ViewBag.Multa = TempData["Multa"];
+            ViewBag.Renovar = TempData["Renovar"];
             List<Contrato> listaContratos = repositorioContrato.GetContratos();
             return View(listaContratos);
         }
@@ -84,7 +87,10 @@ namespace PracticaMVC.Controllers
         {
             try
             {
+                contrato.Estado = true;
                 // TODO: Add insert logic here
+                ViewBag.Inquilinos = repositorioInquilino.GetInquilinos();
+                ViewBag.Inmuebles = repositorioInmueble.GetInmuebles();
                 int res = repositorioContrato.agregarContrato(contrato);
                 if(res > 0){
                     TempData["CreacionExitosa"] = contrato.Id;
@@ -142,7 +148,7 @@ namespace PracticaMVC.Controllers
         }
 
         // GET: Contrato/Delete/5
-        [Authorize]
+        [Authorize(Policy="Administrador")]
         public ActionResult Delete(int id)
         {
             Contrato contrato = repositorioContrato.obtenerContratoById(id);
@@ -152,7 +158,7 @@ namespace PracticaMVC.Controllers
         // POST: Contrato/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize]
+        [Authorize(Policy="Administrador")]
         public ActionResult Delete(int id, IFormCollection collection)
         {
             try
@@ -163,6 +169,7 @@ namespace PracticaMVC.Controllers
                     TempData["EliminacionExitosa"] = 1;
                     return RedirectToAction(nameof(Index));
                 }else{
+                    TempData["Error"] = 1;
                     return RedirectToAction(nameof(Index));
                 }
                 
@@ -170,8 +177,98 @@ namespace PracticaMVC.Controllers
             catch(Exception e)
             {
                 TempData["Error"] = 1;
-                Console.WriteLine(e);
                 return View();
+            }
+        }
+        [Authorize]
+        public IActionResult Cancelar(int id){
+            
+            try
+            {
+                Contrato contrato = repositorioContrato.obtenerContratoById(id);
+                ViewBag.Cancelar = "Cancelar";
+                return View("Delete", contrato);
+            }
+            catch (Exception)
+            {
+                
+                TempData["Error"] = 1;
+                return RedirectToAction(nameof(Index));
+            }
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize]
+
+        public IActionResult Cancelar(int id, IFormCollection collection){
+
+            try
+            {
+            Contrato contrato = repositorioContrato.obtenerContratoById(id);
+                Double multa;
+            DateTime hoy = DateTime.Today;
+            DateTime fechaFinalizacion = (DateTime)contrato.fechaFinalizacion;
+            TimeSpan tiempoDiferencia = fechaFinalizacion.Subtract(hoy);
+            int mesesDiferencia = (int) Math.Round(tiempoDiferencia.TotalDays / 30.0);
+        
+            if (mesesDiferencia == 1)
+            {
+                multa = (double)(contrato.Precio / 30.0);
+            }else
+            {
+                multa = (double)((contrato.Precio / 30.0) * 2);
+
+            }
+            int res = repositorioContrato.cancelarContrato(contrato);
+            if(res > 0){
+                TempData["Multa"] = Math.Round(multa, 2) + "";
+                return RedirectToAction(nameof(Index));
+            }
+            return View();
+            }
+            catch (Exception)
+            {
+                TempData["Error"] = 1;
+                return RedirectToAction(nameof(Index));
+            }
+        }
+
+        [Authorize]
+        public IActionResult Renovar(int id)
+        {
+             try
+            {
+                Contrato contrato = repositorioContrato.obtenerContratoById(id);
+                ViewBag.Renovar = "Renovar";
+                return View(contrato);
+            }
+            catch (Exception)
+            {
+                
+                TempData["Error"] = 1;
+                return RedirectToAction(nameof(Index));
+            }
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize]
+        public IActionResult Renovar(int id, Contrato contrato)
+        {
+            try
+            {
+                contrato.Id = id;
+                int res = repositorioContrato.renovarContrato(contrato);
+                if(res > 0){
+                    TempData["Renovar"] = 1;
+                    return RedirectToAction(nameof(Index));
+                }
+                return View(Index);
+            }
+            catch (Exception)
+            {
+                
+                TempData["Error"] = 1;
+                return RedirectToAction(nameof(Index));
             }
         }
     }

@@ -20,10 +20,14 @@ public class Contrato
     [Display(Name ="Finalizacion del contrato")]
     public DateTime? fechaFinalizacion { get; set; }
     public Double? Precio {get; set;}
+    public Boolean? Estado{get; set;}
+
+    public string? EstadoNombre => Estado == true ? "Activo" : "Finalizado";
 
     public Contrato()
     {
        
     }
+
 
 }

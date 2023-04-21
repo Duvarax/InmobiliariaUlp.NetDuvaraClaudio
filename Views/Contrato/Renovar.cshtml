@@ -1,0 +1,52 @@
+@model PracticaMVC.Models.Contrato
+
+@{
+    ViewData["Title"] = "Renovar";
+}
+
+<h1>Renovar</h1>
+
+<h4></h4>Contrato</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Renovar">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group" id="inquilino-container">
+                <label for="InquilinoId" class="control-label btn-light">
+                    <span> @Model.Inquilino.Nombre  @Model.Inquilino.Apellido</span>
+                </label>
+                <input type="hidden" name="InquilinoId" class="form-control inquilino-input" id="InquilinoId" value="@Model.InquilinoId" style="display: inline;"/>
+                <span asp-validation-for="InquilinoId" class="text-danger"></span>
+            </div>
+            <div class="form-group" id="inmueble-container">
+                <label asp-for="InmuebleId" class="control-label btn-light">
+                    <span> @Model.Inmueble.Direccion </span>
+                </label>
+                <input type="hidden" asp-for="InmuebleId" class="form-control inquilino-input" id="InmuebleId" value="@Model.InmuebleId" />
+                <span asp-validation-for="InmuebleId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="fechaFinalizacion" class="control-label"></label>
+                <input asp-for="fechaFinalizacion" class="form-control" />
+                <span asp-validation-for="fechaFinalizacion" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Precio" class="control-label"></label>
+                <input asp-for="Precio" class="form-control" />
+                <span asp-validation-for="Precio" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Volver al listado</a>
+</div>
+
+
+
+

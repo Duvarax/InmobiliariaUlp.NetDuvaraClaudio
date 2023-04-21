@@ -2,6 +2,8 @@
 
 @{
     ViewData["Title"] = "Eliminar contrato";
+    var cancelar = (string) ViewBag.Cancelar;
+    var renovar = (string) ViewBag.Renovar;
 }
 
 <h1>Eliminar contrato</h1>
@@ -37,8 +39,21 @@
         </dd>
     </dl>
     
-    <form asp-action="Delete">
+    @if(cancelar == "Cancelar"){
+        <form asp-action="Cancelar">
+            <input type="submit" value="Cancelar" class="btn btn-danger" /> |
+        <a asp-action="Index">Volver al listado</a>
+        </form>
+    }else if(renovar == "Renovar"){
+        <form asp-action="Renovar">
+            <input type="submit" value="Renovar" class="btn btn-info" /> |
+        <a asp-action="Index">Volver al listado</a>
+        </form>
+    }
+    else{
+        <form asp-action="Delete">
         <input type="submit" value="Eliminar" class="btn btn-danger" /> |
         <a asp-action="Index">Volver al listado</a>
     </form>
+    }
 </div>
