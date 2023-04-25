@@ -4,8 +4,11 @@ namespace PracticaMVC.Models;
 
 public class Pago
 {   
-    [Display(Name="Nro")]
+    [Display(Name="Nro Identificador")]
     public int? Id { get; set; }
+
+    [Display(Name="Nro de pago")]
+    public int? IdentificadorPago {get; set;}
 
     [Display(Name ="Fecha de pago")]
     public DateTime? fechaPago {get; set;}

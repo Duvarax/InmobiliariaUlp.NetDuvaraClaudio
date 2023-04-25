@@ -12,19 +12,26 @@
     <div class="col-md-4">
         <form asp-action="Renovar">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group" id="inquilino-container">
-                <label for="InquilinoId" class="control-label btn-light">
+            <div class="form-group" id="inquilino-container" >
+                <label class="control-label">Dueño</label>
+                <div class="btn-light form-control bg-info">
                     <span> @Model.Inquilino.Nombre  @Model.Inquilino.Apellido</span>
-                </label>
+                </div>
                 <input type="hidden" name="InquilinoId" class="form-control inquilino-input" id="InquilinoId" value="@Model.InquilinoId" style="display: inline;"/>
                 <span asp-validation-for="InquilinoId" class="text-danger"></span>
             </div>
             <div class="form-group" id="inmueble-container">
-                <label asp-for="InmuebleId" class="control-label btn-light">
+                <label class="control-label">Direccion</label> <br>
+                <div  class="btn-light form-control bg-info">
                     <span> @Model.Inmueble.Direccion </span>
-                </label>
+                </div>
                 <input type="hidden" asp-for="InmuebleId" class="form-control inquilino-input" id="InmuebleId" value="@Model.InmuebleId" />
                 <span asp-validation-for="InmuebleId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="fechaInicio" class="control-label"></label>
+                <input asp-for="fechaInicio" class="form-control" />
+                <span asp-validation-for="fechaInicio" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="fechaFinalizacion" class="control-label"></label>
@@ -37,7 +44,7 @@
                 <span asp-validation-for="Precio" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="Renovar" class="btn btn-primary" />
             </div>
         </form>
     </div>

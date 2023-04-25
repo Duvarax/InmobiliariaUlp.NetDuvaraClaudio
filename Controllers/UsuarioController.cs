@@ -19,12 +19,13 @@ namespace PracticaMVC.Controllers
             rpo = new RepositorioUsuario();
         }
         // GET: Usuario
-        [Authorize]
+        [Authorize(Policy="Administrador")]
         public ActionResult Index()
         {
             List<Usuario> listaUsuarios = rpo.GetUsuarios();
             ViewBag.CreacionExitosa = TempData["CreacionExitosa"];
             ViewBag.ModificacionExitosa = TempData["ModificacionExitosa"];
+            ViewBag.EliminacionExitosa = TempData["EliminacionExitosa"];
             ViewBag.NoPermitido = TempData["NoPermitido"];
             ViewBag.NoPermiso = TempData["NoPermiso"];
             return View(listaUsuarios);
@@ -37,6 +38,20 @@ namespace PracticaMVC.Controllers
             Usuario usuario = rpo.obtenerUsuarioById(id);
             return View(usuario);
         }
+
+        [Authorize]
+        public ActionResult Perfil()
+        {
+            Usuario usuario = rpo.obtenerUsuarioById(Int32.Parse((User.Claims.FirstOrDefault(c => c.Type == "Id").Value)));
+            return View(nameof(Details),usuario);
+        }
+        [Authorize]
+        public ActionResult EditarPerfil()
+        {
+            Usuario usuario = rpo.obtenerUsuarioById(Int32.Parse((User.Claims.FirstOrDefault(c => c.Type == "Id").Value)));
+            return View(nameof(Edit),usuario);
+        }
+
 
         // GET: Usuario/Create
         [Authorize(Policy="Administrador")]
@@ -99,14 +114,9 @@ namespace PracticaMVC.Controllers
         }
 
         // GET: Usuario/Edit/5
-        [Authorize]
+        [Authorize(Policy="Administrador")]
         public ActionResult Edit(int id)
         {
-            int x = Int32.Parse((User.Claims.FirstOrDefault(c => c.Type == "Id").Value));
-            if(id !=  x){
-                TempData["NoPermitido"] = 1;
-                return RedirectToAction("Index");
-            }
             Usuario usuario = rpo.obtenerUsuarioById(id);
             return View(usuario);
         }
@@ -114,7 +124,7 @@ namespace PracticaMVC.Controllers
         // POST: Usuario/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize]
+        [Authorize(Policy="Administrador")]
         public ActionResult Edit(int id, Usuario usuario)
         {
             try
@@ -127,7 +137,7 @@ namespace PracticaMVC.Controllers
                 int res = rpo.modificarUsuario(usuario);
                 if(res > 0){
                     TempData["ModificacionExitosa"] = 1;
-                    return RedirectToAction(nameof(Index));
+                    return RedirectToAction(nameof(Perfil));
                 }
                 return View();
             }
@@ -170,6 +180,7 @@ namespace PracticaMVC.Controllers
                     var ruta = Path.Combine(enviroment.WebRootPath, "Uploads", "profile_avatar_"+id + Path.GetExtension(usuario.Avatar));
                     if (System.IO.File.Exists(ruta))
                         System.IO.File.Delete(ruta);
+                    TempData["EliminacionExitosa"] = 1;
                     return RedirectToAction(nameof(Index));
                 }
 
@@ -255,12 +266,12 @@ namespace PracticaMVC.Controllers
         [Authorize]
         public IActionResult CambiarAvatar(int id)
         {   
-            int x = Int32.Parse((User.Claims.FirstOrDefault(c => c.Type == "Id").Value));
-            if(id !=  x){
-                TempData["NoPermitido"] = 1;
-                return RedirectToAction("Index");
+            Usuario usuario = null;
+            if(id == 0){
+                usuario = rpo.obtenerUsuarioById(Int32.Parse((User.Claims.FirstOrDefault(c => c.Type == "Id").Value)));
+            }else if(User.IsInRole("Administrador")){
+                usuario = rpo.obtenerUsuarioById(id);
             }
-            Usuario usuario = rpo.obtenerUsuarioById(id);
             return View(usuario);
         }
 
@@ -268,12 +279,16 @@ namespace PracticaMVC.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public IActionResult CambiarAvatar(int id, Usuario user)
+        public IActionResult CambiarAvatar(int id,Usuario user)
         {
 
             try{
-                Usuario usuario = rpo.obtenerUsuarioById(id);
-                usuario.Id = id;
+                Usuario usuario = null;
+                if(id == 0){
+                    usuario = rpo.obtenerUsuarioById(Int32.Parse((User.Claims.FirstOrDefault(c => c.Type == "Id").Value)));
+                }else if(User.IsInRole("Administrador")){
+                    usuario = rpo.obtenerUsuarioById(id);
+                }
                 string wwwPath = enviroment.WebRootPath;
                 string path = Path.Combine(wwwPath, "Uploads");
                 string fileName = "profile_avatar_"+usuario.Id + Path.GetExtension(user.AvatarFile.FileName);
@@ -287,7 +302,7 @@ namespace PracticaMVC.Controllers
                 if(res > 0)
                 {
                     TempData["ModificacionExitosa"] = 1;
-                    return RedirectToAction("Index");
+                    return RedirectToAction("Perfil");
                 }
                 return View();
             }catch(Exception ex){
@@ -300,12 +315,12 @@ namespace PracticaMVC.Controllers
         //GET: Usuario/CambiarContraseña
         [Authorize]
         public IActionResult CambiarContraseña(int id){
-            int x = Int32.Parse((User.Claims.FirstOrDefault(c => c.Type == "Id").Value));
-            if(id !=  x){
-                TempData["NoPermitido"] = 1;
-                return RedirectToAction("Index");
-            }
-            Usuario usuario = rpo.obtenerUsuarioById(id);
+            Usuario usuario = null;
+                if(id == 0){
+                    usuario = rpo.obtenerUsuarioById(Int32.Parse((User.Claims.FirstOrDefault(c => c.Type == "Id").Value)));
+                }else if(User.IsInRole("Administrador")){
+                    usuario = rpo.obtenerUsuarioById(id);
+                }
             return View(usuario);
         }
 
@@ -313,13 +328,18 @@ namespace PracticaMVC.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public IActionResult CambiarContraseña(int id, IFormCollection collection)
+        public IActionResult CambiarContraseña(int id,IFormCollection collection)
         {
             if(!ModelState.IsValid){
                 return View();
             }
             try{
-                Usuario usuario = rpo.obtenerUsuarioById(id);
+                Usuario usuario = null;
+                if(id == 0){
+                    usuario = rpo.obtenerUsuarioById(Int32.Parse((User.Claims.FirstOrDefault(c => c.Type == "Id").Value)));
+                }else if(User.IsInRole("Administrador")){
+                    usuario = rpo.obtenerUsuarioById(id);
+                }
                 string contraseña_vieja = Convert.ToBase64String(KeyDerivation.Pbkdf2(
                     password: collection["contraseña_vieja"],
                     salt: System.Text.Encoding.ASCII.GetBytes(configuration["Salt"]),
@@ -342,7 +362,7 @@ namespace PracticaMVC.Controllers
                 if(res > 0)
                 {
                     TempData["ModificacionExitosa"] = 1;
-                    return RedirectToAction(nameof(Index));
+                    return RedirectToAction(nameof(Perfil));
                 }
             }
                 return View();
@@ -354,9 +374,6 @@ namespace PracticaMVC.Controllers
             }
         }
 
-    public IActionResult Perfil(){
-        return View();
-    }
 }
 
 }

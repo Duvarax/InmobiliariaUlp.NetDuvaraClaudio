@@ -17,9 +17,9 @@ public class Inmueble
     public Propietario? Duenio {get; set;}
 
     public decimal Precio {get; set;}
-    public int Estado {get; set;}
+    public Boolean Estado {get; set;}
 
-    public string EstadoNombre => Estado == 1 ? "Disponible" : "No Disponible"; 
+    public string? EstadoNombre => Estado == true ? "Disponible" : "No Disponible";
     
 
     public Inmueble()

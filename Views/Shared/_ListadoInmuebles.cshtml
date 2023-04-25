@@ -32,6 +32,9 @@
             <th>
                 Dueño
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Estado)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -61,6 +64,9 @@
             </td>
             <td>
                 @(item.Duenio.Nombre + " " + item.Duenio.Apellido)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EstadoNombre)
             </td>
             <td>
                 @Html.ActionLink("Editar", "Edit", new { id=item.Id }) |

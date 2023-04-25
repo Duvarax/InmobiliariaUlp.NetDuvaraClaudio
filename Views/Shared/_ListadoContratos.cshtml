@@ -61,6 +61,7 @@
                 @if(User.IsInRole("Administrador")){
                     @Html.ActionLink("Eliminar", "Delete", new { id=item.Id }) 
                 }
+                @Html.ActionLink("Cargar Pago", "Pagar", "Pago", new { id = item.Id}) |
                 
             </td>
         </tr>

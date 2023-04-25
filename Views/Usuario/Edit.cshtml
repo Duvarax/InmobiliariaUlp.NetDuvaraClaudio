@@ -1,10 +1,10 @@
 @model PracticaMVC.Models.Usuario
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Editar Usuario";
 }
 
-<h1>Edit</h1>
+<h1>Editar Usuario</h1>
 
 <h4>Usuario</h4>
 <hr />
@@ -45,16 +45,31 @@
 				<span asp-validation-for="Rol" class="text-danger"></span>
             </div>
             }
+            @if(User.IsInRole("Administrador")){
+                @if(Int32.Parse((User.Claims.FirstOrDefault(c => c.Type == "Id").Value)) != Model.Id){
+                    <b class="btn btn-light my-2">@Html.ActionLink("Cambiar Avatar", "CambiarAvatar", new {id = Model.Id})</b> <br>
+                    <b class="btn btn-light my-2">@Html.ActionLink("Cambiar Contraseña", "CambiarContraseña" , new {id = Model.Id})</b>
+                }else{
+                <b class="btn btn-light my-2">@Html.ActionLink("Cambiar Avatar", "CambiarAvatar")</b> <br>
+                <b class="btn btn-light my-2">@Html.ActionLink("Cambiar Contraseña", "CambiarContraseña")</b>
+                }
+            }else{
+                <b class="btn btn-light my-2">@Html.ActionLink("Cambiar Avatar", "CambiarAvatar")</b> <br>
+                <b class="btn btn-light my-2">@Html.ActionLink("Cambiar Contraseña", "CambiarContraseña")</b>
+            }
+                 
+            
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="Editar" class="btn btn-primary" />
             </div>
-            @Html.ActionLink("Cambiar Avatar", "CambiarAvatar", new { id=Model.Id }) <br>
-                @Html.ActionLink("Cambiar Contraseña", "CambiarContraseña", new { id=Model.Id }) 
+            
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+
+        <a asp-action="Perfil">Volver al perfil</a>
+    
 </div>
 

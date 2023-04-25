@@ -74,7 +74,12 @@ namespace PracticaMVC.Controllers
             ViewBag.Contratos = rpoContrato.GetContratos();
             try
             {
-                // TODO: Add insert logic here
+                if(pago.IdentificadorPago == null || pago.IdentificadorPago == 0){
+                    pago.IdentificadorPago = 1;
+                }else{
+                    pago.IdentificadorPago++;
+                }
+                
                 int res = rpo.agregarPago(pago);
                 if(res > 0){
                     TempData["CreacionExitosa"] = 1;
@@ -87,7 +92,7 @@ namespace PracticaMVC.Controllers
             }
             catch(Exception e)
             {
-                TempData["Error"] = "Parametros nulos";
+                TempData["Error"] = e+"";
                  return RedirectToAction(nameof(Create));
             }
         }

@@ -94,12 +94,18 @@ namespace PracticaMVC.Controllers
                 // TODO: Add insert logic here
                 ViewBag.Inquilinos = repositorioInquilino.GetInquilinos();
                 ViewBag.Inmuebles = repositorioInmueble.GetInmuebles();
-                int res = repositorioContrato.agregarContrato(contrato);
+                int contador = repositorioContrato.varificarSuperposicionDeFechas(contrato);
+                if(contador < 1){
+                    int res = repositorioContrato.agregarContrato(contrato);
                 if(res > 0){
                     TempData["CreacionExitosa"] = contrato.Id;
                     return RedirectToAction(nameof(Index));
                 }else{
                     TempData["Error"] = "Campos no completados correctamente";
+                    return RedirectToAction(nameof(Index));
+                }
+                }else{
+                    TempData["Error"] = "Fechas superpuestas con otro contrato";
                     return RedirectToAction(nameof(Index));
                 }
                 
@@ -134,7 +140,9 @@ namespace PracticaMVC.Controllers
                 // TODO: Add update logic here
                 contrato.Id = id;
                 
-                if(contrato.InmuebleId != null || contrato.InmuebleId != null){
+                int contador = repositorioContrato.varificarSuperposicionDeFechas(contrato);
+                if(contador < 1){
+                    if(contrato.InmuebleId != null || contrato.InmuebleId != null){
                     int res = repositorioContrato.modificarContrato(contrato);
                     if(res > 0){
                         TempData["ModificacionExitosa"] = 1;
@@ -143,6 +151,10 @@ namespace PracticaMVC.Controllers
                 }else{
                    TempData["Error"] = "Campos no completados correctamente";
                     return RedirectToAction(nameof(Index)); 
+                }
+                }else{
+                    TempData["Error"] = "Fechas superpuestas con otro contrato";
+                    return RedirectToAction(nameof(Index));
                 }
                 return RedirectToAction(nameof(Index)); 
             }
@@ -263,9 +275,15 @@ namespace PracticaMVC.Controllers
             try
             {
                 contrato.Id = id;
-                int res = repositorioContrato.renovarContrato(contrato);
+                int contador = repositorioContrato.varificarSuperposicionDeFechas(contrato);
+                if(contador < 1){
+                    int res = repositorioContrato.renovarContrato(contrato);
                 if(res > 0){
                     TempData["Renovar"] = 1;
+                    return RedirectToAction(nameof(Index));
+                }
+                }else{
+                    TempData["Error"] = "Fechas superpuestas con otro contrato";
                     return RedirectToAction(nameof(Index));
                 }
                 return View(Index);

@@ -16,7 +16,7 @@ public class RepositorioPagos
     List<Pago> Pagos = new List<Pago>();
     using (MySqlConnection conn = new MySqlConnection(ConnectionString))
     {
-        var query = @"SELECT p.Id, p.FechaPago, p.Importe, p.ContratoId, fechaInicio FROM pagos p INNER JOIN contratos c WHERE p.ContratoId = c.Id";
+        var query = @"SELECT p.Id, p.IdentificadorPago, p.FechaPago, p.Importe, p.ContratoId, fechaInicio FROM pagos p INNER JOIN contratos c WHERE p.ContratoId = c.Id";
         
         using (var command = new MySqlCommand(query, conn))
         {
@@ -28,6 +28,7 @@ public class RepositorioPagos
                {
                 Pago pago = new Pago{
                     Id = reader.GetInt32(nameof(Pago.Id)),
+                    IdentificadorPago = reader.GetInt32(nameof(Pago.IdentificadorPago)),
                     fechaPago = reader.GetDateTime(nameof(Pago.fechaPago)),
                     Importe = reader.GetDecimal(nameof(Pago.Importe)),
                     ContratoId = reader.GetInt32(nameof(Pago.ContratoId)),
@@ -52,7 +53,7 @@ public class RepositorioPagos
     List<Pago> Pagos = new List<Pago>();
     using (MySqlConnection conn = new MySqlConnection(ConnectionString))
     {
-        var query = @"SELECT p.Id, p.FechaPago, p.Importe, p.ContratoId, fechaInicio FROM pagos p INNER JOIN contratos c WHERE p.ContratoId = @id AND p.ContratoId = c.Id";
+        var query = @"SELECT p.Id, p.IdentificadorPago, p.FechaPago, p.Importe, p.ContratoId, fechaInicio FROM pagos p INNER JOIN contratos c WHERE p.ContratoId = @id AND p.ContratoId = c.Id";
         
         using (var command = new MySqlCommand(query, conn))
         {
@@ -65,6 +66,7 @@ public class RepositorioPagos
                {
                 Pago pago = new Pago{
                     Id = reader.GetInt32(nameof(Pago.Id)),
+                    IdentificadorPago = reader.GetInt32(nameof(Pago.IdentificadorPago)),
                     fechaPago = reader.GetDateTime(nameof(Pago.fechaPago)),
                     Importe = reader.GetDecimal(nameof(Pago.Importe)),
                     ContratoId = reader.GetInt32(nameof(Pago.ContratoId)),
@@ -84,17 +86,21 @@ public class RepositorioPagos
     return Pagos;
    }
 
-
    public int agregarPago(Pago pago)
    {
     int res = -1;
     using(MySqlConnection conn = new MySqlConnection(ConnectionString))
     {   
-        var query = @"INSERT INTO Pagos(`fechaPago`, `Importe`, `ContratoId`) VALUES (@fechapago, @importe, @idcontrato); SELECT LAST_INSERT_ID();
+        var query = @"INSERT INTO Pagos (`IdentificadorPago`, `fechaPago`, `Importe`, `ContratoId`)
+SELECT COALESCE(MAX(`IdentificadorPago`), 0) + 1, @fechapago, @importe, @idcontrato 
+FROM Pagos
+WHERE ContratoId = @idcontrato
+ON DUPLICATE KEY UPDATE IdentificadorPago = IdentificadorPago + 1;  SELECT LAST_INSERT_ID();
         ;";
         using(var command = new MySqlCommand(query, conn))
         {
             command.CommandType = System.Data.CommandType.Text;
+            command.Parameters.AddWithValue("@identificadorpago", pago.IdentificadorPago);
             command.Parameters.AddWithValue("@fechapago", pago.fechaPago);
             command.Parameters.AddWithValue("@importe", pago.Importe);
             command.Parameters.AddWithValue("@idcontrato", pago.ContratoId);
@@ -126,6 +132,7 @@ public class RepositorioPagos
                     pago = new Pago
                     {
                         Id = reader.GetInt32(nameof(Pago.Id)),
+                        IdentificadorPago = reader.GetInt32(nameof(Pago.IdentificadorPago)),
                         fechaPago = reader.GetDateTime(nameof(Pago.fechaPago)),
                         Importe = reader.GetDecimal(nameof(Pago.Importe)),
                         ContratoId = reader.GetInt32(nameof(Pago.ContratoId)),
@@ -159,6 +166,7 @@ public class RepositorioPagos
                     pago = new Pago
                     {
                         Id = reader.GetInt32(nameof(Pago.Id)),
+                        IdentificadorPago = reader.GetInt32(nameof(Pago.IdentificadorPago)),
                         fechaPago = reader.GetDateTime(nameof(Pago.fechaPago)),
                         Importe = reader.GetDecimal(nameof(Pago.Importe)),
                         ContratoId = reader.GetInt32(nameof(Pago.ContratoId)),

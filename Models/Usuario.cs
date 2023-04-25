@@ -15,6 +15,7 @@ public class Usuario
     public string Nombre { get; set; }
     public string Apellido { get; set; }
     public string Email {get; set;}
+    [Display(Name = "Nickname")]
     public string NombreUsuario {get; set;}
     public string Contraseña { get; set; }
     public string? Avatar {get; set;}

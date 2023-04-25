@@ -200,6 +200,33 @@ public class RepositorioContrato
     }
     return contratos;
    }
+   public int varificarSuperposicionDeFechas(Contrato contrato){
+        int cont = 0;
+        using(MySqlConnection conn = new MySqlConnection(ConnectionString))
+        {
+            var query = @"SELECT COUNT(*) as count FROM Contratos
+    WHERE (FechaInicio BETWEEN @inicio AND @final)
+   OR (FechaFinalizacion BETWEEN @inicio AND @final)
+   OR (@inicio BETWEEN FechaInicio AND FechaFinalizacion)
+   OR (@final BETWEEN FechaInicio AND FechaFinalizacion);";
+        using(var command = new MySqlCommand(query, conn))
+                {
+                    command.CommandType = System.Data.CommandType.Text;
+                    command.Parameters.AddWithValue("@inicio", contrato.fechaInicio);
+                    command.Parameters.AddWithValue("@final", contrato.fechaFinalizacion);
+                    conn.Open();
+                    using(var reader = command.ExecuteReader())
+                    {
+                        if(reader.Read())
+                        {
+                            cont = reader.GetInt32("count");
+                        }
+                    }
+                }
+        }
+        
+        return cont;
+    }
 
    public int agregarContrato(Contrato contrato)
    {

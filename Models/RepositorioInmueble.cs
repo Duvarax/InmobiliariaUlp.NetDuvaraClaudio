@@ -16,8 +16,8 @@ public class RepositorioInmueble
     List<Inmueble> inmuebles = new List<Inmueble>();
     using (MySqlConnection conn = new MySqlConnection(ConnectionString))
     {
-        var query = @"SELECT i.Id, i.Direccion, i.Ambientes, i.Superficie, i.Latitud, i.Longitud, i.Precio,
-        i.PropietarioId, p.Nombre, p.Apellido 
+        var query = @"SELECT i.Id, Direccion, Ambientes, Superficie, Latitud, Longitud, Precio,
+        PropietarioId, Estado, Nombre, Apellido 
         FROM inmuebles i INNER JOIN propietarios p ON i.PropietarioId = p.Id;";
         
         using (var command = new MySqlCommand(query, conn))
@@ -30,17 +30,18 @@ public class RepositorioInmueble
                {
                 Inmueble inmueble = new Inmueble{
                     Id = reader.GetInt32(0),
-                    Direccion = reader.GetString(1),
-                    Ambientes = reader.GetInt32(2),
-                    Superficie = reader.GetInt32(3),
-                    Latitud = reader.GetDecimal(4),
-                    Longitud = reader.GetDecimal(5),
-                    Precio = reader.GetDecimal(6),
-                    PropietarioId = reader.GetInt32(7),
+                    Direccion = reader.GetString("Direccion"),
+                    Ambientes = reader.GetInt32("Ambientes"),
+                    Superficie = reader.GetInt32("Superficie"),
+                    Latitud = reader.GetDecimal("Latitud"),
+                    Longitud = reader.GetDecimal("Longitud"),
+                    Precio = reader.GetDecimal("Precio"),
+                    PropietarioId = reader.GetInt32("PropietarioId"),
+                    Estado = reader.GetBoolean("Estado"),
                     Duenio = new Propietario
                     {
-                        Nombre = reader.GetString(8),
-                        Apellido = reader.GetString(9),
+                        Nombre = reader.GetString("Nombre"),
+                        Apellido = reader.GetString("Apellido"),
                     }
                     
                 };
@@ -58,8 +59,8 @@ public class RepositorioInmueble
     List<Inmueble> inmuebles = new List<Inmueble>();
     using (MySqlConnection conn = new MySqlConnection(ConnectionString))
     {
-        var query = @"SELECT i.Id, i.Direccion, i.Ambientes, i.Superficie, i.Latitud, i.Longitud, i.Precio,
-        i.PropietarioId, p.Nombre, p.Apellido 
+        var query = @"SELECT SELECT i.Id, Direccion, Ambientes, Superficie, Latitud, Longitud, Precio,
+        PropietarioId, Estado, Nombre, Apellido 
         FROM inmuebles i INNER JOIN propietarios p ON i.PropietarioId = p.Id AND i.Estado = 1;";
         
         using (var command = new MySqlCommand(query, conn))
@@ -72,17 +73,18 @@ public class RepositorioInmueble
                {
                 Inmueble inmueble = new Inmueble{
                     Id = reader.GetInt32(0),
-                    Direccion = reader.GetString(1),
-                    Ambientes = reader.GetInt32(2),
-                    Superficie = reader.GetInt32(3),
-                    Latitud = reader.GetDecimal(4),
-                    Longitud = reader.GetDecimal(5),
-                    Precio = reader.GetDecimal(6),
-                    PropietarioId = reader.GetInt32(7),
+                    Direccion = reader.GetString("Direccion"),
+                    Ambientes = reader.GetInt32("Ambientes"),
+                    Superficie = reader.GetInt32("Superficie"),
+                    Latitud = reader.GetDecimal("Latitud"),
+                    Longitud = reader.GetDecimal("Longitud"),
+                    Precio = reader.GetDecimal("Precio"),
+                    PropietarioId = reader.GetInt32("PropietarioId"),
+                    Estado = reader.GetBoolean("Estado"),
                     Duenio = new Propietario
                     {
-                        Nombre = reader.GetString(8),
-                        Apellido = reader.GetString(9),
+                        Nombre = reader.GetString("Nombre"),
+                        Apellido = reader.GetString("Apellido"),
                     }
                     
                 };
@@ -100,8 +102,8 @@ public class RepositorioInmueble
     List<Inmueble> inmuebles = new List<Inmueble>();
     using (MySqlConnection conn = new MySqlConnection(ConnectionString))
     {
-        var query = @"SELECT i.Id, i.Direccion, i.Ambientes, i.Superficie, i.Latitud, i.Longitud, i.Precio,
-        i.PropietarioId, p.Nombre, p.Apellido 
+        var query = @"SELECT SELECT i.Id, Direccion, Ambientes, Superficie, Latitud, Longitud, Precio,
+        PropietarioId, Estado, Nombre, Apellido 
         FROM inmuebles i INNER JOIN propietarios p ON i.PropietarioId = p.Id AND i.Estado = 0;";
         
         using (var command = new MySqlCommand(query, conn))
@@ -114,17 +116,18 @@ public class RepositorioInmueble
                {
                 Inmueble inmueble = new Inmueble{
                     Id = reader.GetInt32(0),
-                    Direccion = reader.GetString(1),
-                    Ambientes = reader.GetInt32(2),
-                    Superficie = reader.GetInt32(3),
-                    Latitud = reader.GetDecimal(4),
-                    Longitud = reader.GetDecimal(5),
-                    Precio = reader.GetDecimal(6),
-                    PropietarioId = reader.GetInt32(7),
+                    Direccion = reader.GetString("Direccion"),
+                    Ambientes = reader.GetInt32("Ambientes"),
+                    Superficie = reader.GetInt32("Superficie"),
+                    Latitud = reader.GetDecimal("Latitud"),
+                    Longitud = reader.GetDecimal("Longitud"),
+                    Precio = reader.GetDecimal("Precio"),
+                    PropietarioId = reader.GetInt32("PropietarioId"),
+                    Estado = reader.GetBoolean("Estado"),
                     Duenio = new Propietario
                     {
-                        Nombre = reader.GetString(8),
-                        Apellido = reader.GetString(9),
+                        Nombre = reader.GetString("Nombre"),
+                        Apellido = reader.GetString("Apellido"),
                     }
                     
                 };
@@ -143,8 +146,8 @@ public class RepositorioInmueble
     List<Inmueble> inmuebles = new List<Inmueble>();
     using (MySqlConnection conn = new MySqlConnection(ConnectionString))
     {
-        var query = @"SELECT i.Id, i.Direccion, i.Ambientes, i.Superficie, i.Latitud, i.Longitud, i.Precio,
-        i.PropietarioId, p.Nombre, p.Apellido 
+        var query = @"SELECT i.Id, Direccion, Ambientes, Superficie, Latitud, Longitud, Precio,
+        PropietarioId, Estado, Nombre, Apellido 
         FROM inmuebles i INNER JOIN propietarios p ON i.PropietarioId = p.Id AND i.PropietarioId = @id;";
         
         using (var command = new MySqlCommand(query, conn))
@@ -158,17 +161,18 @@ public class RepositorioInmueble
                {
                 Inmueble inmueble = new Inmueble{
                     Id = reader.GetInt32(0),
-                    Direccion = reader.GetString(1),
-                    Ambientes = reader.GetInt32(2),
-                    Superficie = reader.GetInt32(3),
-                    Latitud = reader.GetDecimal(4),
-                    Longitud = reader.GetDecimal(5),
-                    Precio = reader.GetDecimal(6),
-                    PropietarioId = reader.GetInt32(7),
+                    Direccion = reader.GetString("Direccion"),
+                    Ambientes = reader.GetInt32("Ambientes"),
+                    Superficie = reader.GetInt32("Superficie"),
+                    Latitud = reader.GetDecimal("Latitud"),
+                    Longitud = reader.GetDecimal("Longitud"),
+                    Precio = reader.GetDecimal("Precio"),
+                    PropietarioId = reader.GetInt32("PropietarioId"),
+                    Estado = reader.GetBoolean("Estado"),
                     Duenio = new Propietario
                     {
-                        Nombre = reader.GetString(8),
-                        Apellido = reader.GetString(9),
+                        Nombre = reader.GetString("Nombre"),
+                        Apellido = reader.GetString("Apellido"),
                     }
                     
                 };
@@ -236,6 +240,7 @@ public class RepositorioInmueble
                         Longitud = reader.GetDecimal("Longitud"),
                         Precio = reader.GetDecimal("Precio"),
                         PropietarioId = reader.GetInt32("PropietarioId"),
+                        Estado = reader.GetBoolean("Estado"),
                         Duenio = new Propietario
                         {
                             Nombre = reader.GetString("Nombre"),
@@ -275,7 +280,7 @@ public class RepositorioInmueble
 			using (var connection = new MySqlConnection(ConnectionString))
 			{
 				string sql = "UPDATE inmuebles SET " +
-	"Direccion=@direccion, Ambientes=@ambientes, Superficie=@superficie, Latitud=@latitud, Longitud=@longitud , Precio=@precio, PropietarioId=@propietarioid " + "WHERE Id = @id";
+	"Direccion=@direccion, Ambientes=@ambientes, Superficie=@superficie, Latitud=@latitud, Longitud=@longitud , Precio=@precio, PropietarioId=@propietarioid, Estado=@estado " + "WHERE Id = @id";
 				using (MySqlCommand command = new MySqlCommand(sql, connection))
 				{
                     command.Parameters.AddWithValue("@id", inmueble.Id);
@@ -286,6 +291,7 @@ public class RepositorioInmueble
                     command.Parameters.AddWithValue("@longitud", inmueble.Longitud);
                     command.Parameters.AddWithValue("@propietarioid", inmueble.PropietarioId);
                     command.Parameters.AddWithValue("@precio", inmueble.Precio);
+                    command.Parameters.AddWithValue("@estado", inmueble.Estado);
 					command.CommandType = System.Data.CommandType.Text;
 					connection.Open();
 					res = command.ExecuteNonQuery();

@@ -65,12 +65,13 @@ namespace PracticaMVC.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public ActionResult Create(Inmueble inmueble)
+        public ActionResult Create(Inmueble inmueble, IFormCollection collection)
         {
             ViewBag.Propietarios = repositorioPropietario.GetPropietarios();
             try
             {
                 // TODO: Add insert logic here
+                
                 int res = repo.agregarInmueble(inmueble);
                 if(res > 0){
                     TempData["CreacionExitosa"] = 1;

@@ -38,7 +38,7 @@
                         <li class="nav-item">
                             <a class="nav-link text-light anim bg-secondary rounded mx-2 " asp-area="" asp-controller="Pago" asp-action="Index">Pagos</a>
                         </li>
-                        @if(User.Identity.IsAuthenticated)
+                        @if(User.Identity.IsAuthenticated && User.IsInRole("Administrador"))
                         {
                         <li class="nav-item">
                             <a class="nav-link text-light anim bg-info rounded mx-2 " asp-area="" asp-controller="Usuario" asp-action="Index">Usuarios</a>

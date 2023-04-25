@@ -46,6 +46,15 @@ app.MapControllerRoute(
 app.MapControllerRoute(
     name: "logout",
     pattern: "{controller=Usuario}/{action=Logout}");
+
+app.MapControllerRoute(
+    name: "Cambiar Avatar",
+    pattern: "{controller=Usuario}/{action=CambiarAvatar}/{id?}"
+);
+app.MapControllerRoute(
+    name: "Cambiar Contraseña",
+    pattern: "{controller=Usuario}/{action=CambiarContraseña}/{id?}"
+);
 app.MapControllerRoute(
     name: "inmueble",
     pattern: "{controller=Propietario}/{action=listar}",
