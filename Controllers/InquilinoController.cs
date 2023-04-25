@@ -21,6 +21,10 @@ namespace PracticaMVC.Controllers
         public ActionResult Index()
         {   
             List<Inquilino> inquilinos =  ri.GetInquilinos();
+            ViewBag.CreacionExitosa = TempData["CreacionExitosa"];
+            ViewBag.ModificacionExitosa = TempData["ModificacionExitosa"];
+            ViewBag.EliminacionExitosa = TempData["EliminacionExitosa"];
+            ViewBag.Error = TempData["Error"];
             return View(inquilinos);
         }
 

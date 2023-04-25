@@ -26,6 +26,7 @@ namespace PracticaMVC.Controllers
             ViewBag.ModificacionExitosa = TempData["ModificacionExitosa"];
             ViewBag.EliminacionExitosa = TempData["EliminacionExitosa"];
             ViewBag.NoPermitido = TempData["NoPermitido"];
+            ViewBag.Error = TempData["Error"];
             ViewBag.Contratos = rpoContrato.GetContratos();
             return View(listaPagos);
         }
@@ -79,14 +80,14 @@ namespace PracticaMVC.Controllers
                     TempData["CreacionExitosa"] = 1;
                     return RedirectToAction(nameof(Index));
                 }else{
-                    throw new ArgumentException("Un parametro es nulo");
+                    TempData["Error"] = "Error en la creacion";
+                    return RedirectToAction(nameof(Index));
                 }
                 
             }
             catch(Exception e)
             {
-                Console.WriteLine(e);
-                TempData["Error"] = 1;
+                TempData["Error"] = "Parametros nulos";
                  return RedirectToAction(nameof(Create));
             }
         }
@@ -112,19 +113,18 @@ namespace PracticaMVC.Controllers
                 // TODO: Add update logic here
                 pago.Id = id;
                 int res = rpo.modificarPago(pago);
-                Console.WriteLine(res);
                 if(res > 0){
                     TempData["ModificacionExitosa"] = 1;
                     return RedirectToAction(nameof(Index));
                 }else{
-                    throw new ArgumentException("Un parametro es nulo");
+                    TempData["Error"] = "Error en la modificacion";
+                    return RedirectToAction(nameof(Index));
                 }
                 
             }
             catch(Exception e)
             {
-                Console.WriteLine(e);
-                TempData["Error"] = 1;
+                TempData["Error"] = "Parametros nulos";
                 return RedirectToAction(nameof(Edit));
             }
         }

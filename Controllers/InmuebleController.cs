@@ -21,6 +21,7 @@ namespace PracticaMVC.Controllers
             ViewBag.CreacionExitosa = TempData["CreacionExitosa"];
             ViewBag.ModificacionExitosa = TempData["ModificacionExitosa"];
             ViewBag.EliminacionExitosa = TempData["EliminacionExitosa"];
+            ViewBag.Error = TempData["Error"];
             return View(listaInmuebles);
         }
         [Authorize]
@@ -75,7 +76,7 @@ namespace PracticaMVC.Controllers
                     TempData["CreacionExitosa"] = 1;
                     return RedirectToAction(nameof(Index));
                 }else{
-                    throw new ArgumentException("Un parametro es nulo");
+                    return View();
                 }
 
             }

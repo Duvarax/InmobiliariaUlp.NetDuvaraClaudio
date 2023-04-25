@@ -88,14 +88,14 @@
     }
     @if (ViewBag.EliminacionExitosa != null)
     {
-        <div class="alert alert-success text-center" role="alert">
+        <div class="alert alert-danger text-center" role="alert">
             <strong> ELIMINADO EXITOSAMENTE </strong>
         </div>
     }   
     @if (ViewBag.Error != null)
     {
         <div class="alert alert-danger text-center" role="alert">
-            <strong> UN ERROR HA OCURRIDO </strong>
+            <strong> HA OCURRIDO UN ERROR: @ViewBag.Error </strong>
         </div>
     }
     @if (ViewBag.NoPermitido != null)

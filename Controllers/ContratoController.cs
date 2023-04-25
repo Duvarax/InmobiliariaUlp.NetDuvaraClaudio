@@ -24,6 +24,7 @@ namespace PracticaMVC.Controllers
             ViewBag.EliminacionExitosa = TempData["EliminacionExitosa"];
             ViewBag.Multa = TempData["Multa"];
             ViewBag.Renovar = TempData["Renovar"];
+            ViewBag.Error = TempData["Error"];
             List<Contrato> listaContratos = repositorioContrato.GetContratos();
             return View(listaContratos);
         }
@@ -45,12 +46,14 @@ namespace PracticaMVC.Controllers
             string fechaDesde = collection["desde"];
             string fechaHasta = collection["hasta"];
 
-            if(fechaDesde != null && fechaHasta != null){
+            if(fechaDesde != "" && fechaHasta != ""){
                 ViewBag.Inmuebles = repositorioInmueble.GetInmuebles();
                 List<Contrato> listaContratos = repositorioContrato.GetContratosPorFechas(DateTime.Parse(fechaDesde), DateTime.Parse(fechaHasta));
                 return View("Index", listaContratos);
+            }else{
+                TempData["Error"] = "Fechas vacias";
+                return RedirectToAction(nameof(Index));
             }
-            return View();
 
             
         }
@@ -96,15 +99,15 @@ namespace PracticaMVC.Controllers
                     TempData["CreacionExitosa"] = contrato.Id;
                     return RedirectToAction(nameof(Index));
                 }else{
-                    return View();
+                    TempData["Error"] = "Campos no completados correctamente";
+                    return RedirectToAction(nameof(Index));
                 }
                 
             }
             catch(Exception e)
             {
-                TempData["Error"] = 1;
-                Console.WriteLine(e);
-                return View();
+                TempData["Error"] = "Campos vacios";
+                return RedirectToAction(nameof(Index));
             }
         }
 
@@ -130,20 +133,23 @@ namespace PracticaMVC.Controllers
             {
                 // TODO: Add update logic here
                 contrato.Id = id;
-                int res = repositorioContrato.modificarContrato(contrato);
-                if(res > 0){
-                    TempData["ModificacionExitosa"] = 1;
-                    return RedirectToAction(nameof(Index));
+                
+                if(contrato.InmuebleId != null || contrato.InmuebleId != null){
+                    int res = repositorioContrato.modificarContrato(contrato);
+                    if(res > 0){
+                        TempData["ModificacionExitosa"] = 1;
+                        return RedirectToAction(nameof(Index));
+                    }
                 }else{
-                    
-                    return View();
+                   TempData["Error"] = "Campos no completados correctamente";
+                    return RedirectToAction(nameof(Index)); 
                 }
+                return RedirectToAction(nameof(Index)); 
             }
             catch(Exception e)
             {
-                TempData["Error"] = 1;
-                Console.WriteLine(e);
-                return View();
+                TempData["Error"] = "Campos no completados correctamente";
+                return RedirectToAction(nameof(Index));
             }
         }
 
@@ -169,14 +175,14 @@ namespace PracticaMVC.Controllers
                     TempData["EliminacionExitosa"] = 1;
                     return RedirectToAction(nameof(Index));
                 }else{
-                    TempData["Error"] = 1;
+                    TempData["Error"] = "Error de eliminacion";
                     return RedirectToAction(nameof(Index));
                 }
                 
             }
             catch(Exception e)
             {
-                TempData["Error"] = 1;
+                TempData["Error"] = "Error de eliminacion";
                 return View();
             }
         }
@@ -205,7 +211,7 @@ namespace PracticaMVC.Controllers
             try
             {
             Contrato contrato = repositorioContrato.obtenerContratoById(id);
-                Double multa;
+            Double multa;
             DateTime hoy = DateTime.Today;
             DateTime fechaFinalizacion = (DateTime)contrato.fechaFinalizacion;
             TimeSpan tiempoDiferencia = fechaFinalizacion.Subtract(hoy);
