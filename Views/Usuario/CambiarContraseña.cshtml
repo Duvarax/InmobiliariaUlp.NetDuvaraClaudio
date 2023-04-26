@@ -29,6 +29,14 @@
 </div>
 
 <div>
-    <a asp-action="Index">Volver al listado</a>
+    @if(User.IsInRole("Administrador")){
+        @if(Int32.Parse((User.Claims.FirstOrDefault(c => c.Type == "Id").Value)) != Model.Id){
+            <a asp-action="Index">Volver al listado</a>
+        }else{
+        <a asp-action="Perfil">Volver al Perfil</a>
+        }
+    }else{
+        <a asp-action="Perfil">Volver al Perfil</a>
+    }
 </div>
 

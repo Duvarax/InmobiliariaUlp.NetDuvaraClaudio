@@ -59,7 +59,7 @@ public class RepositorioInmueble
     List<Inmueble> inmuebles = new List<Inmueble>();
     using (MySqlConnection conn = new MySqlConnection(ConnectionString))
     {
-        var query = @"SELECT SELECT i.Id, Direccion, Ambientes, Superficie, Latitud, Longitud, Precio,
+        var query = @"SELECT i.Id, Direccion, Ambientes, Superficie, Latitud, Longitud, Precio,
         PropietarioId, Estado, Nombre, Apellido 
         FROM inmuebles i INNER JOIN propietarios p ON i.PropietarioId = p.Id AND i.Estado = 1;";
         
@@ -102,7 +102,7 @@ public class RepositorioInmueble
     List<Inmueble> inmuebles = new List<Inmueble>();
     using (MySqlConnection conn = new MySqlConnection(ConnectionString))
     {
-        var query = @"SELECT SELECT i.Id, Direccion, Ambientes, Superficie, Latitud, Longitud, Precio,
+        var query = @"SELECT i.Id, Direccion, Ambientes, Superficie, Latitud, Longitud, Precio,
         PropietarioId, Estado, Nombre, Apellido 
         FROM inmuebles i INNER JOIN propietarios p ON i.PropietarioId = p.Id AND i.Estado = 0;";
         

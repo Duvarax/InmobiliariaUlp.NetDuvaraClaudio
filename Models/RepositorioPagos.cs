@@ -172,6 +172,7 @@ ON DUPLICATE KEY UPDATE IdentificadorPago = IdentificadorPago + 1;  SELECT LAST_
                         ContratoId = reader.GetInt32(nameof(Pago.ContratoId)),
                         contrato = new Contrato
                         {
+                            
                             fechaInicio = reader.GetDateTime(nameof(Contrato.fechaInicio))
                         }
                     };

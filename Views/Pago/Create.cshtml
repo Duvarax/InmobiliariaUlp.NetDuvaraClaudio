@@ -31,8 +31,10 @@
                  </button>
               }else{
                  @if(Model.ContratoId != null){
-                  <label asp-for="ContratoId" class="control-label btn-light">
-                    <span>Contrato NRO:  @Model.ContratoId </span>
+                  <label for="ContratoId" class="control-label btn-light">
+                    <b>Contrato</b>
+                    <br>
+                    <span class="form-control"> @Model.ContratoId | @Model.contrato.fechaInicio</span>
                   </label>
                   <input type="hidden" asp-for="ContratoId" class="form-control inquilino-input" id="ContratoId" value="@Model.ContratoId"/>
                 }

@@ -272,6 +272,7 @@ namespace PracticaMVC.Controllers
             }else if(User.IsInRole("Administrador")){
                 usuario = rpo.obtenerUsuarioById(id);
             }
+            ViewBag.ModificacionExitosa = TempData["ModificacionExitosa"];
             return View(usuario);
         }
 
@@ -301,8 +302,13 @@ namespace PracticaMVC.Controllers
                 int res = rpo.modificarUsuario(usuario);
                 if(res > 0)
                 {
-                    TempData["ModificacionExitosa"] = 1;
-                    return RedirectToAction("Perfil");
+                     if(User.IsInRole("Administrador")){
+                        TempData["ModificacionExitosa"] = 1;
+                        return RedirectToAction(nameof(Index));
+                    }else{
+                        TempData["ModificacionExitosa"] = 1;
+                        return RedirectToAction(nameof(Perfil));
+                    }
                 }
                 return View();
             }catch(Exception ex){
@@ -321,6 +327,7 @@ namespace PracticaMVC.Controllers
                 }else if(User.IsInRole("Administrador")){
                     usuario = rpo.obtenerUsuarioById(id);
                 }
+            ViewBag.Error = TempData["Error"];
             return View(usuario);
         }
 
@@ -347,7 +354,8 @@ namespace PracticaMVC.Controllers
                     iterationCount: 1000,
                     numBytesRequested: 256 /8));
             if(!(usuario.Contraseña == contraseña_vieja)){
-                return View();
+                TempData["Error"] = "Contraseña antigua incorrecta";
+                return RedirectToAction(nameof(CambiarContraseña));
             }else{
 
                 string contraseña_nueva = Convert.ToBase64String(KeyDerivation.Pbkdf2(
@@ -361,8 +369,13 @@ namespace PracticaMVC.Controllers
                 int res = rpo.modificarUsuario(usuario);
                 if(res > 0)
                 {
-                    TempData["ModificacionExitosa"] = 1;
-                    return RedirectToAction(nameof(Perfil));
+                    if(User.IsInRole("Administrador")){
+                        TempData["ModificacionExitosa"] = 1;
+                        return RedirectToAction(nameof(Index));
+                    }else{
+                        TempData["ModificacionExitosa"] = 1;
+                        return RedirectToAction(nameof(Perfil));
+                    }
                 }
             }
                 return View();
