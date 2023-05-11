@@ -1,6 +1,10 @@
 
 using Microsoft.AspNetCore.Authentication.Cookies;
-using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using PracticaMVC.Models;
+using Microsoft.EntityFrameworkCore;
+
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -8,16 +12,58 @@ var configuration = builder.Configuration;
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-.AddCookie(options => {
-    options.LoginPath = "/Usuario/Login";
-    options.LogoutPath = "/Usuario/Logout";
-    options.AccessDeniedPath = "/Home/Restringido";
-});
+	.AddCookie(options =>//el sitio web valida con cookie
+	{
+		options.LoginPath = "/Usuario/Login";
+		options.LogoutPath = "/Usuario/Logout";
+		options.AccessDeniedPath = "/Home/Restringido";
+		//options.ExpireTimeSpan = TimeSpan.FromMinutes(5);//Tiempo de expiración
+	})
+	.AddJwtBearer(options =>//la api web valida con token
+	{
+		options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+		{
+			ValidateIssuer = true,
+			ValidateAudience = true,
+			ValidateLifetime = true,
+			ValidateIssuerSigningKey = true,
+			ValidIssuer = configuration["TokenAuthentication:Issuer"],
+			ValidAudience = configuration["TokenAuthentication:Audience"],
+			IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.ASCII.GetBytes(
+				configuration["TokenAuthentication:SecretKey"])),
+		};
+		// opción extra para usar el token en el hub y otras peticiones sin encabezado (enlaces, src de img, etc.)
+		options.Events = new JwtBearerEvents
+		{
+			OnMessageReceived = context =>
+			{
+				// Leer el token desde el query string
+				var accessToken = context.Request.Query["access_token"];
+				// Si el request es para el Hub u otra ruta seleccionada...
+				var path = context.HttpContext.Request.Path;
+				if (!string.IsNullOrEmpty(accessToken) &&
+					(
+					path.StartsWithSegments("/api/Propietario/reset") ||
+					path.StartsWithSegments("/api/Propietario/token")))
+				{//reemplazar las urls por las necesarias ruta ⬆
+					context.Token = accessToken;
+				}
+				return Task.CompletedTask;
+			}
+		};
+	});
 
-builder.Services.AddAuthorization(options =>
-{;
-	options.AddPolicy("Administrador", policy => policy.RequireRole("Administrador", "Empleado"));
-});
+    builder.Services.AddDbContext<DataContext>(
+	options => options.UseSqlServer(
+		configuration["ConnectionStrings:SQL"]
+	)
+);
+    builder.Services.AddDbContext<DataContext>(
+        options => options.UseMySql(
+            configuration["ConnectionStrings:SQL"],
+            ServerVersion.AutoDetect(configuration["ConnectionStrings:SQL"])
+        )
+    );
 
 
     
