@@ -53,11 +53,11 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 		};
 	});
 
-    builder.Services.AddDbContext<DataContext>(
-	options => options.UseSqlServer(
-		configuration["ConnectionStrings:SQL"]
-	)
-);
+    builder.Services.AddAuthorization(options =>
+    {;
+	options.AddPolicy("Administrador", policy => policy.RequireRole("Administrador", "Empleado"));
+    });
+
     builder.Services.AddDbContext<DataContext>(
         options => options.UseMySql(
             configuration["ConnectionStrings:SQL"],
@@ -65,6 +65,8 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         )
     );
 
+    //builder.WebHost.UseUrls("http://localhost:5000", "https://localhost:5001")//permite escuchar SOLO peticiones locales
+    builder.WebHost.UseUrls("http://localhost:5190", "http://*:5200");//permite escuchar peticiones locales y remotas
 
     
 

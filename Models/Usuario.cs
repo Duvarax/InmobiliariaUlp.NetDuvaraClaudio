@@ -21,6 +21,7 @@ public class Usuario
     public string? Avatar {get; set;}
     public int Rol {get; set;}
 
+    [NotMapped]
     public IFormFile? AvatarFile{get; set;}
     
     public string RolNombre => Rol > 0 ? ((enRoles)Rol).ToString() : "";

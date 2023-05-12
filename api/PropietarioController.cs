@@ -7,7 +7,7 @@ using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 namespace PracticaMVC.api;
 
-[Route("api/[controller]")]
+	[Route("api/[controller]")]
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	[ApiController]
     public class PropietarioController : ControllerBase
@@ -26,15 +26,10 @@ namespace PracticaMVC.api;
         [HttpGet]
 		public List<Propietario> Get()
 		{
-			try
-			{
-				return contexto.Propietarios.ToList();
-			}
-			catch (Exception ex)
-			{
-                List<Propietario> propietarios = new List<Propietario>();
-				return propietarios;
-			}
+			
+			return contexto.Propietarios.ToList();
+			
+			
 		}
 
         [HttpGet("token")]
