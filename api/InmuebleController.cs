@@ -8,15 +8,15 @@ using Microsoft.IdentityModel.Tokens;
 namespace PracticaMVC.api;
 
 	[Route("api/[controller]")]
-	//[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	[ApiController]
-    public class PropietarioController : ControllerBase
+    public class InmuebleController : ControllerBase
     {
         private readonly DataContext contexto;
 		private readonly IConfiguration config;
 		private readonly IWebHostEnvironment environment;
 
-        public PropietarioController(DataContext context, IConfiguration config, IWebHostEnvironment environment)
+        public InmuebleController(DataContext context, IConfiguration config, IWebHostEnvironment environment)
         {
             this.contexto = context;
             this.config = config;
@@ -24,10 +24,11 @@ namespace PracticaMVC.api;
         }
 
         [HttpGet]
-		public List<Propietario> Get()
+		public async Task<IActionResult> GetInmuebles()
 		{
 			
-			return contexto.Propietarios.ToList();
+			var usuario = Int32.Parse((User.Claims.FirstOrDefault(c => c.Type == "Id").Value));
+			return Ok(contexto.Inmuebles.Where(i => i.PropietarioId == usuario));
 			
 			
 		}
@@ -40,10 +41,9 @@ namespace PracticaMVC.api;
 					var credenciales = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 					var claims = new List<Claim>
 					{
-						new Claim("Id", 8+""),
-                		new Claim(ClaimTypes.Name, "Mariano"),
-                		new Claim("Email", "mluza@gmail.com"),
-                		new Claim("FullName", "Mariano luzza"),
+						new Claim(ClaimTypes.Name, "DUVARAX@GMAIL.COM"),
+						new Claim("FullName", "Duvara" + " " + "Claudio"),
+						new Claim(ClaimTypes.Role, "Propietario"),
 					};
 
 					var token = new JwtSecurityToken(
