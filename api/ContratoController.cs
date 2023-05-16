@@ -23,15 +23,15 @@ namespace PracticaMVC.api;
             this.environment = environment;
         }
 
-        [HttpGet]
-		public async Task<IActionResult> GetContratos()
-		{
+        // [HttpGet]
+		// public async Task<IActionResult> GetContratos()
+		// {
 			
-			int propietarioId = Int32.Parse((User.Claims.FirstOrDefault(c => c.Type == "Id").Value));
-			return Ok(contexto.Contratos.Where(c));
+		// 	int propietarioId = Int32.Parse((User.Claims.FirstOrDefault(c => c.Type == "Id").Value));
+		// 	return Ok(contexto.Contratos.Where(c));
 			
 			
-		}
+		// }
 
 		[HttpGet("{id}")]
 		public async Task<IActionResult> GetInquilinoById(int id){
