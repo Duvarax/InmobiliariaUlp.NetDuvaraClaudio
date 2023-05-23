@@ -8,10 +8,12 @@ namespace PracticaMVC.Controllers
         private RepositorioContrato repositorioContrato;
         private RepositorioInmueble repositorioInmueble;
         private RepositorioInquilino repositorioInquilino;
-        public ContratoController()
+        private readonly IConfiguration config;
+        public ContratoController(IConfiguration config)
         {
-            repositorioContrato = new RepositorioContrato();
-            repositorioInmueble = new RepositorioInmueble();
+            this.config = config;
+            repositorioContrato = new RepositorioContrato(config);
+            repositorioInmueble = new RepositorioInmueble(config);
             repositorioInquilino = new RepositorioInquilino();
         }
         // GET: Contrato

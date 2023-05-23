@@ -4,17 +4,17 @@ namespace PracticaMVC.Models;
 
 public class RepositorioContrato
 {   
-   string ConnectionString = "Server=localhost;User=root;Password=;Database=testmvc;SslMode=none";
 
-   public RepositorioContrato()
+    private readonly IConfiguration config;
+   public RepositorioContrato(IConfiguration config)
    {
-    
+    this.config = config;
    }
 
    public List<Contrato> GetContratos()
    {
     List<Contrato> contratos = new List<Contrato>();
-    using (MySqlConnection conn = new MySqlConnection(ConnectionString))
+    using (MySqlConnection conn = new MySqlConnection(config["ConnectionStrings:SQL"]))
     {
         var query = @"SELECT c.Id, InquilinoId, InmuebleId, fechaInicio, fechaFinalizacion, c.Precio, i.Nombre, i.Apellido, m.Direccion, c.Estado 
                     FROM contratos c INNER JOIN
@@ -60,7 +60,7 @@ public class RepositorioContrato
    public List<Contrato> GetContratosVigentes()
    {
     List<Contrato> contratos = new List<Contrato>();
-    using (MySqlConnection conn = new MySqlConnection(ConnectionString))
+    using (MySqlConnection conn = new MySqlConnection(config["ConnectionStrings:SQL"]))
     {
         var query = @"SELECT c.Id, InquilinoId, InmuebleId, fechaInicio, fechaFinalizacion, c.Precio, i.Nombre, i.Apellido, m.Direccion, c.Estado 
                     FROM contratos c INNER JOIN
@@ -107,7 +107,7 @@ public class RepositorioContrato
    public List<Contrato> GetContratosPorInmueble(int id)
    {
     List<Contrato> contratos = new List<Contrato>();
-    using (MySqlConnection conn = new MySqlConnection(ConnectionString))
+    using (MySqlConnection conn = new MySqlConnection(config["ConnectionStrings:SQL"]))
     {
         var query = @"SELECT c.Id, InquilinoId, InmuebleId, fechaInicio, fechaFinalizacion, c.Precio, i.Nombre, i.Apellido, m.Direccion, c.Estado FROM contratos c INNER JOIN inquilinos i INNER JOIN inmuebles m WHERE c.InmuebleId = @id AND c.InquilinoId = i.Id AND c.InmuebleId = m.Id";
         
@@ -154,7 +154,7 @@ public class RepositorioContrato
     string fechaDesdeStr = desde.ToString("yyyy-MM-dd");
     string fechaHastaStr = hasta.ToString("yyyy-MM-dd");
     List<Contrato> contratos = new List<Contrato>();
-    using (MySqlConnection conn = new MySqlConnection(ConnectionString))
+    using (MySqlConnection conn = new MySqlConnection(config["ConnectionStrings:SQL"]))
     {
         var query = @"SELECT c.Id, InquilinoId, InmuebleId, fechaInicio, fechaFinalizacion, c.Precio, i.Nombre, i.Apellido, m.Direccion, c.Estado 
                     FROM contratos c INNER JOIN
@@ -202,7 +202,7 @@ public class RepositorioContrato
    }
    public int varificarSuperposicionDeFechas(Contrato contrato){
         int cont = 0;
-        using(MySqlConnection conn = new MySqlConnection(ConnectionString))
+        using(MySqlConnection conn = new MySqlConnection(config["ConnectionStrings:SQL"]))
         {
             var query = @"SELECT COUNT(*) as count FROM Contratos
     WHERE (FechaInicio BETWEEN @inicio AND @final)
@@ -231,7 +231,7 @@ public class RepositorioContrato
    public int agregarContrato(Contrato contrato)
    {
     int res = -1;
-    using(MySqlConnection conn = new MySqlConnection(ConnectionString))
+    using(MySqlConnection conn = new MySqlConnection(config["ConnectionStrings:SQL"]))
     {   
         var query = @"INSERT INTO contratos(`InquilinoId`, `InmuebleId`, `fechaInicio`, `fechaFinalizacion`, `Precio`, `Estado`) VALUES (@inquilinoid, @inmuebleid, @fechainicio, @fechaFinalizacion, @precio, @estado); SELECT LAST_INSERT_ID();
         ;";
@@ -257,7 +257,7 @@ public class RepositorioContrato
     public Contrato obtenerContratoById(int id)
     {
         Contrato? contrato = null;
-        using(MySqlConnection conn = new MySqlConnection(ConnectionString))
+        using(MySqlConnection conn = new MySqlConnection(config["ConnectionStrings:SQL"]))
         {
             var query = @$"SELECT c.Id, c.fechaInicio, c.fechaFinalizacion,c.Precio, c.InquilinoId, i.Nombre, i.Apellido, c.InmuebleId,
             m.Direccion, c.Estado  FROM contratos c 
@@ -305,7 +305,7 @@ public class RepositorioContrato
     public int eliminarContratoById(int id)
     {
         int res = -1;
-        using(MySqlConnection conn = new MySqlConnection(ConnectionString))
+        using(MySqlConnection conn = new MySqlConnection(config["ConnectionStrings:SQL"]))
         {
             var query = @$"DELETE FROM contratos WHERE {nameof(Contrato.Id)} = @id";
 
@@ -324,7 +324,7 @@ public class RepositorioContrato
     public int modificarContrato(Contrato contrato)
 		{
 			int res = -1;
-			using (var connection = new MySqlConnection(ConnectionString))
+			using (var connection = new MySqlConnection(config["ConnectionStrings:SQL"]))
 			{
 				string sql = "UPDATE contratos SET " +
 	"InquilinoId=@inquilinoid, InmuebleId=@inmuebleid, fechaInicio=@fechainicio, fechaFinalizacion=@fechafinalizacion, Estado = @estado WHERE Id = @id";
@@ -347,7 +347,7 @@ public class RepositorioContrato
         public int cancelarContrato(Contrato contrato)
 		{
 			int res = -1;
-			using (var connection = new MySqlConnection(ConnectionString))
+			using (var connection = new MySqlConnection(config["ConnectionStrings:SQL"]))
 			{
 				string sql = "UPDATE contratos SET fechaFinalizacion = CURRENT_TIMESTAMP, Estado = 0 WHERE Id = @id";
 				using (MySqlCommand command = new MySqlCommand(sql, connection))
@@ -368,7 +368,7 @@ public class RepositorioContrato
         public int renovarContrato(Contrato contrato)
 		{
 			int res = -1;
-			using (var connection = new MySqlConnection(ConnectionString))
+			using (var connection = new MySqlConnection(config["ConnectionStrings:SQL"]))
 			{
 				string sql = "UPDATE contratos SET fechaInicio = CURRENT_TIMESTAMP, fechaFinalizacion = @fechaFinalizacion, Estado = 1 WHERE Id = @id";
 				using (MySqlCommand command = new MySqlCommand(sql, connection))

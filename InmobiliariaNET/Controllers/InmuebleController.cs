@@ -7,9 +7,11 @@ namespace PracticaMVC.Controllers
     {
         private RepositorioInmueble repo;
         private RepositorioPropietario repositorioPropietario;
-        public InmuebleController()
+        private readonly IConfiguration config;
+        public InmuebleController(IConfiguration config)
         {
-            repo = new RepositorioInmueble();
+            this.config = config;
+            repo = new RepositorioInmueble(config);
             repositorioPropietario = new RepositorioPropietario();
         }
         // GET: Inmueble
@@ -82,7 +84,7 @@ namespace PracticaMVC.Controllers
 
             }
             catch(Exception e){
-                TempData["Error"] = 1;
+                TempData["Error"] = e + "";
                 return RedirectToAction(nameof(Create));
             }
         }

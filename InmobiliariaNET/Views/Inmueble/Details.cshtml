@@ -29,22 +29,22 @@
             @Html.DisplayFor(model => model.Ambientes)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Superficie)
+            @Html.DisplayNameFor(model => model.Uso)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Superficie)
+            @Html.DisplayFor(model => model.Uso)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Latitud)
+            @Html.DisplayNameFor(model => model.Tipo)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Latitud)
+            @Html.DisplayFor(model => model.Tipo)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Longitud)
+            @Html.DisplayNameFor(model => model.Imagen)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Longitud)
+            <img src=`${@Model.Imagen}` alt="">
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Precio)

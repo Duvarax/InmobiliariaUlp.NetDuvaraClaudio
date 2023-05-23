@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using PracticaMVC.Models;
 using Microsoft.EntityFrameworkCore;
-using PracticaMVC.api.Models;
+using PracticaMVC.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;

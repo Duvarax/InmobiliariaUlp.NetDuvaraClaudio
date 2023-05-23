@@ -37,6 +37,7 @@ namespace PracticaMVC.Controllers
         [Authorize]
         public ActionResult Create()
         {
+            
             return View();
         }
 
