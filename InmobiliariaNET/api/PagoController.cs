@@ -5,60 +5,48 @@ using PracticaMVC.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.EntityFrameworkCore;
-
 namespace PracticaMVC.api;
 
 	[Route("api/[controller]")]
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	[ApiController]
-    public class ContratoController : ControllerBase
+    public class PagoController : ControllerBase
     {
         private readonly DataContext _context;
 		private readonly IConfiguration config;
 		private readonly IWebHostEnvironment environment;
 
-        public ContratoController(DataContext context, IConfiguration config, IWebHostEnvironment environment)
+        public PagoController(DataContext context, IConfiguration config, IWebHostEnvironment environment)
         {
             this._context = context;
             this.config = config;
             this.environment = environment;
         }
 
-        //Dado un inmueble retorna el contrato activo de dicho inmueble
+		//Dado un Contrato, retorna los pagos de dicho contrato
 		[HttpPost]
 		[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-		public IActionResult ObtenerContratoVigente([FromBody] Inmueble inmueble)
+		public IActionResult ObtenerPagosContrato([FromBody] Contrato contratoVer)
 		{
 			var propietarioActual = ObtenerPropietarioLogueado();
 			if (propietarioActual == null)
-			{
-				return Unauthorized("No se encontró un propietario autenticado.");
-			}
+				return Unauthorized();
 
-			var inmuebleEncontrado = _context.Inmuebles.FirstOrDefault(i => i.Id == inmueble.Id && i.PropietarioId == propietarioActual.Id);
-			if (inmuebleEncontrado == null)
-			{
-				return NotFound("No se encontró el inmueble especificado para el propietario actual.");
-			}
+			if (contratoVer == null)
+				return BadRequest("No se proporcionó un contrato válido.");
 
-			var contratoVigente = _context.Contratos
-				.Include(c => c.Inquilino)
-				.FirstOrDefault(contrato => contrato.InmuebleId == inmuebleEncontrado.Id && contrato.Estado == true);
+			var pagosContrato = _context.Pagos
+				.Where(pago => pago.ContratoId == contratoVer.Id)
+				.ToList();
 
-			if (contratoVigente == null)
-			{
-				return NotFound("No se encontró un contrato vigente para el inmueble especificado.");
-			}
-
-			return Ok(contratoVigente);
+			return Ok(pagosContrato);
 		}
+
 		private Propietario ObtenerPropietarioLogueado()
     {
         var email = User.Identity.Name;
         var propietario = _context.Propietarios.FirstOrDefault(p => p.Email == email);
         return propietario;
     }
-
 
     }

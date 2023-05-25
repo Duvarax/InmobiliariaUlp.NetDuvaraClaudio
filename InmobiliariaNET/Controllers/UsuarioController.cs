@@ -16,7 +16,7 @@ namespace PracticaMVC.Controllers
         {
             this.configuration = configuration;
             this.enviroment = enviroment;
-            rpo = new RepositorioUsuario();
+            rpo = new RepositorioUsuario(configuration);
         }
         // GET: Usuario
         [Authorize(Policy="Administrador")]

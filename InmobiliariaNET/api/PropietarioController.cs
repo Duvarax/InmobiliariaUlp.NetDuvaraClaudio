@@ -10,8 +10,8 @@ using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 
 namespace PracticaMVC.api;
 
-[Route("api/[controller]")]
-	//[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Route("api/[controller]")]
+	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	[ApiController]
     public class PropietarioController : ControllerBase
     {
@@ -113,6 +113,15 @@ namespace PracticaMVC.api;
 
         return Unauthorized();
     }
+
+    [HttpPut("editar")]
+    public IActionResult editarPerfil(Propietario propietarioEditado){
+
+
+        contexto.Entry(propietarioEditado).State = EntityState.Modified;
+        return Ok(contexto.SaveChanges());
+    }
+
 
 }
 

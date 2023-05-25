@@ -16,6 +16,7 @@ namespace PracticaMVC.api;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 public class InmuebleController : ControllerBase
 {
     private readonly DataContext _context;
@@ -27,7 +28,17 @@ public class InmuebleController : ControllerBase
         _configuration = configuration;
     }
 
+    [HttpPut("estado")]
+    public IActionResult editarEstadoInmueble(EditViewInmueble inmuebleEditado){
 
+
+        var inmueble = _context.Inmuebles.First(i => i.Id == inmuebleEditado.id);
+        inmueble.Estado = inmuebleEditado.estado;
+        return Ok(_context.SaveChanges());
+
+
+
+    }
     [HttpGet("propiedades")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public IActionResult ObtenerPropiedades()
@@ -59,85 +70,12 @@ public class InmuebleController : ControllerBase
 
 
 
-    //Dado un inmueble retorna el contrato activo de dicho inmueble
-    [HttpPost("contrato-vigente")]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public IActionResult ObtenerContratoVigente([FromBody] Inmueble inmueble)
-    {
-        var propietarioActual = ObtenerPropietarioLogueado();
-        if (propietarioActual == null)
-        {
-            return Unauthorized("No se encontró un propietario autenticado.");
-        }
+    
 
-        var inmuebleEncontrado = _context.Inmuebles.FirstOrDefault(i => i.Id == inmueble.Id && i.PropietarioId == propietarioActual.Id);
-        if (inmuebleEncontrado == null)
-        {
-            return NotFound("No se encontró el inmueble especificado para el propietario actual.");
-        }
-
-        var contratoVigente = _context.Contratos
-             .Include(c => c.Inquilino)
-             .FirstOrDefault(contrato => contrato.InmuebleId == inmuebleEncontrado.Id && contrato.Estado == true);
-
-        if (contratoVigente == null)
-        {
-            return NotFound("No se encontró un contrato vigente para el inmueble especificado.");
-        }
-
-        return Ok(contratoVigente);
-    }
+    
 
 
-    //Dado un inmueble, retorna el inquilino del ultimo contrato activo de ese inmueble.
-    [HttpPost("inquilino-ultimo-contrato")]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public IActionResult ObtenerInquilinoUltimoContrato([FromBody] Inmueble inmueble)
-    {
-        var propietarioActual = ObtenerPropietarioLogueado();
-        if (propietarioActual == null)
-            return Unauthorized();
-
-        var inmuebleEncontrado = _context.Inmuebles
-            .FirstOrDefault(i => i.Id == inmueble.Id && i.PropietarioId == propietarioActual.Id);
-
-        if (inmuebleEncontrado == null)
-            return NotFound();
-
-
-        var contratoVigente = _context.Contratos
-            .Include(c => c.Inquilino)
-            .Where(contrato => contrato.InmuebleId == inmuebleEncontrado.Id && contrato.Estado == true)
-            .OrderByDescending(contrato => contrato.fechaInicio)
-            .FirstOrDefault();
-
-
-        if (contratoVigente == null)
-            return NotFound();
-
-
-        return Ok(contratoVigente.Inquilino);
-    }
-
-
-    //Dado un Contrato, retorna los pagos de dicho contrato
-    [HttpPost("pagos-contrato")]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public IActionResult ObtenerPagosContrato([FromBody] Contrato contratoVer)
-    {
-        var propietarioActual = ObtenerPropietarioLogueado();
-        if (propietarioActual == null)
-            return Unauthorized();
-
-        if (contratoVer == null)
-            return BadRequest("No se proporcionó un contrato válido.");
-
-        var pagosContrato = _context.Pagos
-            .Where(pago => pago.ContratoId == contratoVer.Id)
-            .ToList();
-
-        return Ok(pagosContrato);
-    }
+    
 
     // Actualizar Perfil
     [HttpPost("actualizar-perfil")]
@@ -200,6 +138,7 @@ public class InmuebleController : ControllerBase
 
         return NotFound("No se encontró el inmueble especificado.");
     }
+
 
 
 

@@ -21,7 +21,7 @@ public class Inmueble
     public Boolean Estado {get; set;}
 
     [NotMapped]
-    public IFormFile ImagenFile {get; set;}
+    public IFormFile? ImagenFile {get; set;}
 
     public string? EstadoNombre => Estado == true ? "Disponible" : "No Disponible";
     

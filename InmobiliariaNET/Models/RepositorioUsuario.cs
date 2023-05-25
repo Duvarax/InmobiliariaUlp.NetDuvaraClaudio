@@ -4,17 +4,17 @@ namespace PracticaMVC.Models;
 
 public class RepositorioUsuario
 {   
-   string ConnectionString = "Server=localhost;User=root;Password=;Database=testmvc;SslMode=none";
+   private IConfiguration config;
 
-   public RepositorioUsuario()
+   public RepositorioUsuario(IConfiguration config)
    {
-    
+    this.config = config;
    }
 
    public List<Usuario> GetUsuarios()
    {
     List<Usuario> usuarios = new List<Usuario>();
-    using (MySqlConnection conn = new MySqlConnection(ConnectionString))
+    using (MySqlConnection conn = new MySqlConnection(config["ConnectionStrings:SQL"]))
     {
         var query = @"SELECT Id, Nombre, Apellido, Email, NombreUsuario, Avatar, Rol FROM usuarios";
         
@@ -48,7 +48,7 @@ public class RepositorioUsuario
    public int agregarUsuario(Usuario usuario)
    {
     int res = -1;
-    using(MySqlConnection conn = new MySqlConnection(ConnectionString))
+    using(MySqlConnection conn = new MySqlConnection(config["ConnectionStrings:SQL"]))
     {   
         var query = @"INSERT INTO usuarios(`Nombre`, `Apellido`, `Email`, `NombreUsuario`, `Contraseña`, `Avatar`,`Rol`) VALUES (@Nombre, @Apellido, @Email, @NombreUsuario, @Contraseña, @Avatar, @Rol); SELECT LAST_INSERT_ID();
         ;";
@@ -79,7 +79,7 @@ public class RepositorioUsuario
     public Usuario obtenerUsuarioById(int id)
     {
         Usuario? usuario = null;
-        using(MySqlConnection conn = new MySqlConnection(ConnectionString))
+        using(MySqlConnection conn = new MySqlConnection(config["ConnectionStrings:SQL"]))
         {
             var query = @$"SELECT Id, Nombre, Apellido, Email, NombreUsuario, Contraseña, Avatar, Rol FROM usuarios WHERE {nameof(Usuario.Id)} = @id";
 
@@ -112,7 +112,7 @@ public class RepositorioUsuario
     public Usuario obtenerUsuarioByEmail(String email)
     {
         Usuario? usuario = null;
-        using(MySqlConnection conn = new MySqlConnection(ConnectionString))
+        using(MySqlConnection conn = new MySqlConnection(config["ConnectionStrings:SQL"]))
         {
             var query = @$"SELECT Id, Nombre, Apellido, Email, NombreUsuario, Contraseña, Avatar, Rol FROM usuarios WHERE {nameof(Usuario.Email)} = @email";
 
@@ -145,7 +145,7 @@ public class RepositorioUsuario
     public int eliminarUsuarioById(int id)
     {
         int res = -1;
-        using(MySqlConnection conn = new MySqlConnection(ConnectionString))
+        using(MySqlConnection conn = new MySqlConnection(config["ConnectionStrings:SQL"]))
         {
             var query = @$"DELETE FROM usuarios WHERE {nameof(Usuario.Id)} = @id";
 
@@ -164,7 +164,7 @@ public class RepositorioUsuario
     public int modificarUsuario(Usuario Usuario)
 		{
 			int res = -1;
-			using (var connection = new MySqlConnection(ConnectionString))
+			using (var connection = new MySqlConnection(config["ConnectionStrings:SQL"]))
 			{
 				string sql = "UPDATE usuarios SET " +
 	"Nombre=@Nombre, Apellido=@Apellido, Email=@Email, NombreUsuario=@NombreUsuario, Contraseña=@Contraseña, Avatar=@Avatar WHERE Id = @id";

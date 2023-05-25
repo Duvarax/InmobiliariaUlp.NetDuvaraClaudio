@@ -12,6 +12,7 @@ public class Contrato
     [ForeignKey(nameof(InquilinoId))]
     public Inquilino? Inquilino { get; set; }
     [Display(Name ="Nro de Inmueble")]
+    
     public int? InmuebleId { get; set; }
     [ForeignKey(nameof(InmuebleId))]
     public Inmueble? Inmueble { get; set; }
