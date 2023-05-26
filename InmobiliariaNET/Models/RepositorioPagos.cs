@@ -4,17 +4,19 @@ namespace PracticaMVC.Models;
 
 public class RepositorioPagos
 {   
-   string ConnectionString = "Server=localhost;User=root;Password=;Database=testmvc;SslMode=none";
 
-   public RepositorioPagos()
+    private readonly IConfiguration config;
+
+
+   public RepositorioPagos(IConfiguration config)
    {
-    
+    this.config = config;
    }
 
    public List<Pago> GetPagos()
    {
     List<Pago> Pagos = new List<Pago>();
-    using (MySqlConnection conn = new MySqlConnection(ConnectionString))
+    using (MySqlConnection conn = new MySqlConnection(config["ConnectionStrings:SQL"]))
     {
         var query = @"SELECT p.Id, p.IdentificadorPago, p.FechaPago, p.Importe, p.ContratoId, fechaInicio FROM pagos p INNER JOIN contratos c WHERE p.ContratoId = c.Id";
         
@@ -51,7 +53,7 @@ public class RepositorioPagos
    public List<Pago> GetPagosPorContrato(int id)
    {
     List<Pago> Pagos = new List<Pago>();
-    using (MySqlConnection conn = new MySqlConnection(ConnectionString))
+    using (MySqlConnection conn = new MySqlConnection(config["ConnectionStrings:SQL"]))
     {
         var query = @"SELECT p.Id, p.IdentificadorPago, p.FechaPago, p.Importe, p.ContratoId, fechaInicio FROM pagos p INNER JOIN contratos c WHERE p.ContratoId = @id AND p.ContratoId = c.Id";
         
@@ -89,7 +91,7 @@ public class RepositorioPagos
    public int agregarPago(Pago pago)
    {
     int res = -1;
-    using(MySqlConnection conn = new MySqlConnection(ConnectionString))
+    using(MySqlConnection conn = new MySqlConnection(config["ConnectionStrings:SQL"]))
     {   
         var query = @"INSERT INTO Pagos (`IdentificadorPago`, `fechaPago`, `Importe`, `ContratoId`)
 SELECT COALESCE(MAX(`IdentificadorPago`), 0) + 1, @fechapago, @importe, @idcontrato 
@@ -117,7 +119,7 @@ ON DUPLICATE KEY UPDATE IdentificadorPago = IdentificadorPago + 1;  SELECT LAST_
     public Pago obtenerPagoById(int id)
     {
         Pago? pago = null;
-        using(MySqlConnection conn = new MySqlConnection(ConnectionString))
+        using(MySqlConnection conn = new MySqlConnection(config["ConnectionStrings:SQL"]))
         {
             var query = @$"SELECT p.*, c.fechaInicio FROM pagos p INNER JOIN contratos c WHERE p.{nameof(Pago.Id)} = @id";
 
@@ -151,7 +153,7 @@ ON DUPLICATE KEY UPDATE IdentificadorPago = IdentificadorPago + 1;  SELECT LAST_
     public Pago obtenerPagoByIdDeContrato(int id)
     {
         Pago? pago = null;
-        using(MySqlConnection conn = new MySqlConnection(ConnectionString))
+        using(MySqlConnection conn = new MySqlConnection(config["ConnectionStrings:SQL"]))
         {
             var query = @$"SELECT p.*, c.fechaInicio FROM pagos p INNER JOIN contratos c WHERE ContratoId =  @id";
 
@@ -186,7 +188,7 @@ ON DUPLICATE KEY UPDATE IdentificadorPago = IdentificadorPago + 1;  SELECT LAST_
     public int eliminarPagoById(int id)
     {
         int res = -1;
-        using(MySqlConnection conn = new MySqlConnection(ConnectionString))
+        using(MySqlConnection conn = new MySqlConnection(config["ConnectionStrings:SQL"]))
         {
             var query = @$"DELETE FROM pagos WHERE {nameof(Pago.Id)} = @id";
 
@@ -205,7 +207,7 @@ ON DUPLICATE KEY UPDATE IdentificadorPago = IdentificadorPago + 1;  SELECT LAST_
     public int modificarPago(Pago Pago)
 		{
 			int res = -1;
-			using (var connection = new MySqlConnection(ConnectionString))
+			using (var connection = new MySqlConnection(config["ConnectionStrings:SQL"]))
 			{
 				var sql = @$"UPDATE Pagos SET fechaPago=@fechapago, Importe=@importe, ContratoId=@idcontrato WHERE {nameof(Pago.Id)} = @id";
 				using (MySqlCommand command = new MySqlCommand(sql, connection))

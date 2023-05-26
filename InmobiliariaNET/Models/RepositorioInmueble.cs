@@ -231,6 +231,7 @@ public class RepositorioInmueble
                     Direccion = reader.GetString("Direccion"),
                     Ambientes = reader.GetInt32("Ambientes"),
                     Uso = reader.GetString("Uso"),
+                    Imagen = reader.GetString("Imagen"),
                     Tipo = reader.GetString("Tipo"),
                     Precio = reader.GetDouble("Precio"),
                     PropietarioId = reader.GetInt32("PropietarioId"),

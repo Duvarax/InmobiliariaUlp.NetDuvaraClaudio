@@ -16,7 +16,7 @@ namespace PracticaMVC.Controllers
         public PagoController(IConfiguration config)
         {
             this.config = config;
-            rpo = new RepositorioPagos();
+            rpo = new RepositorioPagos(config);
             rpoContrato = new RepositorioContrato(config);
         }
         // GET: Pago

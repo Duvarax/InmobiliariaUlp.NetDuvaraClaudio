@@ -1,15 +1,19 @@
 using Microsoft.AspNetCore.Mvc;
 using PracticaMVC.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+
 namespace PracticaMVC.Controllers
 {
     public class PropietarioController : Controller
     {
 
         RepositorioPropietario rp;
+        private readonly IConfiguration config;
 
-        public PropietarioController()
+        public PropietarioController(IConfiguration config)
         {
+            this.config = config;
             rp = new RepositorioPropietario();
         }
         // GET: Propietario
@@ -50,6 +54,13 @@ namespace PracticaMVC.Controllers
             try
             {
                 // TODO: Add insert logic here
+                string contraseñaHasheada = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                    password: propietario.Clave,
+                    salt: System.Text.Encoding.ASCII.GetBytes(config["Salt"]),
+                    prf: KeyDerivationPrf.HMACSHA1,
+                    iterationCount: 1000,
+                    numBytesRequested: 256 /8));
+                propietario.Clave = contraseñaHasheada;
                 int res = rp.agregarPropietario(propietario);
                 if(res > 0){
                     TempData["CreacionExitosa"] = 1;

@@ -1,6 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using PracticaMVC.Models;
+using CloudinaryDotNet;
+using CloudinaryDotNet.Actions;
+
 namespace PracticaMVC.Controllers
 {
     public class InmuebleController : Controller
@@ -8,9 +11,11 @@ namespace PracticaMVC.Controllers
         private RepositorioInmueble repo;
         private RepositorioPropietario repositorioPropietario;
         private readonly IConfiguration config;
-        public InmuebleController(IConfiguration config)
+        private readonly IWebHostEnvironment environment;
+        public InmuebleController(IConfiguration config, IWebHostEnvironment environment)
         {
             this.config = config;
+            this.environment = environment;
             repo = new RepositorioInmueble(config);
             repositorioPropietario = new RepositorioPropietario();
         }
@@ -67,19 +72,48 @@ namespace PracticaMVC.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public ActionResult Create(Inmueble inmueble, IFormCollection collection)
+        public async Task<IActionResult> Create(Inmueble inmueble, IFormCollection collection)
         {
             ViewBag.Propietarios = repositorioPropietario.GetPropietarios();
             try
             {
                 // TODO: Add insert logic here
                 
-                int res = repo.agregarInmueble(inmueble);
-                if(res > 0){
-                    TempData["CreacionExitosa"] = 1;
-                    return RedirectToAction(nameof(Index));
+                
+                if(inmueble.ImagenFile != null)
+                {
+                    int res = repo.agregarInmueble(inmueble);
+                    if(res > 0){
+                        var tempPath = Path.GetTempFileName();
+                        using (var stream = new FileStream(tempPath, FileMode.Create))
+                        {
+                            await inmueble.ImagenFile.CopyToAsync(stream);
+                        }
+                        var cloudinary = new Cloudinary(new Account(config["cloud-name"], config["cloud-key"], config["cloud-secret"]));
+
+                        // Upload
+                        var uploadParams = new ImageUploadParams()
+                        {
+                            File = new FileDescription(tempPath)
+                        };
+
+                        var uploadResults = cloudinary.Upload(uploadParams);
+
+                        inmueble.Imagen = uploadResults.Uri.ToString();
+
+                        repo.modificarInmueble(inmueble);
+                    
+                        
+                        TempData["CreacionExitosa"] = 1;
+                        return RedirectToAction(nameof(Index));
+                    }else{
+                        TempData["Error"] = "No se pudo crear el inmueble";
+                        return RedirectToAction(nameof(Create));
+                    }
+                    
                 }else{
-                    return View();
+                    TempData["Error"] = "No Selecciono una imagen";
+                    return RedirectToAction(nameof(Create));
                 }
 
             }

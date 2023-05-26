@@ -28,6 +28,11 @@ public class InmuebleController : ControllerBase
         _configuration = configuration;
     }
 
+    [HttpGet("inmueble/{id}")]
+    public Inmueble obtenerInmueble(int id){
+        return _context.Inmuebles.First(i => i.Id == id);
+    }
+
     [HttpPut("estado")]
     public IActionResult editarEstadoInmueble(EditViewInmueble inmuebleEditado){
 
