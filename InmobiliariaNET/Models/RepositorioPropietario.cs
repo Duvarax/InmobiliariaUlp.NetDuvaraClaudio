@@ -4,17 +4,17 @@ namespace PracticaMVC.Models;
 
 public class RepositorioPropietario
 {   
-   string ConnectionString = "Server=localhost;User=root;Password=;Database=testmvc;SslMode=none";
+   private readonly IConfiguration config;
 
-   public RepositorioPropietario()
+   public RepositorioPropietario(IConfiguration config)
    {
-    
+    this.config = config;
    }
 
    public List<Propietario> GetPropietarios()
    {
     List<Propietario> Propietarios = new List<Propietario>();
-    using (MySqlConnection conn = new MySqlConnection(ConnectionString))
+    using (MySqlConnection conn = new MySqlConnection(config["ConnectionStrings:SQL"]))
     {
         var query = @"SELECT Id, Nombre, Apellido,Telefono,Dni, Email, Clave FROM propietarios";
         
@@ -48,7 +48,7 @@ public class RepositorioPropietario
    public int agregarPropietario(Propietario propietario)
    {
     int res = -1;
-    using(MySqlConnection conn = new MySqlConnection(ConnectionString))
+    using(MySqlConnection conn = new MySqlConnection(config["ConnectionStrings:SQL"]))
     {   
         var query = @"INSERT INTO propietarios(`Nombre`, `Apellido`, `Telefono`, `Dni`, `Email`,`Clave`) VALUES (@nombre, @apellido, @telefono, @dni, @email, @clave); SELECT LAST_INSERT_ID();
         ;";
@@ -76,7 +76,7 @@ public class RepositorioPropietario
     public Propietario obtenerPropietarioById(int id)
     {
         Propietario? propietario = null;
-        using(MySqlConnection conn = new MySqlConnection(ConnectionString))
+        using(MySqlConnection conn = new MySqlConnection(config["ConnectionStrings:SQL"]))
         {
             var query = @$"SELECT * FROM propietarios WHERE {nameof(Propietario.Id)} = @id";
 
@@ -108,7 +108,7 @@ public class RepositorioPropietario
     public int eliminarPropietarioById(int id)
     {
         int res = -1;
-        using(MySqlConnection conn = new MySqlConnection(ConnectionString))
+        using(MySqlConnection conn = new MySqlConnection(config["ConnectionStrings:SQL"]))
         {
             var query = @$"DELETE FROM propietarios WHERE {nameof(Propietario.Id)} = @id";
 
@@ -127,7 +127,7 @@ public class RepositorioPropietario
     public int modificarPropietario(Propietario propietario)
 		{
 			int res = -1;
-			using (var connection = new MySqlConnection(ConnectionString))
+			using (var connection = new MySqlConnection(config["ConnectionStrings:SQL"]))
 			{
 				string sql = "UPDATE propietarios SET " +
 	"Nombre=@nombre, Apellido=@apellido, Telefono=@telefono, Dni=@dni, Email=@email , Clave=@clave"  + "WHERE Id = @id";

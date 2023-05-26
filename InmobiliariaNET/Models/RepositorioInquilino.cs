@@ -4,17 +4,17 @@ namespace PracticaMVC.Models;
 
 public class RepositorioInquilino
 {   
-   string ConnectionString = "Server=localhost;User=root;Password=;Database=testmvc;SslMode=none";
+   private readonly IConfiguration config;
 
-   public RepositorioInquilino()
+   public RepositorioInquilino(IConfiguration config)
    {
-    
+    this.config = config;
    }
 
    public List<Inquilino> GetInquilinos()
    {
     List<Inquilino> inquilinos = new List<Inquilino>();
-    using (MySqlConnection conn = new MySqlConnection(ConnectionString))
+    using (MySqlConnection conn = new MySqlConnection(config["ConnectionStrings:SQL"]))
     {
         var query = @"SELECT Id, Nombre, Apellido,Telefono,Dni, Email FROM inquilinos";
         
@@ -47,7 +47,7 @@ public class RepositorioInquilino
    public int agregarInquilino(Inquilino inquilino)
    {
     int res = -1;
-    using(MySqlConnection conn = new MySqlConnection(ConnectionString))
+    using(MySqlConnection conn = new MySqlConnection(config["ConnectionStrings:SQL"]))
     {   
         var query = @"INSERT INTO inquilinos(`Nombre`, `Apellido`, `Telefono`, `Dni`, `Email`) VALUES (@nombre, @apellido, @telefono, @dni, @email); SELECT LAST_INSERT_ID();
         ;";
@@ -73,7 +73,7 @@ public class RepositorioInquilino
     public Inquilino obtenerInquilinoById(int id)
     {
         Inquilino? inquilino = null;
-        using(MySqlConnection conn = new MySqlConnection(ConnectionString))
+        using(MySqlConnection conn = new MySqlConnection(config["ConnectionStrings:SQL"]))
         {
             var query = @$"SELECT * FROM inquilinos WHERE {nameof(Inquilino.Id)} = @id";
 
@@ -105,7 +105,7 @@ public class RepositorioInquilino
     public int eliminarInquilinoById(int id)
     {
         int res = -1;
-        using(MySqlConnection conn = new MySqlConnection(ConnectionString))
+        using(MySqlConnection conn = new MySqlConnection(config["ConnectionStrings:SQL"]))
         {
             var query = @$"DELETE FROM inquilinos WHERE {nameof(Propietario.Id)} = @id";
 
@@ -124,7 +124,7 @@ public class RepositorioInquilino
     public int modificarInquilino(Inquilino inquilino)
 		{
 			int res = -1;
-			using (var connection = new MySqlConnection(ConnectionString))
+			using (var connection = new MySqlConnection(config["ConnectionStrings:SQL"]))
 			{
 				string sql = "UPDATE inquilinos SET " +
 	"Nombre=@nombre, Apellido=@apellido, Telefono=@telefono, Dni=@dni, Email=@email " + "WHERE Id = @id";
