@@ -14,7 +14,7 @@ namespace PracticaMVC.Controllers
             this.config = config;
             repositorioContrato = new RepositorioContrato(config);
             repositorioInmueble = new RepositorioInmueble(config);
-            repositorioInquilino = new RepositorioInquilino();
+            repositorioInquilino = new RepositorioInquilino(config);
         }
         // GET: Contrato
         [Authorize]

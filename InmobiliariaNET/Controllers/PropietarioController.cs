@@ -14,7 +14,7 @@ namespace PracticaMVC.Controllers
         public PropietarioController(IConfiguration config)
         {
             this.config = config;
-            rp = new RepositorioPropietario();
+            rp = new RepositorioPropietario(config);
         }
         // GET: Propietario
         [Authorize]

@@ -10,12 +10,14 @@ namespace PracticaMVC.Controllers
 {
     public class InquilinoController : Controller
     {
+        private readonly IConfiguration config;
         RepositorioInquilino ri;
         // GET: Inquilino
 
-        public InquilinoController()
+        public InquilinoController(IConfiguration config)
         {
-            ri = new RepositorioInquilino();
+            this.config = config;
+            ri = new RepositorioInquilino(config);
         }
         [Authorize]
         public ActionResult Index()
