@@ -52,10 +52,10 @@ namespace PracticaMVC.api;
                 password: loginView.Contraseña,
                 salt: System.Text.Encoding.ASCII.GetBytes(config["Salt"]),
                 prf: KeyDerivationPrf.HMACSHA1,
-                iterationCount: 30000,
+                iterationCount: 1000,
                 numBytesRequested: 256 / 8));
             var p = await contexto.Propietarios.FirstOrDefaultAsync(x => x.Email == loginView.Email);
-            if (p == null || p.Clave != loginView.Contraseña)
+            if (p == null || p.Clave != hashed)
             {
                 return BadRequest("Nombre de usuario o clave incorrecta");
             }
