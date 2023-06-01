@@ -48,12 +48,12 @@ namespace PracticaMVC.api;
                 return NotFound();
             }
 
-            // string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
-            //     password: loginView.Contraseña,
-            //     salt: System.Text.Encoding.ASCII.GetBytes(config["Salt"]),
-            //     prf: KeyDerivationPrf.HMACSHA1,
-            //     iterationCount: 30000,
-            //     numBytesRequested: 256 / 8));
+            string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                password: loginView.Contraseña,
+                salt: System.Text.Encoding.ASCII.GetBytes(config["Salt"]),
+                prf: KeyDerivationPrf.HMACSHA1,
+                iterationCount: 30000,
+                numBytesRequested: 256 / 8));
             var p = await contexto.Propietarios.FirstOrDefaultAsync(x => x.Email == loginView.Email);
             if (p == null || p.Clave != loginView.Contraseña)
             {
