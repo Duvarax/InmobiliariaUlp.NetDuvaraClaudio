@@ -25,31 +25,6 @@ namespace PracticaMVC.api;
             this.environment = environment;
         }
 
-        // [HttpGet]
-		// public async Task<IActionResult> GetInquilinos()
-		// {
-			
-		// 	int propietarioId = Int32.Parse((User.Claims.FirstOrDefault(c => c.Type == "Id").Value));
-		// 	return Ok(_context.Inmuebles
-		// 		.Join(_context.Contratos,
-		// 			inmueble => inmueble.Id,
-		// 			contrato => contrato.InmuebleId,
-		// 			(inmueble, contrato) => new { Inmueble = inmueble, Contrato = contrato })
-		// 		.Join(_context.Inquilinos,
-		// 			inmuebleContrato => inmuebleContrato.Contrato.InquilinoId,
-		// 			inquilino => inquilino.Id,
-		// 			(inmuebleContrato, inquilino) => new { InmuebleContrato = inmuebleContrato, Inquilino = inquilino })
-		// 		.Where(joinResult => joinResult.InmuebleContrato.Contrato.Estado == true &&
-		// 							joinResult.InmuebleContrato.Contrato.Inmueble.PropietarioId == propietarioId)
-		// 		.Select(joinResult => joinResult.InmuebleContrato.Inmueble));
-			
-			
-		// }
-
-		[HttpGet("{id}")]
-		public async Task<IActionResult> GetInquilinoById(int id){
-			return Ok(_context.Inquilinos.Where(i => i.Id == id));
-		}
 
 		//Dado un inmueble, retorna el inquilino del ultimo contrato activo de ese inmueble.
     [HttpPost]
