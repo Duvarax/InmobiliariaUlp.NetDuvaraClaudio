@@ -26,14 +26,6 @@ namespace PracticaMVC.api;
             this.environment = environment;
         }
 
-        [HttpGet]
-		public IActionResult Get()
-		{
-			int idPropietario = Int32.Parse((User.Claims.FirstOrDefault(c => c.Type == "Id").Value));
-			return Ok(contexto.Propietarios.Where(p => p.Id == idPropietario));
-			
-			
-		}
 
 
     [HttpPost("login")]
@@ -117,11 +109,28 @@ namespace PracticaMVC.api;
     [HttpPut("editar")]
     public IActionResult editarPerfil(Propietario propietarioEditado){
 
+        Propietario propietarioActual = ObtenerPropietarioLogueado();
 
-        contexto.Entry(propietarioEditado).State = EntityState.Modified;
-        return Ok(contexto.SaveChanges());
+        if(propietarioActual.Id == propietarioEditado.Id){
+            propietarioActual.Nombre = propietarioEditado.Nombre;
+            propietarioActual.Apellido = propietarioEditado.Apellido;
+            propietarioActual.Email = propietarioEditado.Email;
+            propietarioActual.Dni = propietarioEditado.Dni;
+            propietarioActual.Telefono = propietarioEditado.Telefono;
+            return Ok(contexto.SaveChanges());
+        }else{
+            return Unauthorized("No puede modificar los datos de otro propietario");
+        }
+
+        
     }
 
+    private Propietario ObtenerPropietarioLogueado()
+    {
+        var email = User.Identity.Name;
+        var propietario = contexto.Propietarios.FirstOrDefault(p => p.Email == email);
+        return propietario;
+    }
 
 }
 

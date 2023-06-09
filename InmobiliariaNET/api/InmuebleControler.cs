@@ -28,18 +28,23 @@ public class InmuebleController : ControllerBase
         _configuration = configuration;
     }
 
-    [HttpGet("inmueble/{id}")]
-    public Inmueble obtenerInmueble(int id){
-        return _context.Inmuebles.First(i => i.Id == id);
-    }
 
     [HttpPut("estado")]
     public IActionResult editarEstadoInmueble(EditViewInmueble inmuebleEditado){
 
+        Propietario propietarioLogeado = ObtenerPropietarioLogueado();
 
-        var inmueble = _context.Inmuebles.First(i => i.Id == inmuebleEditado.id);
-        inmueble.Estado = inmuebleEditado.estado;
-        return Ok(_context.SaveChanges());
+        if(propietarioLogeado == null){
+            return Unauthorized();
+        }
+        Inmueble inmuebleAModificar = _context.Inmuebles.Include(i => i.Duenio).First(i => i.Id == inmuebleEditado.id);
+        if(inmuebleAModificar.Duenio.Id == propietarioLogeado.Id){
+            inmuebleAModificar.Estado = inmuebleEditado.estado;
+            return Ok(_context.SaveChanges());
+        }else{
+            return BadRequest("No puede modificar un inmueble que no sea suyo");
+        }
+        
 
 
 
@@ -49,6 +54,11 @@ public class InmuebleController : ControllerBase
     public IActionResult ObtenerPropiedades()
     {
         var propietarioActual = ObtenerPropietarioLogueado();
+
+        if(propietarioActual == null)
+        {
+            return Unauthorized();
+        }
         return propietarioActual == null
                                     ? Unauthorized()
                                     : Ok(_context.Inmuebles
@@ -74,57 +84,25 @@ public class InmuebleController : ControllerBase
     }
 
 
-
-    
-
-    
-
-
-    
-
-    // Actualizar Perfil
-    [HttpPost("actualizar-perfil")]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public ActionResult<Propietario> ActualizarPerfil([FromBody] Propietario propietario)
-    {
-        if (propietario == null)
-        {
-            return BadRequest("No se proporcionó un propietario válido.");
-        }
-
-        var propietarioExistente = _context.Propietarios.FirstOrDefault(p => p.Id == propietario.Id);
-        if (propietarioExistente != null)
-        {
-            // Actualizar los campos del propietario existente
-            propietarioExistente.Dni = propietario.Dni;
-            propietarioExistente.Nombre = propietario.Nombre;
-            propietarioExistente.Apellido = propietario.Apellido;
-            propietarioExistente.Telefono = propietario.Telefono;
-            propietarioExistente.Email = propietario.Email;
-            propietarioExistente.Clave = propietario.Clave;
-
-            // Guardar los cambios en la base de datos
-            _context.SaveChanges();
-
-            return Ok(propietarioExistente);
-        }
-
-        return NotFound("No se encontró el propietario especificado.");
-    }
-
-
     //ActualizarInmueble
-    [HttpPost("actualizar-inmueble")]
+    [HttpPut("actualizar-inmueble")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public IActionResult ActualizarInmueble([FromBody] Inmueble inmueble)
     {
+
+        Propietario propietarioLogeado = ObtenerPropietarioLogueado();
+
+        if(propietarioLogeado == null){
+            return Unauthorized();
+        }
+
         if (inmueble == null)
         {
             return BadRequest("No se proporcionó un inmueble válido.");
         }
 
         var inmuebleExistente = _context.Inmuebles.Include(i => i.Duenio).FirstOrDefault(i => i.Id == inmueble.Id);
-        if (inmuebleExistente != null)
+        if (inmuebleExistente != null && inmuebleExistente.Duenio.Id == propietarioLogeado.Id)
         {
             // Actualizar los campos del inmueble existente con los valores proporcionados
             inmuebleExistente.PropietarioId = inmueble.PropietarioId;

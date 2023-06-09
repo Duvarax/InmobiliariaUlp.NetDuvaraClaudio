@@ -36,7 +36,7 @@ namespace PracticaMVC.api;
 				return BadRequest("No se proporcionó un contrato válido.");
 
 			var pagosContrato = _context.Pagos
-				.Where(pago => pago.ContratoId == contratoVer.Id)
+				.Where(pago => pago.ContratoId == contratoVer.Id && pago.contrato.Inmueble.PropietarioId == propietarioActual.Id)
 				.ToList();
 
 			return Ok(pagosContrato);

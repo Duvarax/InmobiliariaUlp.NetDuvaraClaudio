@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 26-05-2023 a las 22:19:56
+-- Tiempo de generación: 09-06-2023 a las 04:03:36
 -- Versión del servidor: 10.4.27-MariaDB
 -- Versión de PHP: 8.0.25
 
@@ -67,9 +67,9 @@ CREATE TABLE `inmuebles` (
 --
 
 INSERT INTO `inmuebles` (`Id`, `Direccion`, `Ambientes`, `Uso`, `Tipo`, `Imagen`, `PropietarioId`, `Precio`, `Estado`) VALUES
-(39, 'OJOM', 231, '321', '21', 'http://res.cloudinary.com/dhg4fafod/image/upload/v1685128206/se159qyif0ylf0admai9.jpg', 9, 10000, 1),
-(40, 'San Juan', 5, 'Comercial', 'Local', 'http://res.cloudinary.com/dhg4fafod/image/upload/v1685128729/bexjmvllgr70r1gtvuzb.jpg', 9, 10000, 1),
-(41, 'Jujuy', 2, 'Habitat', 'Vivienda', 'http://res.cloudinary.com/dhg4fafod/image/upload/v1685129024/zvhysc3vusphgx3gsut4.jpg', 9, 10000, 1);
+(39, 'OJOM', 231, '321', '21', 'http://res.cloudinary.com/dhg4fafod/image/upload/v1685128206/se159qyif0ylf0admai9.jpg', 10, 10000, 1),
+(40, 'San Juan', 5, 'Comercial', 'Local', 'http://res.cloudinary.com/dhg4fafod/image/upload/v1685128729/bexjmvllgr70r1gtvuzb.jpg', 10, 10000, 1),
+(41, 'Jujuy', 2, 'Habitat', 'Vivienda', 'http://res.cloudinary.com/dhg4fafod/image/upload/v1685129024/zvhysc3vusphgx3gsut4.jpg', 10, 10000, 1);
 
 -- --------------------------------------------------------
 
@@ -141,7 +141,7 @@ INSERT INTO `propietarios` (`Id`, `Nombre`, `Apellido`, `Telefono`, `Dni`, `Emai
 (5, 'Laura', 'Albornoz', '32131231', '4123412412', '3131@gmail.com', ''),
 (6, 'Javier', 'Duvara', '2665024712', '44358778', 'duvaraclaudiojavier@gmail.com', ''),
 (8, 'Mariano', 'Luzza', '3213123', '123123', 'mluza@gmail.com', ''),
-(9, 'Montielazo', 'Je', '3122313', '321321', 'jemontiel06@gmail.com', '1234');
+(10, 'Jex', 'Montiel', '21313', '213131', 'jemontiel06@gmail.com', 'QoAY4q9t5kcEdi8Wk8txbdGar9eutN/uZiErmXORarY=');
 
 -- --------------------------------------------------------
 
@@ -246,7 +246,7 @@ ALTER TABLE `pagos`
 -- AUTO_INCREMENT de la tabla `propietarios`
 --
 ALTER TABLE `propietarios`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT de la tabla `usuarios`
